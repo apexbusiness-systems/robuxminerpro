@@ -54,3 +54,6 @@ pre code {
 :focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 
 .defer { content-visibility:auto; contain-intrinsic-size: 1px 1000px; }
+
+.hero-title{font-size:clamp(2rem,6vw,3.5rem);line-height:1.1;margin:0 0 var(--space-3)}
+.hero-tagline{font-size:clamp(1rem,2.5vw,1.25rem);color:var(--muted);margin:0}

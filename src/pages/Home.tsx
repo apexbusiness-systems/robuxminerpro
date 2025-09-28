@@ -16,28 +16,12 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="hero-gradient text-white" style={{ paddingTop: 'var(--space-6)', paddingBottom: 'var(--space-6)' }}>
+      <section style={{padding:"min(6vh,48px) 0"}}>
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto animate-fade-in">
-            <h1 className="font-bold leading-tight" style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-6)' }}>
-              Mine Robux with
-              <span className="block text-primary-glow glow-effect">
-                Unmatched Speed
-              </span>
-            </h1>
-            <p className="text-gray-200 animate-slide-up" style={{ fontSize: 'var(--font-size-md)', marginBottom: 'var(--space-6)' }}>
-              The most efficient and reliable Robux mining platform. 
-              <span className="block mt-2">Fast processing, simple interface, always online.</span>
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
-              <button className="inline-flex items-center justify-center rounded-md text-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 py-3 glow-effect">
-                Start Mining Now
-              </button>
-              <button className="inline-flex items-center justify-center rounded-md text-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-white/20 text-white hover:bg-white/10 h-12 px-8 py-3">
-                View Features
-              </button>
-            </div>
-          </div>
+          <h1 className="hero-title">RobuxMinerPro</h1>
+          <p className="hero-tagline">
+            Fast, minimal, launch-ready.
+          </p>
         </div>
       </section>
 
