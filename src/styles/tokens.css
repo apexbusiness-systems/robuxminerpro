@@ -48,3 +48,7 @@ pre code {
 .token.string { color:#86efac; }
 .token.keyword { color:#93c5fd; }
 .token.function { color:#fca5a5; }
+
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-link:focus{left:16px;top:16px;width:auto;height:auto;z-index:1000;background:#fff;color:#000;padding:8px 12px;border-radius:8px}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
