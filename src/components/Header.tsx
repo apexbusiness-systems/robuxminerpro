@@ -24,8 +24,9 @@ const Header = () => {
           }} />
           </div>
           <div className="flex flex-col">
-            
-            
+            <span className="text-lg font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+              RobuxMiner.Pro
+            </span>
           </div>
         </Link>
 
