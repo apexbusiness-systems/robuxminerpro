@@ -14,7 +14,235 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      mining_sessions: {
+        Row: {
+          created_at: string
+          end_time: string | null
+          id: string
+          is_active: boolean
+          mining_power_used: number
+          robux_earned: number
+          start_time: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          is_active?: boolean
+          mining_power_used?: number
+          robux_earned?: number
+          start_time?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          is_active?: boolean
+          mining_power_used?: number
+          robux_earned?: number
+          start_time?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          last_login: string | null
+          mining_power: number
+          referral_code: string | null
+          referred_by: string | null
+          total_robux: number
+          updated_at: string
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          last_login?: string | null
+          mining_power?: number
+          referral_code?: string | null
+          referred_by?: string | null
+          total_robux?: number
+          updated_at?: string
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          last_login?: string | null
+          mining_power?: number
+          referral_code?: string | null
+          referred_by?: string | null
+          total_robux?: number
+          updated_at?: string
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_referred_by_fkey"
+            columns: ["referred_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          bonus_earned: number
+          created_at: string
+          id: string
+          is_active: boolean
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          bonus_earned?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          bonus_earned?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          referred_id?: string
+          referrer_id?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          created_at: string
+          daily_limit: number | null
+          description: string | null
+          id: string
+          is_active: boolean
+          requirements: Json | null
+          robux_reward: number
+          task_type: Database["public"]["Enums"]["task_type"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          daily_limit?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          requirements?: Json | null
+          robux_reward?: number
+          task_type: Database["public"]["Enums"]["task_type"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          daily_limit?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          requirements?: Json | null
+          robux_reward?: number
+          task_type?: Database["public"]["Enums"]["task_type"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          reference_id: string | null
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          reference_id?: string | null
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          reference_id?: string | null
+          transaction_type?: Database["public"]["Enums"]["transaction_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_task_completions: {
+        Row: {
+          completed_at: string | null
+          completion_data: Json | null
+          created_at: string
+          id: string
+          robux_earned: number
+          started_at: string | null
+          status: Database["public"]["Enums"]["task_status"]
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completion_data?: Json | null
+          created_at?: string
+          id?: string
+          robux_earned?: number
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["task_status"]
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completion_data?: Json | null
+          created_at?: string
+          id?: string
+          robux_earned?: number
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["task_status"]
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_task_completions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +251,20 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      task_status: "pending" | "in_progress" | "completed" | "failed"
+      task_type:
+        | "daily_login"
+        | "watch_ad"
+        | "complete_survey"
+        | "referral"
+        | "social_share"
+        | "game_play"
+      transaction_type:
+        | "mining_reward"
+        | "task_completion"
+        | "referral_bonus"
+        | "withdrawal"
+        | "purchase"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +391,23 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      task_status: ["pending", "in_progress", "completed", "failed"],
+      task_type: [
+        "daily_login",
+        "watch_ad",
+        "complete_survey",
+        "referral",
+        "social_share",
+        "game_play",
+      ],
+      transaction_type: [
+        "mining_reward",
+        "task_completion",
+        "referral_bonus",
+        "withdrawal",
+        "purchase",
+      ],
+    },
   },
 } as const
