@@ -3,6 +3,7 @@
   --primary:#3b82f6; --primary-contrast:#ffffff;
   --radius:12px; --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px;
   --font-size-sm:0.875rem; --font-size-md:1rem; --font-size-lg:1.125rem; --font-size-xl:1.25rem;
+  --code-bg: #0e0e11; --code-inline-bg: #1a1a1f; --code-border: #2a2a2f; --code-text: #f8fafc; --code-shadow: rgba(0,0,0,.2);
 }
 *{box-sizing:border-box}
 html,body,#root{height:100%}
@@ -11,3 +12,39 @@ body{margin:0;background:var(--bg);color:var(--text);font-feature-settings:'ss01
 .btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:10px 14px;border-radius:var(--radius)}
 .btn-primary{background:var(--primary);color:var(--primary-contrast)}
 .muted{color:var(--muted)}
+
+pre, code, kbd, samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+               "Liberation Mono", "Courier New", monospace;
+}
+/* Block code */
+pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border: 1px solid var(--code-border);
+  border-radius: calc(var(--radius) - 2px);
+  padding: var(--space-4);
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+  box-shadow: 0 1px 0 var(--code-shadow) inset;
+}
+/* Inline code */
+code {
+  background: var(--code-inline-bg);
+  color: var(--code-text);
+  padding: 0 .3em;
+  border-radius: 6px;
+}
+/* Avoid double styling inside blocks */
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+/* Optional: if a highlighter is present, ensure readability */
+.token.comment, .token.prolog, .token.doctype, .token.cdata { color:#9aa1aa; }
+.token.punctuation { color:#cbd5e1; }
+.token.string { color:#86efac; }
+.token.keyword { color:#93c5fd; }
+.token.function { color:#fca5a5; }
