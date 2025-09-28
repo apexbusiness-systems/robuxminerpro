@@ -42,7 +42,7 @@ const Home = () => {
       </section>
 
       {/* Features Preview */}
-      <section className="bg-background" style={{ paddingTop: 'var(--space-6)', paddingBottom: 'var(--space-6)' }}>
+      <section className="bg-background defer" style={{ paddingTop: 'var(--space-6)', paddingBottom: 'var(--space-6)' }}>
         <div className="container mx-auto px-4">
           <div className="text-center" style={{ marginBottom: 'var(--space-6)' }}>
             <h2 className="font-bold" style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-4)' }}>Why Choose RobuxMiner?</h2>
@@ -92,7 +92,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-muted/50" style={{ paddingTop: 'var(--space-6)', paddingBottom: 'var(--space-6)' }}>
+      <section className="bg-muted/50 defer" style={{ paddingTop: 'var(--space-6)', paddingBottom: 'var(--space-6)' }}>
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-bold" style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-6)' }}>
