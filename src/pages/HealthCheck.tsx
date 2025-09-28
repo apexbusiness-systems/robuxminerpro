@@ -1,43 +1,10 @@
-import { useEffect, useState } from 'react';
-
-interface HealthStatus {
-  status: 'ok' | 'error';
-  name: string;
-  time: string;
-}
-
 const HealthCheck = () => {
-  const [healthData, setHealthData] = useState<HealthStatus | null>(null);
+  const healthData = {
+    status: 'ok',
+    name: 'robuxminer', 
+    time: new Date().toISOString()
+  };
 
-  useEffect(() => {
-    const generateHealthData = (): HealthStatus => {
-      return {
-        status: 'ok',
-        name: 'robuxminer',
-        time: new Date().toISOString()
-      };
-    };
-
-    setHealthData(generateHealthData());
-
-    // Update every 30 seconds
-    const interval = setInterval(() => {
-      setHealthData(generateHealthData());
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  if (!healthData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading health status...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">

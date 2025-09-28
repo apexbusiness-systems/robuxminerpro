@@ -6,12 +6,11 @@ Closes #
 ## Release intent
 Planned version bump: ☐ patch  ☐ minor  ☐ none  (pre-GA v0.y.z; GA → v1.0.0)
 
-## Launch Gates (advisory)
-- [ ] DoD met (tests/docs/UX as applicable)
-- [ ] Lighthouse summary attached (Perf/Best/SEO)
-- [ ] PWA installable (if applicable)
-- [ ] A11y spot-check per WCAG/ARIA
-- [ ] Project card → **In Review**
+## Launch Gates (attach evidence)
+- [ ] Lighthouse (Perf/Best/SEO ≥90) — screenshot/JSON
+- [ ] A11y spot-check (focus order, labels, contrast)
+- [ ] QA smoke (curl + clickthrough, no console errors)
+- [ ] Project card → In Review
 
 ## Release notes (draft)
 - Highlights:
