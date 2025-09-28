@@ -1,0 +1,16 @@
+name: "Release prep"
+description: "Prepare a tagged release"
+labels: ["release"]
+body:
+  - type: input
+    id: version
+    attributes: { label: "Version (SemVer)", placeholder: "v0.2.0" }
+  - type: textarea
+    id: scope
+    attributes: { label: "Scope & risks" }
+  - type: textarea
+    id: rollback
+    attributes: { label: "Rollback plan" }
+  - type: textarea
+    id: smoke
+    attributes: { label: "Smoke steps & URLs" }
