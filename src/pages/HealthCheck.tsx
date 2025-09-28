@@ -1,7 +1,7 @@
 const HealthCheck = () => {
   const healthData = {
     status: 'ok',
-    name: 'robuxminer', 
+    name: 'robuxminerpro', 
     time: new Date().toISOString()
   };
 

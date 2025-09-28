@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* RobuxMiner Design System - Clean, minimal gaming-tech aesthetic */
+/* RobuxMinerPro Design System - Clean, minimal gaming-tech aesthetic */
 
 @layer base {
   :root {
@@ -18,7 +18,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 15%;
 
-    /* Brand colors - RobuxMiner blue theme */
+    /* Brand colors - RobuxMinerPro purple theme */
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 217 91% 70%;
@@ -76,7 +76,7 @@
   }
 
   .dark {
-    /* Dark theme for RobuxMiner */
+    /* Dark theme for RobuxMinerPro */
     --background: 220 15% 8%;
     --foreground: 220 15% 95%;
 

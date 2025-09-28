@@ -65,7 +65,7 @@ const Features = () => {
             Powerful Features
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-slide-up">
-            Discover the advanced features that make RobuxMiner the most efficient and reliable mining platform available today.
+            Discover the advanced features that make RobuxMinerPro the most efficient and reliable mining platform available today.
           </p>
         </div>
 

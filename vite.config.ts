@@ -20,8 +20,8 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}']
       },
       manifest: {
-        name: 'RobuxMiner',
-        short_name: 'RobuxMiner',
+        name: 'RobuxMinerPro',
+        short_name: 'RobuxMinerPro',
         description: 'Fast. Simple. Always on.',
         theme_color: '#3b82f6',
         background_color: '#ffffff',

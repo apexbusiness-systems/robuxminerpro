@@ -15,16 +15,16 @@ const Terms = () => {
           <section className="animate-slide-up">
             <h2 className="text-2xl font-bold mb-4">1. Acceptance of Terms</h2>
             <p className="text-muted-foreground">
-              By accessing and using RobuxMiner services, you accept and agree to be bound by 
+              By accessing and using RobuxMinerPro services, you accept and agree to be bound by 
               the terms and provision of this agreement. These Terms of Service constitute a 
-              legally binding agreement between you and RobuxMiner.
+              legally binding agreement between you and RobuxMinerPro.
             </p>
           </section>
 
           <section className="animate-slide-up">
             <h2 className="text-2xl font-bold mb-4">2. Description of Service</h2>
             <p className="text-muted-foreground mb-4">
-              RobuxMiner provides a platform for Robux mining services. Our service includes:
+              RobuxMinerPro provides a platform for Robux mining services. Our service includes:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
               <li>Access to mining algorithms and tools</li>
@@ -87,7 +87,7 @@ const Terms = () => {
           <section className="animate-slide-up">
             <h2 className="text-2xl font-bold mb-4">7. Intellectual Property</h2>
             <p className="text-muted-foreground">
-              All content, features, and functionality of RobuxMiner are owned by us and are 
+              All content, features, and functionality of RobuxMinerPro are owned by us and are 
               protected by international copyright, trademark, and other intellectual property laws. 
               You may not copy, modify, or distribute our content without permission.
             </p>
@@ -96,7 +96,7 @@ const Terms = () => {
           <section className="animate-slide-up">
             <h2 className="text-2xl font-bold mb-4">8. Limitation of Liability</h2>
             <p className="text-muted-foreground">
-              RobuxMiner shall not be liable for any indirect, incidental, special, consequential, 
+              RobuxMinerPro shall not be liable for any indirect, incidental, special, consequential, 
               or punitive damages resulting from your use of our service. Our total liability 
               shall not exceed the amount paid by you for the service during the twelve months 
               preceding the claim.
@@ -129,7 +129,7 @@ const Terms = () => {
             <div className="bg-muted/50 rounded-lg p-6">
               <p className="text-muted-foreground">
                 <strong>Email:</strong> legal@robuxminer.pro<br />
-                <strong>Address:</strong> RobuxMiner Legal Department<br />
+                <strong>Address:</strong> RobuxMinerPro Legal Department<br />
                 123 Tech Street, Digital City, DC 12345
               </p>
             </div>

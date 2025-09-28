@@ -32,7 +32,7 @@ const Privacy = () => {
               We use the information we collect to provide, maintain, and improve our services:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li>To provide and operate the RobuxMiner service</li>
+              <li>To provide and operate the RobuxMinerPro service</li>
               <li>To process transactions and send related information</li>
               <li>To send technical notices and support messages</li>
               <li>To communicate with you about products, services, and events</li>
@@ -113,7 +113,7 @@ const Privacy = () => {
             <div className="bg-muted/50 rounded-lg p-6">
               <p className="text-muted-foreground">
                 <strong>Email:</strong> privacy@robuxminer.pro<br />
-                <strong>Address:</strong> RobuxMiner Privacy Team<br />
+                <strong>Address:</strong> RobuxMinerPro Privacy Team<br />
                 123 Tech Street, Digital City, DC 12345
               </p>
             </div>

@@ -10,7 +10,7 @@ const Footer = () => {
               <div className="w-6 h-6 bg-primary rounded-md flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-sm">R</span>
               </div>
-              <span className="text-lg font-bold">RobuxMiner</span>
+              <span className="text-lg font-bold">RobuxMinerPro</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Fast. Simple. Always on.
@@ -79,7 +79,7 @@ const Footer = () => {
         <div className="mt-8 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-muted-foreground">
-              © 2024 RobuxMiner. All rights reserved.
+              © 2024 RobuxMinerPro. All rights reserved.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
