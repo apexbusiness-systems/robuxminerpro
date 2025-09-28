@@ -10,12 +10,13 @@ const Footer = () => {
             <div className="flex items-center space-x-3">
               <img 
                 src={roboLogo} 
-                alt="ROBOMiner Pro" 
+                alt="RobuxMiner.Pro" 
                 className="w-8 h-8 rounded-lg"
               />
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-gradient">ROBOMiner</span>
-                <span className="text-xs text-muted-foreground -mt-1 font-medium">PRO</span>
+                <span className="text-lg font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                  RobuxMiner.Pro
+                </span>
               </div>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
@@ -104,7 +105,7 @@ const Footer = () => {
         <div className="mt-12 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-muted-foreground">
-              © 2024 ROBOMiner Pro. All rights reserved.
+              © 2024 RobuxMiner.Pro. All rights reserved.
             </p>
             <div className="flex items-center space-x-6">
               <div className="flex space-x-4">
