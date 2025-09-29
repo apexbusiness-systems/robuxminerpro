@@ -94,7 +94,7 @@ export function ChatDock({ isOpen, onClose }: ChatDockProps) {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about strategies..."
+              placeholder="Ask me for safe Robux tips."
               className="flex-1 px-3 py-2 border rounded bg-input text-foreground"
               aria-label="Chat message input"
             />

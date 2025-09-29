@@ -20,7 +20,7 @@ const Home = () => {
         <div className="container mx-auto px-4 text-center">
           <h1 className="hero-title">RobuxMinerPro</h1>
           <p className="hero-tagline">
-            Fast, minimal, launch-ready.
+            Fast, simple, ready to launch.
           </p>
         </div>
       </section>
@@ -31,7 +31,7 @@ const Home = () => {
           <div className="text-center" style={{ marginBottom: 'var(--space-6)' }}>
             <h2 className="font-bold" style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-4)' }}>Why Choose RobuxMinerPro?</h2>
             <p className="muted max-w-2xl mx-auto" style={{ fontSize: 'var(--font-size-md)' }}>
-              Built for performance, designed for simplicity, optimized for results.
+              Fast to run. Safe and steady. Works online, anytime.
             </p>
           </div>
 
@@ -42,9 +42,9 @@ const Home = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold">Lightning Fast</h3>
+              <h3 className="text-xl font-semibold">Fast to Run</h3>
               <p className="text-muted-foreground">
-                Optimized algorithms ensure maximum mining speed and efficiency.
+                Quick setup and faster processing for better results.
               </p>
             </div>
 
@@ -54,9 +54,9 @@ const Home = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold">100% Reliable</h3>
+              <h3 className="text-xl font-semibold">Safe and Steady</h3>
               <p className="text-muted-foreground">
-                99.9% uptime guarantee with redundant systems and failover protection.
+                Secure platform with 99.9% uptime. Your data stays protected.
               </p>
             </div>
 
@@ -66,9 +66,9 @@ const Home = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold">Secure & Safe</h3>
+              <h3 className="text-xl font-semibold">Works Online, Anytime</h3>
               <p className="text-muted-foreground">
-                Enterprise-grade security with encrypted connections and data protection.
+                Access from anywhere with internet. No downloads needed.
               </p>
             </div>
           </div>
@@ -80,14 +80,19 @@ const Home = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-bold" style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-6)' }}>
-              Ready to Start Mining?
+              Ready to start mining?
             </h2>
             <p className="muted" style={{ fontSize: 'var(--font-size-md)', marginBottom: 'var(--space-6)' }}>
-              Join thousands of satisfied users who trust RobuxMinerPro for their mining needs.
+              Join thousands who trust RobuxMinerPro for safe mining.
             </p>
-            <button className="primary-button inline-flex items-center justify-center rounded-md text-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-12 px-8 py-3 glow-effect">
-              Get Started Today
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="primary-button inline-flex items-center justify-center rounded-md text-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-12 px-8 py-3 glow-effect">
+                Start mining
+              </button>
+              <button className="inline-flex items-center justify-center rounded-md text-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-primary text-primary hover:bg-primary hover:text-primary-foreground h-12 px-8 py-3">
+                View features
+              </button>
+            </div>
           </div>
         </div>
       </section>

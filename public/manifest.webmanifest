@@ -1,12 +1,12 @@
 {
   "name": "RobuxMinerPro",
   "short_name": "RobuxMinerPro",
-  "description": "Fast. Simple. Always on.",
+  "description": "Fast, simple, ready to launch.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "theme_color": "#3B82F6",
   "orientation": "portrait-primary",
   "icons": [
     {

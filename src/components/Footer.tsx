@@ -16,7 +16,7 @@ const Footer = () => {
               />
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
-              The most advanced and reliable Robux mining platform. Fast processing, simple interface, always online.
+              Fast mining platform. Simple interface. Always online.
             </p>
             <div className="flex space-x-3">
               <div className="w-2 h-2 bg-primary rounded-full pulse-glow"></div>
