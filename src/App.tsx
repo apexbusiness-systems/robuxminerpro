@@ -7,7 +7,7 @@ import { lazy, Suspense, useState } from "react";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { ChatDock } from "@/shared/ChatDock";
+import ChatDock from "@/shared/ChatDock";
 import { Button } from "@/components/ui/button";
 
 // Lazy load existing pages
@@ -95,7 +95,7 @@ const App = () => {
               <Footer />
               
               {/* ChatDock Portal */}
-              <ChatDock isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+              <ChatDock open={isChatOpen} onClose={() => setIsChatOpen(false)} />
             </div>
           </BrowserRouter>
         </ErrorBoundary>

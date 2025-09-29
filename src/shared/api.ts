@@ -1,26 +1,28 @@
-import { API_BASE } from './config';
+type AnyObj = Record<string,unknown>;
+const STUBS: Record<string,unknown> = {
+  "/earnings/session/active": { balance:0, perMinute:0, elapsed:"00:00:00" },
+  "/earnings/streak": { days:0 },
+  "/earnings/milestones": [],
+  "/ai/recommendations": ["Create & sell UGC items","Increase session time safely"],
+  "/squads/top": [],
+  "/user/squad": null,
+  "/achievements/user": [],
+  "/learning-paths": [],
+  "/learning-paths/user-progress": []
+};
 
-export async function get(path: string) {
-  try {
-    const res = await fetch(API_BASE + path, {
-      headers: { accept: 'application/json' }
-    });
-    if (res.status === 404) return stub(path);
-    if (res.status === 204) return null;
-    return await res.json().catch(() => ({}));
-  } catch {
+export async function get(path: string): Promise<any>{
+  try{
+    const res = await fetch(path, { headers: { accept:"application/json" }});
+    if(res.status===204) return null;
+    if(res.status===404) return stub(path);
+    return await res.json().catch(()=> ({}));
+  }catch{
     return stub(path);
   }
 }
 
-function stub(path: string) {
-  if (path.includes('/earnings/session/active')) return { balance: 0, perMinute: 0, elapsed: '00:00:00' };
-  if (path.includes('/earnings/streak')) return { days: 0 };
-  if (path.includes('/earnings/milestones')) return [];
-  if (path.includes('/ai/recommendations')) return ['Create & sell UGC', 'Optimize sessions safely'];
-  if (path.includes('/squads')) return [];
-  if (path.includes('/achievements')) return [];
-  if (path.includes('/learning-paths')) return [];
-  if (path.includes('/events')) return [];
-  return {};
+function stub(path:string): any{
+  const key = Object.keys(STUBS).find(k=> path.includes(k));
+  return key ? STUBS[key] : {};
 }

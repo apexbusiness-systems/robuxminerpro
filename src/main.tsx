@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
 import { Suspense, useEffect, useState, lazy } from "react";
 import "./index.css";
 import "./styles/tokens.css";
-import { ChatDock } from "./shared/ChatDock";
+import ChatDock from "./shared/ChatDock";
 import Footer from "./components/Footer";
 
 // Dev guardrails
@@ -39,8 +39,8 @@ function AppShell(){
       <a className="skip-link" href="#main">Skip to content</a>
       
       <header className="app-header">
-        <div className="app-header__inner">
-          <Link to="/" className="brand">RobuxMinerPro</Link>
+        <div className="app-header__inner container">
+          <Link to="/" className="brand" aria-label="Home">RobuxMinerPro</Link>
 
           <nav className="nav" aria-label="Main navigation">
             <NavLink to="/" className={navClass} end>Dashboard</NavLink>
@@ -51,17 +51,11 @@ function AppShell(){
             <NavLink to="/payments" className={navClass}>Payments</NavLink>
           </nav>
 
-          <button className="cta-mentor primary-button" onClick={()=>setOpen(true)} aria-label="Ask Robux Mentor" title="Ask Robux Mentor (M)">
-            {/* sparkle icon (inline SVG, no deps) */}
-            <svg className="sparkle" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 3l2.2 4.6L19 9.8l-4.3 2.1L12 17l-2.7-5.1L5 9.8l4.8-.2L12 3z" fill="currentColor" opacity=".95"/>
-            </svg>
-            <span>Ask Robux Mentor</span>
-          </button>
+          <button className="cta-mentor" onClick={()=>setOpen(true)} aria-label="Ask Robux Mentor" title="Ask Robux Mentor (M)">Ask Robux Mentor</button>
         </div>
       </header>
 
-      <main id="main" className="surface" style={{padding:16}}>
+      <main id="main" className="surface container" style={{padding:"16px 0"}}>
         <Suspense fallback={<p className="muted">Loading…</p>}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -84,7 +78,7 @@ function AppShell(){
 
       <Footer />
 
-      <ChatDock isOpen={open} onClose={()=>setOpen(false)} />
+      <ChatDock open={open} onClose={()=>setOpen(false)} />
     </>
   );
 }
