@@ -10,9 +10,9 @@ const Footer = () => {
               <img 
                 src="/official_logo.png" 
                 alt="RobuxMinerPro logo" 
-                width="105" 
-                height="24"
-                className="h-8"
+                width="84" 
+                height="19"
+                className="h-5"
               />
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
