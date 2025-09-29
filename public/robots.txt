@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://robuxminer.pro/sitemap.xml
+Sitemap: https://www.robuxminer.pro/sitemap.xml

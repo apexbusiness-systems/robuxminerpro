@@ -10,7 +10,8 @@ Planned version bump: ☐ patch  ☐ minor  ☐ none  (pre-GA v0.y.z; GA → v1.
 - [ ] Lighthouse (Perf/Best/SEO ≥90) — screenshot/JSON
 - [ ] A11y spot-check (focus order, labels, contrast)
 - [ ] QA smoke (curl + clickthrough, no console errors)
-- [ ] Project card → In Review
+- [ ] Robots/Sitemap 200 on custom domain
+- [ ] Security headers screenshot (CSP + nosniff + Referrer-Policy)
 
 ## Release notes (draft)
 - Highlights:
