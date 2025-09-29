@@ -5,6 +5,11 @@ import "./index.css";
 import "./styles/tokens.css";
 import { ChatDock } from "./shared/ChatDock";
 
+// Dev guardrails
+if (import.meta.env.DEV) {
+  import('./dev/guardrails').then(m => m.runGuardrails());
+}
+
 // Lazy load pages
 const Home = lazy(() => import("./pages/Home"));
 const Squads = lazy(() => import("./pages/Squads"));

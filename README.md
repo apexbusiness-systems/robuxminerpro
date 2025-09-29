@@ -71,3 +71,16 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Release Snapshot (Authoritative)
+
+Before publish, confirm:
+
+- **SPA fallback** (deep routes return 200)
+- **Lighthouse ≥90** Performance/Best/SEO (attach JSON/screenshot)
+- **/robots.txt and /sitemap.xml** return 200
+- **Security headers** screenshot (CSP, nosniff, Referrer-Policy)
+
+(Per Google, robots.txt must live at the site root; one per host.)
+
+(robots.txt placement per [Google Search Central](https://developers.google.com/search/docs/crawling-indexing/robots/intro).)
