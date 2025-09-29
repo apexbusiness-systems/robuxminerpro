@@ -14,14 +14,14 @@ function assertAssets(){
   const badImgs = Array.from(document.querySelectorAll('img'))
     .filter(img=>{
       const s=(img.getAttribute('src')||'').toLowerCase();
-      return (s.includes('logo')||s.includes('icon')) && !s.endsWith('/assets/official_logo.svg') && !s.endsWith('/assets/app_icon.svg');
+      return (s.includes('logo')||s.includes('icon')) && !s.endsWith('/official_logo.png') && !s.endsWith('/app_icon.png');
     });
   if(badImgs.length){
     console.error('Non-canonical logo/icon detected:', badImgs.map(i=>i.getAttribute('src')));
-    throw new Error('Brand guardrail tripped: replace with src/assets/official_logo.svg or src/assets/app_icon.svg');
+    throw new Error('Brand guardrail tripped: replace with /official_logo.png or /app_icon.png');
   }
   const badLinks = Array.from(document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]'))
-    .filter(l=>!/(official_logo.svg|app_icon.svg)/.test(l.getAttribute('href')||''));
+    .filter(l=>!/(official_logo.png|app_icon.png)/.test(l.getAttribute('href')||''));
   if(badLinks.length){
     console.error('Non-canonical favicons detected:', badLinks.map(l=>l.getAttribute('href')));
   }
