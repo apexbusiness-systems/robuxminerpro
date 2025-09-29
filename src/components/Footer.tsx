@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import roboLogo from '@/assets/robominer-logo.png';
 
 const Footer = () => {
   return (
@@ -9,15 +8,12 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <img 
-                src={roboLogo} 
-                alt="RobuxMiner.Pro" 
-                className="w-8 h-8 rounded-lg"
+                src="/official_logo.svg" 
+                alt="RobuxMinerPro logo" 
+                width="140" 
+                height="32"
+                className="h-8"
               />
-              <div className="flex flex-col">
-                <span className="text-lg font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                  RobuxMiner.Pro
-                </span>
-              </div>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
               The most advanced and reliable Robux mining platform. Fast processing, simple interface, always online.
