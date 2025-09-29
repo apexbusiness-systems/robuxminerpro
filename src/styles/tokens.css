@@ -1,6 +1,8 @@
 :root{
-  --bg: #0b0b0c; --surface:#121214; --text:#f4f4f5; --muted:#a1a1aa;
-  --primary:#3b82f6; --primary-contrast:#ffffff;
+  --bg:#0E1A24; --surface:#132430; --text:#EAF2F7; --muted:#9FB2BF;
+  --primary:#FF5EA8; --primary-contrast:#0E1A24;
+  --accent:#F5C542;
+  --brand-grad:linear-gradient(90deg,#FF5EA8,#F5C542);
   --radius:12px; --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px;
   --font-size-sm:0.875rem; --font-size-md:1rem; --font-size-lg:1.125rem; --font-size-xl:1.25rem;
   --code-bg: #0e0e11; --code-inline-bg: #1a1a1f; --code-border: #2a2a2f; --code-text: #f8fafc; --code-shadow: rgba(0,0,0,.2);
@@ -11,7 +13,7 @@ body{margin:0;background:var(--bg);color:var(--text)}
 .container{max-width:1100px;margin:0 auto;padding:0 16px}
 .surface{background:var(--surface);border-radius:var(--radius)}
 .btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:10px 14px;border-radius:var(--radius)}
-.btn-primary{background:var(--primary);color:var(--primary-contrast)}
+.btn-primary{background:var(--brand-grad);color:#0E1A24;font-weight:700}
 .muted{color:var(--muted)}
 
 pre, code, kbd, samp {
@@ -70,8 +72,8 @@ pre code {
 .app-header__inner{display:flex;align-items:center;gap:16px;padding:10px 0}
 .brand{
   font-weight:800; letter-spacing:.2px; margin-right:8px;
-  background:linear-gradient(90deg,var(--brand-start),var(--brand-end));
   -webkit-background-clip:text; background-clip:text; color:transparent;
+  background:var(--brand-grad);
 }
 .nav{
   display:flex; gap:14px; align-items:center;
@@ -82,7 +84,7 @@ pre code {
 .nav-link:hover,.nav-link:focus-visible{ color:var(--text); background:var(--glass); outline:0; }
 .nav-link.active{ color:#fff; background:linear-gradient(90deg,rgba(124,58,237,.18),rgba(59,130,246,.18)); }
 
-.cta-mentor{margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--glass-border);background:linear-gradient(90deg,var(--brand-start),var(--brand-end));color:#fff;font-weight:700;box-shadow:0 6px 24px rgba(59,130,246,.28)}
+.cta-mentor{margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--glass-border);background:var(--brand-grad);color:#0E1A24;font-weight:700;box-shadow:0 6px 24px rgba(255,94,168,.28)}
 .cta-mentor:hover,.cta-mentor:focus-visible{filter:brightness(1.05);outline:0}
 
 /* modal */
