@@ -8,7 +8,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <img 
-                src="/official_logo.svg" 
+                src="/official_logo.png" 
                 alt="RobuxMinerPro logo" 
                 width="140" 
                 height="32"
