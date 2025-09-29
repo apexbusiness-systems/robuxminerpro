@@ -1,7 +1,8 @@
 import { createPortal } from 'react-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface ChatDockProps {
   isOpen: boolean;
@@ -11,6 +12,24 @@ interface ChatDockProps {
 export function ChatDock({ isOpen, onClose }: ChatDockProps) {
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
   const [input, setInput] = useState('');
+  const dialogRef = useFocusTrap(isOpen);
+
+  // Handle ESC key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen, onClose]);
 
   const handleSafety = (message: string): string | null => {
     const forbidden = ['free robux', 'robux generator', 'free membership', 'hack', 'cheat'];
@@ -48,17 +67,23 @@ export function ChatDock({ isOpen, onClose }: ChatDockProps) {
 
   return createPortal(
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-end p-4">
-      <div className="bg-card border rounded-lg w-96 h-96 flex flex-col shadow-xl">
+      <div 
+        ref={dialogRef}
+        role="dialog" 
+        aria-modal="true" 
+        aria-labelledby="chat-title"
+        className="chat-widget border rounded-lg w-96 h-96 flex flex-col shadow-xl"
+      >
         <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="font-semibold">AI Strategy Assistant</h3>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <h2 id="chat-title" className="font-semibold">AI Strategy Assistant</h2>
+          <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close chat">
             <X className="h-4 w-4" />
           </Button>
         </div>
         
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
           {messages.map((msg, i) => (
-            <div key={i} className={`p-2 rounded ${msg.role === 'user' ? 'bg-primary text-primary-foreground ml-8' : 'bg-muted mr-8'}`}>
+            <div key={i} className={`p-2 rounded ${msg.role === 'user' ? 'primary-button ml-8' : 'bg-muted mr-8'}`}>
               {msg.content}
             </div>
           ))}
@@ -70,9 +95,10 @@ export function ChatDock({ isOpen, onClose }: ChatDockProps) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about strategies..."
-              className="flex-1 px-3 py-2 border rounded"
+              className="flex-1 px-3 py-2 border rounded bg-input text-foreground"
+              aria-label="Chat message input"
             />
-            <Button type="submit">Send</Button>
+            <Button type="submit" className="primary-button">Send</Button>
           </div>
         </form>
       </div>

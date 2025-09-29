@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState, lazy } from "react";
 import "./index.css";
 import "./styles/tokens.css";
 import { ChatDock } from "./shared/ChatDock";
+import Footer from "./components/Footer";
 
 // Dev guardrails
 if (import.meta.env.DEV) {
@@ -35,11 +36,13 @@ function AppShell(){
 
   return (
     <>
+      <a className="skip-link" href="#main">Skip to content</a>
+      
       <header className="app-header">
         <div className="app-header__inner">
           <Link to="/" className="brand">RobuxMinerPro</Link>
 
-          <nav className="nav" aria-label="Main">
+          <nav className="nav" aria-label="Main navigation">
             <NavLink to="/" className={navClass} end>Dashboard</NavLink>
             <NavLink to="/squads" className={navClass}>Squads</NavLink>
             <NavLink to="/achievements" className={navClass}>Achievements</NavLink>
@@ -48,7 +51,7 @@ function AppShell(){
             <NavLink to="/payments" className={navClass}>Payments</NavLink>
           </nav>
 
-          <button className="cta-mentor" onClick={()=>setOpen(true)} aria-label="Ask Robux Mentor" title="Ask Robux Mentor (M)">
+          <button className="cta-mentor primary-button" onClick={()=>setOpen(true)} aria-label="Ask Robux Mentor" title="Ask Robux Mentor (M)">
             {/* sparkle icon (inline SVG, no deps) */}
             <svg className="sparkle" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 3l2.2 4.6L19 9.8l-4.3 2.1L12 17l-2.7-5.1L5 9.8l4.8-.2L12 3z" fill="currentColor" opacity=".95"/>
@@ -72,12 +75,14 @@ function AppShell(){
       </main>
 
       {/* Mobile FAB (optional; keep both) */}
-      <button className="mentor-fab" aria-label="Ask Robux Mentor" onClick={()=>setOpen(true)}>
+      <button className="mentor-fab primary-button" aria-label="Ask Robux Mentor" onClick={()=>setOpen(true)}>
         {/* chat bubble icon */}
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M4 5a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H9l-5 5V5z" stroke="currentColor" strokeWidth="2" />
         </svg>
       </button>
+
+      <Footer />
 
       <ChatDock isOpen={open} onClose={()=>setOpen(false)} />
     </>

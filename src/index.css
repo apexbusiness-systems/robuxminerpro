@@ -5,6 +5,17 @@
 /* RobuxMinerPro Design System - Clean, minimal gaming-tech aesthetic */
 
 @layer base {
+  /* WCAG 2.1 AA Contrast Design Tokens */
+  :root {
+    --bg: #0B0B0C;
+    --surface: #111218;
+    --surface-contrast: #FFFFFF;
+    --text: #EDEFF2;
+    --muted: #B7BFC7;
+    --primary: #3B82F6; /* links/buttons */
+    --on-primary: #FFFFFF;
+    --focus: #FFD166; /* focus ring */
+  }
   :root {
     /* Core theme colors */
     --background: 0 0% 98%;
@@ -288,5 +299,51 @@
     to {
       box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 40px hsl(var(--primary) / 0.1);
     }
+  }
+
+  /* WCAG Focus Management */
+  *:focus-visible { 
+    outline: 3px solid var(--focus); 
+    outline-offset: 2px; 
+  }
+
+  /* Skip Link */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--surface-contrast);
+    color: var(--bg);
+    padding: 8px;
+    text-decoration: none;
+    z-index: 1000;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .skip-link:focus {
+    top: 6px;
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* High Contrast Surface Applications */
+  .hero-overlay {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .chat-widget {
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .primary-button {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+
+  .primary-button:hover {
+    background: hsl(from var(--primary) h s calc(l * 0.9));
   }
 }
