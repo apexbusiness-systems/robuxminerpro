@@ -1,6 +1,6 @@
 :root{
-  --bg: #0b0b0c; --surface:#121214; --text:#f4f4f5; --muted:#a1a1aa;
-  --primary:#3b82f6; --primary-contrast:#ffffff;
+  --bg: #0E1A24; --surface:#132430; --text:#EAF2F7; --muted:#9FB2BF;
+  --primary:#FF5EA8; --primary-contrast:#0E1A24;
   --radius:12px; --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px;
   --font-size-sm:0.875rem; --font-size-md:1rem; --font-size-lg:1.125rem; --font-size-xl:1.25rem;
   --code-bg: #0e0e11; --code-inline-bg: #1a1a1f; --code-border: #2a2a2f; --code-text: #f8fafc; --code-shadow: rgba(0,0,0,.2);
@@ -61,8 +61,8 @@ pre code {
 
 /* === Header refresh === */
 :root{
-  --brand-start:#7c3aed;
-  --brand-end:#3b82f6;
+  --brand-start:#FF5EA8;
+  --brand-end:#F5C542;
   --glass:rgba(255,255,255,.06);
   --glass-border:rgba(255,255,255,.12);
 }
