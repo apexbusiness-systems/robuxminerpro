@@ -41,7 +41,7 @@ function AppShell(){
       <header className="app-header">
         <div className="app-header__inner container">
           <Link to="/" className="brand" aria-label="Home">
-            <img src="/official_logo.png" alt="RobuxMinerPro" height="0" style={{ display: 'none' }} />
+            <img src="/official_logo.png" alt="RobuxMinerPro" height="19" />
           </Link>
 
           <nav className="nav" aria-label="Main navigation">
