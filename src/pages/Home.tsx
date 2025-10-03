@@ -2,304 +2,201 @@ import { useState, useEffect, useRef } from 'react';
 import '../styles/landing.css';
 
 const Home = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
-  const [ctaDismissed, setCtaDismissed] = useState(false);
-  const [earningStat, setEarningStat] = useState(0);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const [ctaDismissed, setCtaDismissed] = useState(() => 
+    sessionStorage.getItem('rmp_cta_dismissed') === '1'
+  );
+  const progressRef = useRef<HTMLDivElement | null>(null);
 
+  // Scroll progress + sticky CTA threshold
   useEffect(() => {
-    const dismissed = sessionStorage.getItem('cta-dismissed');
-    if (dismissed) setCtaDismissed(true);
-
     const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (scrolled / docHeight) * 100;
-      setScrollProgress(Math.min(progress, 100));
-      setShowStickyCTA(scrolled > window.innerHeight * 0.4);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    document.querySelectorAll('.quest, .achievement-badge, .testimonial-card, .faq-item').forEach((el) => {
-      observerRef.current?.observe(el);
-    });
-
-    return () => observerRef.current?.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const target = 2547;
-    let current = 0;
-    const increment = target / 60;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setEarningStat(target);
-        clearInterval(timer);
-      } else {
-        setEarningStat(Math.floor(current));
+      const doc = document.documentElement;
+      const max = (doc.scrollHeight - doc.clientHeight) || 1;
+      const pct = Math.min(100, Math.max(0, (window.scrollY / max) * 100));
+      
+      if (progressRef.current) {
+        progressRef.current.style.setProperty('--pct', String(pct));
       }
-    }, 30);
-    return () => clearInterval(timer);
+      
+      setShowStickyCTA(!ctaDismissed && pct > 40);
+    };
+    
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [ctaDismissed]);
+
+  // Reveal-on-view
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll('.reveal'));
+    if (!('IntersectionObserver' in window) || !els.length) return;
+    
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('in');
+      });
+    }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+    
+    els.forEach(el => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  // Count-up for metrics
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
+    
+    const animate = (el: HTMLElement) => {
+      const target = Number(el.dataset.count || 0);
+      const dur = 900;
+      const start = performance.now();
+      
+      const step = (t: number) => {
+        const p = Math.min(1, (t - start) / dur);
+        el.textContent = Math.round(target * (0.08 + 0.92 * p)).toLocaleString();
+        if (p < 1) requestAnimationFrame(step);
+      };
+      
+      requestAnimationFrame(step);
+    };
+    
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          animate(e.target as HTMLElement);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    
+    els.forEach(el => io.observe(el));
+    return () => io.disconnect();
   }, []);
 
   const handleDismissCTA = () => {
     setCtaDismissed(true);
-    sessionStorage.setItem('cta-dismissed', 'true');
+    sessionStorage.setItem('rmp_cta_dismissed', '1');
   };
 
   return (
-    <div className="scrollytelling-container">
-      {/* Scroll Progress */}
-      <div className="scroll-progress-container" aria-label="Reading progress">
-        <svg className="scroll-progress-ring" width="40" height="40">
-          <circle
-            className="scroll-progress-bg"
-            cx="20"
-            cy="20"
-            r="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            opacity="0.2"
-          />
-          <circle
-            className="scroll-progress-bar"
-            cx="20"
-            cy="20"
-            r="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeDasharray={`${2 * Math.PI * 16}`}
-            strokeDashoffset={`${2 * Math.PI * 16 * (1 - scrollProgress / 100)}`}
-            transform="rotate(-90 20 20)"
-            aria-valuenow={Math.round(scrollProgress)}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          />
-        </svg>
-      </div>
+    <>
+      {/* Progress ring */}
+      <div className="progress-ring" ref={progressRef} aria-hidden="true" />
 
-      {/* Hero Section */}
-      <section className="hero">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="hero-headline">Your Quest to Earn Robux Begins Here</h1>
-          <p className="hero-subhead">
-            Fast, simple, ready to launch. Join thousands mining safely every day.
-          </p>
-          <button className="cta-primary">Start Quest</button>
+      {/* HERO */}
+      <section className="hero reveal">
+        <h1>Level up your Robux earnings</h1>
+        <p>Simple steps. Safe strategies. Real results.</p>
+        <div className="cta-row">
+          <a className="btn-primary big" href="/auth" aria-label="Start Quest">Start Quest</a>
         </div>
       </section>
 
-      {/* Quest 1: Connect Account */}
-      <section className="quest quest-1">
-        <div className="container mx-auto px-4">
-          <div className="quest-content">
-            <span className="quest-number">Quest 1</span>
-            <h2 className="quest-title">Connect Your Account</h2>
-            <ul className="quest-benefits">
-              <li>
-                <svg className="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <span>Instant setup in under 60 seconds</span>
-              </li>
-              <li>
-                <svg className="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Bank-grade encryption protects your data</span>
-              </li>
-              <li>
-                <svg className="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                <span>Full control—disconnect anytime</span>
-              </li>
-            </ul>
+      {/* QUEST 1 */}
+      <section className="quest quest-1 reveal">
+        <h2>Quest 1 · Connect</h2>
+        <ul className="bullets">
+          <li>One account, zero hassle</li>
+          <li>Private by default</li>
+          <li>Setup in under a minute</li>
+        </ul>
+      </section>
+
+      {/* QUEST 2 */}
+      <section className="quest quest-2 reveal">
+        <h2>Quest 2 · Earn</h2>
+        <div className="stats">
+          <div className="stat">
+            <span data-count="1200" className="count" aria-label="Active earners">0</span>
+            <small>Active earners</small>
           </div>
+          <div className="stat">
+            <span data-count="98" className="count" aria-label="Success rate percent">0</span>
+            <small>% success rate</small>
+          </div>
+          <div className="stat">
+            <span data-count="7" className="count" aria-label="Days to first payout">0</span>
+            <small>days to payout</small>
+          </div>
+        </div>
+        <p className="note">No generators. Official, legit methods only.</p>
+      </section>
+
+      {/* QUEST 3 */}
+      <section className="quest quest-3 reveal">
+        <h2>Quest 3 · Withdraw</h2>
+        <div className="steps">
+          <article className="step">
+            <h3>1</h3>
+            <p>Pick a cash-out method</p>
+          </article>
+          <article className="step">
+            <h3>2</h3>
+            <p>Verify in-app</p>
+          </article>
+          <article className="step">
+            <h3>3</h3>
+            <p>Done—no surprises</p>
+          </article>
         </div>
       </section>
 
-      {/* Quest 2: Earn While You Play */}
-      <section className="quest quest-2">
-        <div className="container mx-auto px-4">
-          <div className="quest-content">
-            <span className="quest-number">Quest 2</span>
-            <h2 className="quest-title">Earn While You Play</h2>
-            <div className="stat-showcase" data-animate>
-              <div className="stat-number">{earningStat.toLocaleString()}</div>
-              <div className="stat-label">Robux earned today by our community</div>
-            </div>
-            <p className="quest-description">
-              Our automated system runs 24/7, so you earn even when you're offline.
-            </p>
-          </div>
+      {/* ACHIEVEMENTS */}
+      <section className="achievements reveal" aria-label="Achievements">
+        <h2>Achievements</h2>
+        <div className="badges">
+          <div className="badge">Starter</div>
+          <div className="badge">Streak 7</div>
+          <div className="badge">Top 10%</div>
+          <div className="badge">Speedrunner</div>
+          <div className="badge">Team Player</div>
         </div>
       </section>
 
-      {/* Quest 3: Withdraw Safely */}
-      <section className="quest quest-3">
-        <div className="container mx-auto px-4">
-          <div className="quest-content">
-            <span className="quest-number">Quest 3</span>
-            <h2 className="quest-title">Withdraw Safely</h2>
-            <div className="step-cards">
-              <div className="step-card">
-                <div className="step-number">1</div>
-                <h3 className="step-title">Request Withdrawal</h3>
-                <p className="step-description">Choose your amount and confirm</p>
-              </div>
-              <div className="step-card">
-                <div className="step-number">2</div>
-                <h3 className="step-title">Instant Processing</h3>
-                <p className="step-description">Our system verifies in seconds</p>
-              </div>
-              <div className="step-card">
-                <div className="step-number">3</div>
-                <h3 className="step-title">Receive Robux</h3>
-                <p className="step-description">Delivered to your account securely</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Achievements */}
-      <section className="achievements">
-        <div className="container mx-auto px-4">
-          <h2 className="section-title">Unlock Achievements</h2>
-          <div className="achievement-scroller">
-            <div className="achievement-badge">🏆 First Quest</div>
-            <div className="achievement-badge">⚡ Speed Miner</div>
-            <div className="achievement-badge">💎 Diamond Tier</div>
-            <div className="achievement-badge">🔥 Streak Master</div>
-            <div className="achievement-badge">🌟 Elite Member</div>
-            <div className="achievement-badge">🎯 Perfect Score</div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="social-proof">
-        <div className="container mx-auto px-4">
-          <h2 className="section-title">Trusted by Thousands</h2>
-          <div className="testimonials">
-            <div className="testimonial-card">
-              <p className="testimonial-text">"Made 5,000 Robux in my first week. Amazing!"</p>
-              <div className="testimonial-author">— Alex M.</div>
-            </div>
-            <div className="testimonial-card">
-              <p className="testimonial-text">"Super easy to use. Withdrawals are instant."</p>
-              <div className="testimonial-author">— Jamie L.</div>
-            </div>
-            <div className="testimonial-card">
-              <p className="testimonial-text">"Finally a platform that actually works."</p>
-              <div className="testimonial-author">— Taylor R.</div>
-            </div>
-            <div className="testimonial-card">
-              <p className="testimonial-text">"Been using for 3 months, never had issues."</p>
-              <div className="testimonial-author">— Morgan K.</div>
-            </div>
-            <div className="testimonial-card">
-              <p className="testimonial-text">"Customer support is top-notch!"</p>
-              <div className="testimonial-author">— Casey P.</div>
-            </div>
-            <div className="testimonial-card">
-              <p className="testimonial-text">"My friends all use it now too."</p>
-              <div className="testimonial-author">— River S.</div>
-            </div>
-          </div>
+      {/* SOCIAL PROOF */}
+      <section className="social-proof reveal">
+        <h2>Loved by players</h2>
+        <div className="cards">
+          <blockquote>"Clear steps—my first payout in a week."</blockquote>
+          <blockquote>"No hype. Just steady gains."</blockquote>
+          <blockquote>"Safer than anything I tried before."</blockquote>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="faq">
-        <div className="container mx-auto px-4">
-          <h2 className="section-title">Frequently Asked Questions</h2>
-          <div className="faq-list">
-            <details className="faq-item">
-              <summary className="faq-question">Is RobuxMinerPro safe to use?</summary>
-              <p className="faq-answer">
-                Yes, we use bank-grade encryption and never store your password. Your account stays secure.
-              </p>
-            </details>
-            <details className="faq-item">
-              <summary className="faq-question">How long does it take to earn Robux?</summary>
-              <p className="faq-answer">
-                Most users see their first earnings within 24 hours. The system runs automatically.
-              </p>
-            </details>
-            <details className="faq-item">
-              <summary className="faq-question">Are there any hidden fees?</summary>
-              <p className="faq-answer">
-                No hidden fees. What you earn is what you get. Check our pricing page for plan details.
-              </p>
-            </details>
-            <details className="faq-item">
-              <summary className="faq-question">Can I use this on mobile?</summary>
-              <p className="faq-answer">
-                Absolutely! Our platform works perfectly on phones, tablets, and desktops.
-              </p>
-            </details>
-            <details className="faq-item">
-              <summary className="faq-question">What if I want to stop using the service?</summary>
-              <p className="faq-answer">
-                You can disconnect your account anytime with one click. No questions asked.
-              </p>
-            </details>
-            <details className="faq-item">
-              <summary className="faq-question">How do I contact support?</summary>
-              <p className="faq-answer">
-                Our support team is available 24/7 via chat, email, or the help center.
-              </p>
-            </details>
-          </div>
-        </div>
+      <section className="faq reveal">
+        <h2>FAQ</h2>
+        <details>
+          <summary>Is this allowed?</summary>
+          <p>We share safe, platform-compliant strategies only.</p>
+        </details>
+        <details>
+          <summary>How fast do I see results?</summary>
+          <p>Most users see traction within the first 7 days.</p>
+        </details>
+        <details>
+          <summary>Is my data private?</summary>
+          <p>Yes. Private by default with minimal required data.</p>
+        </details>
+        <details>
+          <summary>Can I cancel anytime?</summary>
+          <p>Absolutely. No lock-in, cancel with one click.</p>
+        </details>
       </section>
 
-      {/* Final CTA */}
-      <section className="final-cta">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="final-cta-headline">Ready to Start Your Quest?</h2>
-          <p className="final-cta-subhead">
-            Join thousands earning Robux safely. Your adventure begins now.
-          </p>
-          <button className="cta-primary cta-large">Start Quest</button>
-        </div>
+      {/* FINAL CTA */}
+      <section className="final-cta reveal">
+        <a className="btn-primary huge" href="/auth" aria-label="Start Quest">Start Quest</a>
       </section>
 
       {/* Sticky CTA */}
-      {showStickyCTA && !ctaDismissed && (
-        <button id="sticky-cta" className="sticky-cta">
-          <span>Start Quest</span>
-          <button
-            className="sticky-cta-dismiss"
-            onClick={handleDismissCTA}
-            aria-label="Dismiss"
-          >
-            ×
-          </button>
-        </button>
+      {showStickyCTA && (
+        <div className="sticky-cta" role="region" aria-label="Start Quest">
+          <button className="close" aria-label="Dismiss" onClick={handleDismissCTA}>×</button>
+          <a className="btn-primary" href="/auth">Start Quest</a>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
