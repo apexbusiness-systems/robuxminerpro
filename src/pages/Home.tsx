@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/landing.css';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Home = () => {
   );
   const [showProviderModal, setShowProviderModal] = useState(false);
   const progressRef = useRef<HTMLDivElement | null>(null);
+  const modalRef = useFocusTrap(showProviderModal);
 
   // Scroll progress + sticky CTA threshold
   useEffect(() => {
@@ -82,14 +84,27 @@ const Home = () => {
     sessionStorage.setItem('rmp_cta_dismissed', '1');
   };
 
-  const handleCTAClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleCTAClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    e?.preventDefault();
     setShowProviderModal(true);
+  };
+
+  const handleCTAKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCTAClick();
+    }
   };
 
   const handleProviderSelect = (provider: 'google' | 'discord' | 'email') => {
     setShowProviderModal(false);
     navigate('/auth', { state: { provider } });
+  };
+
+  const handleModalKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setShowProviderModal(false);
+    }
   };
 
   return (
@@ -99,10 +114,17 @@ const Home = () => {
 
       {/* HERO */}
       <section className="hero reveal">
-        <h1>Level up your Robux earnings</h1>
-        <p>Simple steps. Safe strategies. Real results.</p>
+        <h1>Earn real Robux, legitimately</h1>
+        <p>Safe methods. No scams. Results in days.</p>
         <div className="cta-row">
-          <button className="btn-primary big" onClick={handleCTAClick} aria-label="Get Rich">GET RICH</button>
+          <button 
+            className="btn-primary big" 
+            onClick={handleCTAClick} 
+            onKeyDown={handleCTAKeyDown}
+            aria-label="Get Rich - Open sign up options"
+          >
+            GET RICH
+          </button>
         </div>
       </section>
 
@@ -200,20 +222,50 @@ const Home = () => {
 
       {/* FINAL CTA */}
       <section className="final-cta reveal">
-        <button className="btn-primary huge" onClick={handleCTAClick} aria-label="Get Rich">GET RICH</button>
+        <button 
+          className="btn-primary huge" 
+          onClick={handleCTAClick} 
+          onKeyDown={handleCTAKeyDown}
+          aria-label="Get Rich - Open sign up options"
+        >
+          GET RICH
+        </button>
       </section>
 
       {/* Sticky CTA */}
       {showStickyCTA && (
         <div className="sticky-cta" role="region" aria-label="Get Rich">
-          <button className="close" aria-label="Dismiss" onClick={handleDismissCTA}>×</button>
-          <button className="btn-primary" onClick={handleCTAClick}>GET RICH</button>
+          <button 
+            className="close" 
+            aria-label="Dismiss call to action" 
+            onClick={handleDismissCTA}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleDismissCTA();
+              }
+            }}
+          >
+            ×
+          </button>
+          <button 
+            className="btn-primary" 
+            onClick={handleCTAClick}
+            onKeyDown={handleCTAKeyDown}
+            aria-label="Get Rich - Open sign up options"
+          >
+            GET RICH
+          </button>
         </div>
       )}
 
       {/* Provider Modal */}
       <Dialog open={showProviderModal} onOpenChange={setShowProviderModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent 
+          className="sm:max-w-md" 
+          ref={modalRef}
+          onKeyDown={handleModalKeyDown}
+        >
           <DialogHeader>
             <DialogTitle>Choose your path</DialogTitle>
           </DialogHeader>
@@ -221,6 +273,12 @@ const Home = () => {
             <button 
               className="provider-btn" 
               onClick={() => handleProviderSelect('google')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleProviderSelect('google');
+                }
+              }}
               aria-label="Continue with Google"
             >
               <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
@@ -234,6 +292,12 @@ const Home = () => {
             <button 
               className="provider-btn" 
               onClick={() => handleProviderSelect('discord')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleProviderSelect('discord');
+                }
+              }}
               aria-label="Continue with Discord"
             >
               <svg viewBox="0 0 24 24" width="20" height="20" fill="#5865F2" aria-hidden="true">
@@ -244,6 +308,12 @@ const Home = () => {
             <button 
               className="provider-btn" 
               onClick={() => handleProviderSelect('email')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleProviderSelect('email');
+                }
+              }}
               aria-label="Continue with Email"
             >
               <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
@@ -252,6 +322,7 @@ const Home = () => {
               Continue with Email
             </button>
           </div>
+          <p className="trust-line">No generators. Official methods only.</p>
         </DialogContent>
       </Dialog>
     </>

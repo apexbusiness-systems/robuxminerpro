@@ -386,29 +386,27 @@
 }
 
 /* Sticky CTA */
-#sticky-cta {
+.sticky-cta {
   position: fixed;
   bottom: 1rem;
   right: 1rem;
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  border: none;
-  padding: 1rem 2rem;
-  padding-right: 3.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 2rem;
-  cursor: pointer;
-  box-shadow: 0 4px 20px hsl(var(--foreground) / 0.15);
   z-index: 50;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
   animation: slideInRight 0.4s ease;
 }
 
-#sticky-cta:hover {
+.sticky-cta .btn-primary {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 2rem;
+  box-shadow: 0 4px 20px hsl(var(--foreground) / 0.15);
+  transition: all 0.3s ease;
+}
+
+.sticky-cta .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 24px hsl(var(--foreground) / 0.2);
 }
@@ -478,21 +476,41 @@
 }
 
 .provider-btn:focus-visible { 
-  outline: 2px solid hsl(var(--ring)); 
+  outline: 3px solid hsl(var(--ring)); 
   outline-offset: 2px;
+}
+
+.trust-line {
+  text-align: center;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+/* Focus visible for all interactive elements */
+.btn-primary:focus-visible,
+button:focus-visible {
+  outline: 3px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.sticky-cta .close:focus-visible {
+  outline: 2px solid hsl(var(--primary-foreground));
+  outline-offset: 1px;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  #sticky-cta {
+  .sticky-cta {
     left: 50%;
     right: auto;
     transform: translateX(-50%);
     bottom: 0.5rem;
   }
 
-  #sticky-cta:hover {
-    transform: translateX(-50%) translateY(-2px);
+  .sticky-cta .btn-primary:hover {
+    transform: translateY(-2px);
   }
 
   .hero {
