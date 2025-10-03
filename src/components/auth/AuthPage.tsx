@@ -222,11 +222,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
       <div className="w-full max-w-md space-y-6">
         {/* Logo */}
         <div className="text-center">
-          <img 
-            src="/official_logo.png" 
-            alt="RobuxMinerPro" 
-            className="h-12 mx-auto mb-4"
-          />
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
             RobuxMinerPro
           </h1>
