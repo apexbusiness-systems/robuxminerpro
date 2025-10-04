@@ -2,19 +2,22 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/landing.css';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { LeadCaptureModal } from '@/components/LeadCaptureModal';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+import robotMiner from '@/assets/robot-miner.png';
+import robuxCoins from '@/assets/robux-coins.png';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [showStickyCTA, setShowStickyCTA] = useState(false);
   const [ctaDismissed, setCtaDismissed] = useState(() => 
     sessionStorage.getItem('rmp_cta_dismissed') === '1'
   );
+  const [showLeadModal, setShowLeadModal] = useState(false);
   const [showProviderModal, setShowProviderModal] = useState(false);
   const progressRef = useRef<HTMLDivElement | null>(null);
   const modalRef = useFocusTrap(showProviderModal);
 
-  // Scroll progress + sticky CTA threshold
+  // Scroll progress
   useEffect(() => {
     const handleScroll = () => {
       const doc = document.documentElement;
@@ -24,14 +27,12 @@ const Home = () => {
       if (progressRef.current) {
         progressRef.current.style.setProperty('--pct', String(pct));
       }
-      
-      setShowStickyCTA(!ctaDismissed && pct > 40);
     };
     
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [ctaDismissed]);
+  }, []);
 
   // Reveal-on-view
   useEffect(() => {
@@ -86,7 +87,7 @@ const Home = () => {
 
   const handleCTAClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
-    setShowProviderModal(true);
+    setShowLeadModal(true);
   };
 
   const handleCTAKeyDown = (e: React.KeyboardEvent) => {
@@ -140,17 +141,31 @@ const Home = () => {
 
       {/* HERO */}
       <section className="hero reveal">
-        <h1>Earn real Robux, legitimately</h1>
-        <p>Safe methods. No scams. Results in days.</p>
-        <div className="cta-row">
-          <button 
-            className="btn-primary big" 
-            onClick={handleCTAClick} 
-            onKeyDown={handleCTAKeyDown}
-            aria-label="Get Rich - Open sign up options"
-          >
-            GET RICH
-          </button>
+        <div className="hero-container">
+          <img 
+            src={robotMiner} 
+            alt="Voxel robot miner character" 
+            className="hero-illustration"
+          />
+          <div className="hero-content">
+            <h1>Earn real Robux, legitimately</h1>
+            <p>Safe methods. No scams. Results in days.</p>
+            <div className="cta-row">
+              <button 
+                className="btn-primary big" 
+                onClick={handleCTAClick} 
+                onKeyDown={handleCTAKeyDown}
+                aria-label="Get Rich - Open sign up options"
+              >
+                GET RICH
+              </button>
+            </div>
+          </div>
+          <img 
+            src={robuxCoins} 
+            alt="Voxel Robux coins" 
+            className="hero-illustration"
+          />
         </div>
       </section>
 
@@ -181,7 +196,7 @@ const Home = () => {
             <small>days to payout</small>
           </div>
         </div>
-        <p className="note">No generators. Official, legit methods only.</p>
+        <p className="note">Earn Robux the right way. Official, legit methods only.</p>
       </section>
 
       {/* QUEST 3 */}
@@ -258,9 +273,17 @@ const Home = () => {
         </button>
       </section>
 
-      {/* Sticky CTA */}
-      {showStickyCTA && (
+      {/* Sticky CTA - Always visible */}
+      {!ctaDismissed && (
         <div className="sticky-cta" role="region" aria-label="Get Rich">
+          <button 
+            className="btn-primary" 
+            onClick={handleCTAClick}
+            onKeyDown={handleCTAKeyDown}
+            aria-label="Get Rich - Open sign up options"
+          >
+            GET RICH
+          </button>
           <button 
             className="close" 
             aria-label="Dismiss call to action" 
@@ -274,16 +297,14 @@ const Home = () => {
           >
             ×
           </button>
-          <button 
-            className="btn-primary" 
-            onClick={handleCTAClick}
-            onKeyDown={handleCTAKeyDown}
-            aria-label="Get Rich - Open sign up options"
-          >
-            GET RICH
-          </button>
         </div>
       )}
+
+      {/* Lead Capture Modal */}
+      <LeadCaptureModal 
+        open={showLeadModal} 
+        onOpenChange={setShowLeadModal} 
+      />
 
       {/* Provider Modal */}
       <Dialog open={showProviderModal} onOpenChange={setShowProviderModal}>
@@ -348,7 +369,7 @@ const Home = () => {
               Continue with Email
             </button>
           </div>
-          <p className="trust-line">No generators. Official methods only.</p>
+          <p className="trust-line">Earn Robux the right way. Official methods only.</p>
         </DialogContent>
       </Dialog>
     </>
