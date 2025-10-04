@@ -65,8 +65,8 @@ const Navigation: React.FC = () => {
             <img 
               src={logo} 
               alt="RobuxMinerPro logo" 
-              className="h-12 w-auto"
-              style={{ objectFit: 'contain' }}
+              className="w-auto"
+              style={{ height: '3.6rem', objectFit: 'contain' }}
             />
           </Link>
 
@@ -88,8 +88,8 @@ const Navigation: React.FC = () => {
           <img 
             src={logo} 
             alt="RobuxMinerPro logo" 
-            className="h-12 w-auto"
-            style={{ objectFit: 'contain' }}
+            className="w-auto"
+            style={{ height: '3.6rem', objectFit: 'contain' }}
           />
         </Link>
 
