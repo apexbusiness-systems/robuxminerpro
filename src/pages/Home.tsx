@@ -12,10 +12,6 @@ import {
 } from 'lucide-react';
 import robotMiner from '@/assets/robot-miner.png';
 import robuxCoins from '@/assets/robux-coins.png';
-import robuxPile from '@/assets/robux-pile.png';
-import robuxCoinSingle from '@/assets/robux-coin-single.png';
-import robuxStackSmall from '@/assets/robux-stack-small.png';
-import robuxCoinSparkle from '@/assets/robux-coin-sparkle.png';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -159,13 +155,6 @@ const Home = () => {
                 <Sparkles className="w-4 h-4" />
                 Trusted by 50K+ Users
               </Badge>
-              
-              {/* Static Robux Images Layout */}
-              <div className="flex items-center gap-4 my-6">
-                <img src={robuxPile} alt="Robux coins" className="w-24 h-24 object-contain" />
-                <img src={robuxCoinSingle} alt="Robux coin" className="w-20 h-20 object-contain" />
-                <img src={robuxStackSmall} alt="Robux stack" className="w-16 h-16 object-contain" />
-              </div>
               
               <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
