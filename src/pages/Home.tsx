@@ -316,7 +316,7 @@ const Home = () => {
                   <div className="hidden md:block absolute top-10 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-primary to-transparent" />
                 )}
                 <step.icon className="w-12 h-12 mx-auto text-primary" />
-                <h3 className="text-2xl font-bold">{step.title}</h3>
+                <h3 className="text-2xl font-bold text-foreground">{step.title}</h3>
                 <p className="text-muted-foreground">{step.description}</p>
               </div>
             ))}
