@@ -22,7 +22,7 @@ const Header = () => {
             src={logo} 
             alt="RobuxMinerPro logo" 
             className="w-auto"
-            style={{ height: '7.965rem', objectFit: 'contain' }}
+            style={{ height: '8.7615rem', objectFit: 'contain' }}
           />
         </Link>
 
