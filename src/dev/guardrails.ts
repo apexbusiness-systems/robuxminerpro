@@ -69,6 +69,19 @@ function assertAssets() {
 export function runGuardrails() {
   const hits: any[] = [];
   try {
+    // Remove legacy SSR fallback hero if present
+    const ssr = document.getElementById('hero-ssr');
+    if (ssr) {
+      ssr.remove();
+      console.warn('Removed legacy SSR hero fallback.');
+    }
+    // Ensure skip link target exists
+    const skip = document.querySelector('a.skip-link[href="#main"]');
+    if (skip && !document.getElementById('main')) {
+      const mainEl = document.querySelector('main');
+      if (mainEl) (mainEl as HTMLElement).id = 'main';
+    }
+
     walk(document.body, hits);
     if (hits.length) {
       console.warn('Guardrails sanitized content at runtime:', hits.slice(0, 10));
