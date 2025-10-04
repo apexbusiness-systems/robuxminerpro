@@ -26,7 +26,7 @@ const Header = () => {
           />
         </Link>
 
-        <nav className="flex items-center space-x-6 md:space-x-8">
+        <nav className="hidden md:flex items-center space-x-6 md:space-x-8">
           {navItems.map(item => <Link key={item.path} to={item.path} className={`relative text-sm font-medium transition-all duration-200 hover:text-primary group ${location.pathname === item.path ? 'text-primary' : 'text-muted-foreground'}`}>
               {item.name}
               <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-200 group-hover:w-full ${location.pathname === item.path ? 'w-full' : ''}`} />
@@ -37,7 +37,7 @@ const Header = () => {
           <img 
             src={wordmark} 
             alt="RobuxMinerPro wordmark" 
-            className="h-12 w-auto"
+            className="h-8 md:h-12 w-auto"
           />
         </div>
       </div>
