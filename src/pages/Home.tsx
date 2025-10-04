@@ -148,8 +148,8 @@ const Home = () => {
             className="hero-illustration"
           />
           <div className="hero-content">
-            <h1>Earn real Robux, legitimately</h1>
-            <p>Safe methods. No scams. Results in days.</p>
+            <h1>RobuxMinerPro</h1>
+            <p>Learn safe, official ways to get Robux.</p>
             <div className="cta-row">
               <button 
                 className="btn-primary big" 
