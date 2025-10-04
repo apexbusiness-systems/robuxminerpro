@@ -47,7 +47,26 @@
 
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    
+    <!-- SSR fallback for SEO/crawlers (auto-hidden after hydration) -->
+    <section id="hero-ssr" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;text-align:center;background:linear-gradient(135deg,#1a0b2e,#16213e);color:#e8e8e8;">
+      <h1 style="font-size:2.5rem;font-weight:700;margin-bottom:1rem;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Earn real Robux, legitimately</h1>
+      <p style="font-size:1.25rem;margin-bottom:2rem;color:#93c5fd;">Safe methods. No scams. Results in days.</p>
+      <a href="/auth" data-cta="primary" style="display:inline-block;padding:1rem 2rem;background:#a855f7;color:#fff;border-radius:0.5rem;text-decoration:none;font-weight:600;font-size:1.125rem;">GET RICH</a>
+    </section>
+    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Auto-hide SSR fallback after hydration -->
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        const ssr = document.getElementById('hero-ssr');
+        const root = document.getElementById('root');
+        if (root && root.children.length > 0 && ssr) {
+          ssr.style.display = 'none';
+        }
+      });
+    </script>
   </body>
 </html>
