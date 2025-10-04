@@ -151,32 +151,21 @@ const Home = () => {
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
         
-        {/* Floating background coins */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img src={robuxCoinSparkle} alt="" className="absolute top-20 right-[10%] w-20 h-20 opacity-20 animate-bounce" style={{ animationDuration: '4s' }} />
-          <img src={robuxStackSmall} alt="" className="absolute top-40 right-[25%] w-16 h-16 opacity-15 animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '1s' }} />
-          <img src={robuxCoinSingle} alt="" className="absolute bottom-32 right-[15%] w-24 h-24 opacity-20 animate-bounce" style={{ animationDuration: '3s', animationDelay: '0.5s' }} />
-          <img src={robuxPile} alt="" className="absolute top-60 left-[5%] w-28 h-28 opacity-15 animate-bounce" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }} />
-          <img src={robuxCoinSparkle} alt="" className="absolute bottom-20 left-[20%] w-20 h-20 opacity-20 animate-bounce" style={{ animationDuration: '3.8s', animationDelay: '0.8s' }} />
-          <img src={robuxStackSmall} alt="" className="absolute top-10 left-[15%] w-16 h-16 opacity-15 animate-bounce" style={{ animationDuration: '3.2s', animationDelay: '2s' }} />
-        </div>
-        
         <div className="container relative mx-auto px-4 py-20 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Hero Content */}
-            <div className="space-y-8 animate-slide-up relative">
-              {/* Decorative Robux coins */}
-              <div className="absolute -left-8 top-0 w-24 h-24 opacity-60 animate-bounce" style={{ animationDuration: '3s' }}>
-                <img src={robuxPile} alt="" className="w-full h-full object-contain" />
-              </div>
-              <div className="absolute -left-4 top-32 w-16 h-16 opacity-50 animate-bounce" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}>
-                <img src={robuxCoinSingle} alt="" className="w-full h-full object-contain" />
-              </div>
-              
+            <div className="space-y-8 animate-slide-up">
               <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
                 <Sparkles className="w-4 h-4" />
                 Trusted by 50K+ Users
               </Badge>
+              
+              {/* Static Robux Images Layout */}
+              <div className="flex items-center gap-4 my-6">
+                <img src={robuxPile} alt="Robux coins" className="w-24 h-24 object-contain" />
+                <img src={robuxCoinSingle} alt="Robux coin" className="w-20 h-20 object-contain" />
+                <img src={robuxStackSmall} alt="Robux stack" className="w-16 h-16 object-contain" />
+              </div>
               
               <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
