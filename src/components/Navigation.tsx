@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import logo from '@/assets/logo.svg';
 
-const Navigation: React.FC = () => {
+const Navigation: React.FC = memo(() => {
   const { user, profile, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -196,6 +196,6 @@ const Navigation: React.FC = () => {
       </div>
     </header>
   );
-};
+});
 
 export default Navigation;

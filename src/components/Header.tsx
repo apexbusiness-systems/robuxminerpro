@@ -1,7 +1,9 @@
+import { memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import officialLogo from '@/assets/official_logo.svg';
 import wordmark from '@/assets/wordmark.svg';
-const Header = () => {
+
+const Header = memo(() => {
   const location = useLocation();
   const navItems = [{
     name: 'Home',
@@ -42,5 +44,6 @@ const Header = () => {
         </div>
       </div>
     </header>;
-};
+});
+
 export default Header;

@@ -1,3 +1,5 @@
+import { requestCache } from '@/utils/requestCache';
+
 type AnyObj = Record<string,unknown>;
 const STUBS: Record<string,unknown> = {
   "/earnings/session/active": { balance:0, perMinute:0, elapsed:"00:00:00" },
@@ -12,14 +14,19 @@ const STUBS: Record<string,unknown> = {
 };
 
 export async function get(path: string): Promise<any>{
-  try{
-    const res = await fetch(path, { headers: { accept:"application/json" }});
-    if(res.status===204) return null;
-    if(res.status===404) return stub(path);
-    return await res.json().catch(()=> ({}));
-  }catch{
-    return stub(path);
-  }
+  return requestCache.dedupe(path, async () => {
+    try{
+      const res = await fetch(path, { 
+        headers: { accept:"application/json" },
+        signal: AbortSignal.timeout(10000) // 10s timeout
+      });
+      if(res.status===204) return null;
+      if(res.status===404) return stub(path);
+      return await res.json().catch(()=> ({}));
+    }catch{
+      return stub(path);
+    }
+  });
 }
 
 function stub(path:string): any{

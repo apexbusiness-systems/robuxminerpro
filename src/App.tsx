@@ -31,7 +31,16 @@ const Events = lazy(() => import("./pages/Events"));
 const Payments = lazy(() => import("./pages/Payments"));
 const Mentor = lazy(() => import("./pages/Mentor"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-[200px]">
