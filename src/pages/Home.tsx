@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import robotMiner from '@/assets/robot-miner.png';
 import robuxCoins from '@/assets/robux-coins.png';
+import robuxPile from '@/assets/robux-pile.png';
+import robuxCoinSingle from '@/assets/robux-coin-single.png';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -150,7 +152,15 @@ const Home = () => {
         <div className="container relative mx-auto px-4 py-20 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Hero Content */}
-            <div className="space-y-8 animate-slide-up">
+            <div className="space-y-8 animate-slide-up relative">
+              {/* Decorative Robux coins */}
+              <div className="absolute -left-8 top-0 w-24 h-24 opacity-60 animate-bounce" style={{ animationDuration: '3s' }}>
+                <img src={robuxPile} alt="" className="w-full h-full object-contain" />
+              </div>
+              <div className="absolute -left-4 top-32 w-16 h-16 opacity-50 animate-bounce" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}>
+                <img src={robuxCoinSingle} alt="" className="w-full h-full object-contain" />
+              </div>
+              
               <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
                 <Sparkles className="w-4 h-4" />
                 Trusted by 50K+ Users
