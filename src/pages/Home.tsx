@@ -174,7 +174,7 @@ const Home = () => {
                   onClick={handleCTAClick}
                 >
                   <Rocket className="mr-2 h-5 w-5" />
-                  Get Started Free
+                  GET RICH
                 </Button>
                 <Button 
                   size="lg" 

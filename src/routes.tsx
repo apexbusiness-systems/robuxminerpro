@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 
+const Home = lazy(() => import('./pages/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Mentor = lazy(() => import('./pages/Mentor'));
 const Squads = lazy(() => import('./pages/Squads'));
@@ -20,7 +21,8 @@ export function AppRoutes() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/mentor" element={<Mentor />} />
         <Route path="/squads" element={<Squads />} />
         <Route path="/achievements" element={<Achievements />} />

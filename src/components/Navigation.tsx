@@ -24,6 +24,7 @@ import {
   Calendar,
   CreditCard
 } from 'lucide-react';
+import logo from "@/assets/official_logo.svg";
 
 const Navigation: React.FC = () => {
   const { user, profile, signOut } = useAuth();
@@ -62,7 +63,7 @@ const Navigation: React.FC = () => {
         <div className="container flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
             <img 
-              src="/official_logo.png" 
+              src={logo} 
               alt="RobuxMinerPro logo" 
               width="40" 
               height="19" 
@@ -92,7 +93,7 @@ const Navigation: React.FC = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
           <img 
-            src="/official_logo.png" 
+            src={logo} 
             alt="RobuxMinerPro logo" 
             width="40" 
             height="19" 

@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import logo from '@/assets/official_logo.svg';
 const Header = () => {
   const location = useLocation();
   const navItems = [{
@@ -17,7 +18,7 @@ const Header = () => {
   return <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
-          <img src="/official_logo.png" alt="RobuxMinerPro logo" width="40" height="9" className="glow-effect" style={{
+          <img src={logo} alt="RobuxMinerPro logo" width="40" height="9" className="glow-effect" style={{
             filter: 'drop-shadow(0 0 20px hsl(var(--primary) / 0.3))'
           }} />
         </Link>
