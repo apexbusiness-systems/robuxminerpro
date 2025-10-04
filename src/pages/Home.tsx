@@ -148,10 +148,10 @@ const Home = () => {
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
         
-        <div className="container relative mx-auto px-4 py-20 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="container relative mx-auto px-4 py-24 lg:py-40">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
             {/* Hero Content */}
-            <div className="space-y-6 animate-slide-up">
+            <div className="space-y-8 animate-slide-up">
               <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
                 <Sparkles className="w-4 h-4" />
                 Trusted by 50K+ Users
@@ -173,7 +173,7 @@ const Home = () => {
                 Learn safe, official ways to get Robux.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-6">
                 <Button 
                   size="lg" 
                   className="text-lg px-8 py-6 hover-lift"
@@ -193,7 +193,7 @@ const Home = () => {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 pt-8 border-t border-border">
+              <div className="grid grid-cols-3 gap-6 pt-12 border-t border-border mt-8">
                 <div className="space-y-1">
                   <div className="text-3xl font-bold text-primary" data-count="50000">0</div>
                   <div className="text-sm text-muted-foreground">Active Users</div>
@@ -225,9 +225,9 @@ const Home = () => {
       </section>
 
       {/* FEATURES GRID */}
-      <section id="features" className="py-20 lg:py-32 border-b border-border">
+      <section id="features" className="py-24 lg:py-40 border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
             <Badge className="bg-accent/10 text-accent border-accent/20">Features</Badge>
             <h2 className="text-4xl lg:text-5xl font-bold">Everything You Need to Succeed</h2>
             <p className="text-xl text-muted-foreground">
@@ -235,7 +235,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             {[
               {
                 icon: Shield,
@@ -291,14 +291,14 @@ const Home = () => {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-20 lg:py-32 bg-gradient-to-b from-background to-muted/20 border-b border-border">
+      <section className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
             <Badge className="bg-primary/10 text-primary border-primary/20">Simple Process</Badge>
             <h2 className="text-4xl lg:text-5xl font-bold">Start Earning in 3 Steps</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
             {[
               {
                 step: "1",
@@ -319,7 +319,7 @@ const Home = () => {
                 icon: DollarSign
               }
             ].map((step, idx) => (
-              <div key={idx} className="relative text-center space-y-4">
+              <div key={idx} className="relative text-center space-y-6">
                 <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary-glow text-purple-300 text-3xl font-bold shadow-lg hover-lift">
                   {step.step}
                 </div>
@@ -336,9 +336,9 @@ const Home = () => {
       </section>
 
       {/* PRICING */}
-      <section className="py-20 lg:py-32 border-b border-border">
+      <section className="py-24 lg:py-40 border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
             <Badge className="bg-accent/10 text-accent border-accent/20">Pricing</Badge>
             <h2 className="text-4xl lg:text-5xl font-bold">Choose Your Plan</h2>
             <p className="text-xl text-muted-foreground">
@@ -346,7 +346,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
             {[
               {
                 name: "Starter",
@@ -436,9 +436,9 @@ const Home = () => {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-20 lg:py-32 bg-gradient-to-b from-background to-muted/20 border-b border-border">
+      <section className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
             <Badge className="bg-success/10 text-success border-success/20">Testimonials</Badge>
             <h2 className="text-4xl lg:text-5xl font-bold">Loved by Thousands</h2>
           </div>
