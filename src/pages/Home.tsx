@@ -156,16 +156,11 @@ const Home = () => {
                 Trusted by 50K+ Users
               </Badge>
               
-              <div className="space-y-4">
-                <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
-                  <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
-                    RobuxMinerPro
-                  </span>
-                </h1>
-                <p className="text-xl lg:text-2xl text-muted-foreground max-w-xl">
-                  Learn safe, official ways to get Robux.
-                </p>
-              </div>
+              <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
+                <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+                  RobuxMinerPro
+                </span>
+              </h1>
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
