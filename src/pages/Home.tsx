@@ -14,6 +14,8 @@ import robotMiner from '@/assets/robot-miner.png';
 import robuxCoins from '@/assets/robux-coins.png';
 import robuxPile from '@/assets/robux-pile.png';
 import robuxCoinSingle from '@/assets/robux-coin-single.png';
+import robuxStackSmall from '@/assets/robux-stack-small.png';
+import robuxCoinSparkle from '@/assets/robux-coin-sparkle.png';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -148,6 +150,16 @@ const Home = () => {
       <section className="relative overflow-hidden border-b border-border">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+        
+        {/* Floating background coins */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <img src={robuxCoinSparkle} alt="" className="absolute top-20 right-[10%] w-20 h-20 opacity-20 animate-bounce" style={{ animationDuration: '4s' }} />
+          <img src={robuxStackSmall} alt="" className="absolute top-40 right-[25%] w-16 h-16 opacity-15 animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '1s' }} />
+          <img src={robuxCoinSingle} alt="" className="absolute bottom-32 right-[15%] w-24 h-24 opacity-20 animate-bounce" style={{ animationDuration: '3s', animationDelay: '0.5s' }} />
+          <img src={robuxPile} alt="" className="absolute top-60 left-[5%] w-28 h-28 opacity-15 animate-bounce" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }} />
+          <img src={robuxCoinSparkle} alt="" className="absolute bottom-20 left-[20%] w-20 h-20 opacity-20 animate-bounce" style={{ animationDuration: '3.8s', animationDelay: '0.8s' }} />
+          <img src={robuxStackSmall} alt="" className="absolute top-10 left-[15%] w-16 h-16 opacity-15 animate-bounce" style={{ animationDuration: '3.2s', animationDelay: '2s' }} />
+        </div>
         
         <div className="container relative mx-auto px-4 py-20 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
