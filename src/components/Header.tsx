@@ -40,11 +40,13 @@ const Header = () => {
             </Link>)}
         </nav>
 
-        <img 
-          src={wordmark} 
-          alt="RobuxMinerPro wordmark" 
-          className="h-12 w-auto"
-        />
+        <div className="flex items-center">
+          <img 
+            src={wordmark} 
+            alt="RobuxMinerPro wordmark" 
+            className="h-12 w-auto"
+          />
+        </div>
       </div>
     </header>;
 };
