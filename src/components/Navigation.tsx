@@ -78,7 +78,7 @@ const Navigation: React.FC = () => {
 
           <div className="flex items-center space-x-4">
             <Button asChild>
-              <Link to="/auth">Get Started</Link>
+              <Link to="/auth">GET RICH</Link>
             </Button>
           </div>
         </div>
