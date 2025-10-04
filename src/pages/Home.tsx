@@ -163,7 +163,7 @@ const Home = () => {
                   </span>
                 </h1>
                 <p className="text-xl lg:text-2xl text-muted-foreground max-w-xl">
-                  Learn safe, official ways to get Robux through legitimate methods
+                  Learn safe, official ways to get Robux.
                 </p>
               </div>
 
