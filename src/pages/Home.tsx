@@ -160,7 +160,7 @@ const Home = () => {
               <img 
                 src={heroSvg} 
                 alt="Epic Robux" 
-                className="w-full max-w-2xl"
+                className="w-auto h-16"
               />
               
               <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
