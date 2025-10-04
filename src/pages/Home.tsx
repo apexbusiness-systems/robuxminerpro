@@ -96,8 +96,34 @@ const Home = () => {
     }
   };
 
-  const handleProviderSelect = (provider: 'google' | 'discord' | 'email') => {
+  const handleProviderSelect = async (provider: 'google' | 'discord' | 'email') => {
     setShowProviderModal(false);
+    
+    // Capture lead
+    const endpoint = import.meta.env.VITE_LEADS_ENDPOINT_URL;
+    if (endpoint) {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            provider,
+            url: window.location.href,
+            referrer: document.referrer || null,
+            utm: {
+              source: params.get('utm_source'),
+              medium: params.get('utm_medium'),
+              campaign: params.get('utm_campaign'),
+            },
+            ts: new Date().toISOString(),
+          }),
+        });
+      } catch (err) {
+        console.warn('Lead capture failed:', err);
+      }
+    }
+    
     navigate('/auth', { state: { provider } });
   };
 
