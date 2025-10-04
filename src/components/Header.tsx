@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import officialLogo from '@/assets/official_logo.svg';
+import wordmark from '@/assets/wordmark.svg';
 const Header = () => {
   const location = useLocation();
   const navItems = [{
@@ -31,6 +32,14 @@ const Header = () => {
               <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-200 group-hover:w-full ${location.pathname === item.path ? 'w-full' : ''}`} />
             </Link>)}
         </nav>
+
+        <div className="flex items-center">
+          <img 
+            src={wordmark} 
+            alt="RobuxMinerPro wordmark" 
+            className="h-12 w-auto"
+          />
+        </div>
       </div>
     </header>;
 };
