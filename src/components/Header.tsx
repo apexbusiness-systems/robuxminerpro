@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import logo from '@/assets/logo.svg';
+import wordmark from '@/assets/wordmark.svg';
 const Header = () => {
   const location = useLocation();
   const navItems = [{
@@ -39,10 +40,11 @@ const Header = () => {
             </Link>)}
         </nav>
 
-        <button className="relative inline-flex items-center justify-center rounded-xl text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-gradient-to-r from-primary to-primary-glow text-primary-foreground hover:scale-105 hover:shadow-lg h-10 px-6 py-2 glow-effect group overflow-hidden">
-          <span className="relative z-10">GET RICH</span>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-glow to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-        </button>
+        <img 
+          src={wordmark} 
+          alt="RobuxMinerPro wordmark" 
+          className="h-12 w-auto"
+        />
       </div>
     </header>;
 };

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import robotMiner from '@/assets/robot-miner.png';
 import robuxCoins from '@/assets/robux-coins.png';
+import heroSvg from '@/assets/hero.svg';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -155,6 +156,12 @@ const Home = () => {
                 <Sparkles className="w-4 h-4" />
                 Trusted by 50K+ Users
               </Badge>
+              
+              <img 
+                src={heroSvg} 
+                alt="Epic Robux" 
+                className="w-full max-w-2xl"
+              />
               
               <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
