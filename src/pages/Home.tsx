@@ -309,7 +309,7 @@ const Home = () => {
               }
             ].map((step, idx) => (
               <div key={idx} className="relative text-center space-y-4">
-                <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary-glow text-primary-foreground text-3xl font-bold shadow-lg hover-lift">
+                <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary-glow text-purple-300 text-3xl font-bold shadow-lg hover-lift">
                   {step.step}
                 </div>
                 {idx < 2 && (
