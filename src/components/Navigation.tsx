@@ -70,6 +70,12 @@ const Navigation: React.FC = () => {
             />
           </Link>
 
+          <div className="absolute left-1/2 -translate-x-1/2 hidden md:block">
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent whitespace-nowrap">
+              RobuxMinerPro
+            </span>
+          </div>
+
           <div className="flex items-center space-x-4">
             <Button asChild>
               <Link to="/auth">GET RICH</Link>
@@ -92,6 +98,12 @@ const Navigation: React.FC = () => {
             style={{ height: '8.7615rem', objectFit: 'contain' }}
           />
         </Link>
+
+        <div className="absolute left-1/2 -translate-x-1/2 hidden md:block">
+          <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent whitespace-nowrap">
+            RobuxMinerPro
+          </span>
+        </div>
 
         {/* Navigation Items */}
         <nav className="hidden md:flex items-center space-x-6">
