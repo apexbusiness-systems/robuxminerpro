@@ -31,7 +31,7 @@ const Navigation: React.FC = () => {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: Home },
+    { name: 'Dashboard', path: '/dashboard', icon: Home },
     { name: 'Squads', path: '/squads', icon: Users },
     { name: 'Achievements', path: '/achievements', icon: Trophy },
     { name: 'Learn', path: '/learn', icon: BookOpen },
