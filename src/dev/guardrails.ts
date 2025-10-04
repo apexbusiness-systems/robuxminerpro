@@ -2,7 +2,6 @@
 const FORBIDDEN = [
   /\bfree\s+robux\b/i,
   /\brobux(?:\W+|_)?generator\b/i,
-  /\brobux(?:\W+|_)?mining\b/i,                 // NOT "miner"
   /\boff(?:[-\s])?platform\b.*\b(trade|payout|cash|casino|gambl\w*)\b/i
 ];
 

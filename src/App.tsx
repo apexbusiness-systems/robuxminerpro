@@ -57,6 +57,7 @@ const App = () => {
                   <Suspense fallback={<LoadingSpinner />}>
                     <Routes>
                       {/* Public routes */}
+                      <Route path="/" element={<Home />} />
                       <Route path="/features" element={<Features />} />
                       <Route path="/pricing" element={<Pricing />} />
                       <Route path="/privacy" element={<Privacy />} />
@@ -72,11 +73,6 @@ const App = () => {
                       } />
                       
                       {/* Protected routes */}
-                      <Route path="/" element={
-                        <ProtectedRoute>
-                          <Dashboard />
-                        </ProtectedRoute>
-                      } />
                       <Route path="/dashboard" element={
                         <ProtectedRoute>
                           <Dashboard />
