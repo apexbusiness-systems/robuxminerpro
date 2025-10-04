@@ -160,7 +160,7 @@ const Home = () => {
               <img 
                 src={heroSvg} 
                 alt="Epic Robux" 
-                className="w-auto h-16"
+                className="w-full max-w-sm"
               />
               
               <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
@@ -168,6 +168,10 @@ const Home = () => {
                   RobuxMinerPro
                 </span>
               </h1>
+              
+              <p className="text-xl text-muted-foreground max-w-2xl">
+                Learn safe, official ways to get Robux.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
