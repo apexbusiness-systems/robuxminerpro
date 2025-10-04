@@ -60,7 +60,39 @@ const Navigation: React.FC = () => {
   if (!user) {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4">
+        <div className="container relative h-16 px-4">
+          <div className="flex h-full items-center justify-between">
+            <Link to="/" className="flex items-center hover:scale-105 transition-transform duration-200">
+              <img 
+                src={logo} 
+                alt="RobuxMinerPro logo" 
+                className="w-auto"
+                style={{ height: '8.7615rem', objectFit: 'contain' }}
+              />
+            </Link>
+
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block pointer-events-none">
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent whitespace-nowrap">
+                RobuxMinerPro
+              </span>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <Button asChild>
+                <Link to="/auth">GET RICH</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container relative h-16 px-4">
+        <div className="flex h-full items-center justify-between">
+          {/* Logo */}
           <Link to="/" className="flex items-center hover:scale-105 transition-transform duration-200">
             <img 
               src={logo} 
@@ -70,46 +102,17 @@ const Navigation: React.FC = () => {
             />
           </Link>
 
-          <div className="absolute left-1/2 -translate-x-1/2 hidden md:block">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block pointer-events-none">
             <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent whitespace-nowrap">
               RobuxMinerPro
             </span>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <Button asChild>
-              <Link to="/auth">GET RICH</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
-    );
-  }
-
-  return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <Link to="/" className="flex items-center hover:scale-105 transition-transform duration-200">
-          <img 
-            src={logo} 
-            alt="RobuxMinerPro logo" 
-            className="w-auto"
-            style={{ height: '8.7615rem', objectFit: 'contain' }}
-          />
-        </Link>
-
-        <div className="absolute left-1/2 -translate-x-1/2 hidden md:block">
-          <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent whitespace-nowrap">
-            RobuxMinerPro
-          </span>
-        </div>
-
-        {/* Navigation Items */}
-        <nav className="hidden md:flex items-center space-x-6">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+          {/* Navigation Items */}
+          <nav className="hidden md:flex items-center space-x-6">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
             
             return (
               <Link
@@ -129,73 +132,74 @@ const Navigation: React.FC = () => {
           })}
         </nav>
 
-        {/* User Menu */}
-        <div className="flex items-center space-x-4">
-          {/* Robux Display */}
-          {profile && (
-            <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-full border border-yellow-400/20">
-              <Coins className="h-4 w-4 text-yellow-500" />
-              <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
-                {profile.total_robux.toLocaleString()}
-              </span>
-            </div>
-          )}
+          {/* User Menu */}
+          <div className="flex items-center space-x-4">
+            {/* Robux Display */}
+            {profile && (
+              <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-full border border-yellow-400/20">
+                <Coins className="h-4 w-4 text-yellow-500" />
+                <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
+                  {profile.total_robux.toLocaleString()}
+                </span>
+              </div>
+            )}
 
-          {/* User Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage 
-                    src={profile?.avatar_url || ''} 
-                    alt={profile?.display_name || 'User'} 
-                  />
-                  <AvatarFallback className={getTierColor(profile?.subscription_tier || 'free')}>
-                    {profile?.display_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-              <div className="flex items-center justify-start gap-2 p-2">
-                <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">{profile?.display_name || 'User'}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {user.email}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="secondary" className="text-xs">
-                      <Crown className="h-3 w-3 mr-1" />
-                      {profile?.subscription_tier || 'Free'}
-                    </Badge>
-                    {profile && (
-                      <Badge variant="outline" className="text-xs">
-                        ⚡ {profile.mining_power}
+            {/* User Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage 
+                      src={profile?.avatar_url || ''} 
+                      alt={profile?.display_name || 'User'} 
+                    />
+                    <AvatarFallback className={getTierColor(profile?.subscription_tier || 'free')}>
+                      {profile?.display_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    <p className="font-medium">{profile?.display_name || 'User'}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {user.email}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant="secondary" className="text-xs">
+                        <Crown className="h-3 w-3 mr-1" />
+                        {profile?.subscription_tier || 'Free'}
                       </Badge>
-                    )}
+                      {profile && (
+                        <Badge variant="outline" className="text-xs">
+                          ⚡ {profile.mining_power}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to="/profile" className="cursor-pointer">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/settings" className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings" className="cursor-pointer">
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </header>
