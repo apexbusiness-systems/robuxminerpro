@@ -26,6 +26,12 @@ const Header = () => {
           />
         </Link>
 
+        <div className="absolute left-1/2 -translate-x-1/2 hidden md:block">
+          <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent whitespace-nowrap">
+            RobuxMinerPro
+          </span>
+        </div>
+
         <nav className="hidden md:flex items-center space-x-8">
           {navItems.map(item => <Link key={item.path} to={item.path} className={`relative text-sm font-medium transition-all duration-200 hover:text-primary group ${location.pathname === item.path ? 'text-primary' : 'text-muted-foreground'}`}>
               {item.name}
