@@ -24,7 +24,6 @@ import {
   Calendar,
   CreditCard
 } from 'lucide-react';
-import logo from "@/assets/official_logo.svg";
 
 const Navigation: React.FC = () => {
   const { user, profile, signOut } = useAuth();
@@ -61,21 +60,9 @@ const Navigation: React.FC = () => {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4">
-          <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
-            <img 
-              src={logo} 
-              alt="RobuxMinerPro logo" 
-              width="40" 
-              height="19" 
-              className="glow-effect" 
-              style={{
-                filter: 'drop-shadow(0 0 20px hsl(var(--primary) / 0.3))'
-              }} 
-            />
-            <span className="font-bold text-xl bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-              RobuxMinerPro
-            </span>
-          </Link>
+          <span className="font-bold text-xl bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+            RobuxMinerPro
+          </span>
 
           <div className="flex items-center space-x-4">
             <Button asChild>
@@ -91,21 +78,9 @@ const Navigation: React.FC = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
-          <img 
-            src={logo} 
-            alt="RobuxMinerPro logo" 
-            width="40" 
-            height="19" 
-            className="glow-effect" 
-            style={{
-              filter: 'drop-shadow(0 0 20px hsl(var(--primary) / 0.3))'
-            }} 
-          />
-          <span className="font-bold text-xl bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-            RobuxMinerPro
-          </span>
-        </Link>
+        <span className="font-bold text-xl bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+          RobuxMinerPro
+        </span>
 
         {/* Navigation Items */}
         <nav className="hidden md:flex items-center space-x-6">
