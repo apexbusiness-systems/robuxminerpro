@@ -151,17 +151,11 @@ const Home = () => {
         <div className="container relative mx-auto px-4 py-20 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Hero Content */}
-            <div className="space-y-8 animate-slide-up">
+            <div className="space-y-6 animate-slide-up">
               <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
                 <Sparkles className="w-4 h-4" />
                 Trusted by 50K+ Users
               </Badge>
-              
-              <img 
-                src={heroSvg} 
-                alt="Epic Robux" 
-                className="w-full max-w-sm"
-              />
               
               <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
@@ -169,11 +163,17 @@ const Home = () => {
                 </span>
               </h1>
               
-              <p className="text-xl text-muted-foreground max-w-2xl">
+              <img 
+                src={heroSvg} 
+                alt="Earn Robux" 
+                className="w-full max-w-md"
+              />
+              
+              <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
                 Learn safe, official ways to get Robux.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Button 
                   size="lg" 
                   className="text-lg px-8 py-6 hover-lift"
