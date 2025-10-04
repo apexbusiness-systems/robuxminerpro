@@ -149,75 +149,66 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
         
         <div className="container relative mx-auto px-4 py-20 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Hero Content */}
-            <div className="space-y-6 animate-slide-up">
-              <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
-                <Sparkles className="w-4 h-4" />
-                Trusted by 50K+ Users
-              </Badge>
-              
-              <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
-                <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
-                  RobuxMinerPro
-                </span>
+          <div className="max-w-4xl mx-auto text-center space-y-8 animate-slide-up">
+            {/* Trust Badge */}
+            <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
+              <Sparkles className="w-4 h-4" />
+              Trusted by 50K+ Users
+            </Badge>
+            
+            {/* Brand + Value Prop */}
+            <div className="space-y-4">
+              <h1 className="text-4xl lg:text-6xl font-bold tracking-tight">
+                RobuxMinerPro
               </h1>
-              
-              <img 
-                src={heroSvg} 
-                alt="Earn Robux" 
-                className="w-full max-w-md"
-              />
-              
-              <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
+              <p className="text-2xl lg:text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
                 Learn safe, official ways to get Robux.
               </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Button 
-                  size="lg" 
-                  className="text-lg px-8 py-6 hover-lift"
-                  onClick={handleCTAClick}
-                >
-                  <Rocket className="mr-2 h-5 w-5" />
-                  GET RICH
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="text-lg px-8 py-6"
-                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Learn More
-                </Button>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 pt-8 border-t border-border">
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="50000">0</div>
-                  <div className="text-sm text-muted-foreground">Active Users</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="98">0</div>
-                  <div className="text-sm text-muted-foreground">% Success</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="7">0</div>
-                  <div className="text-sm text-muted-foreground">Days Avg</div>
-                </div>
-              </div>
+            </div>
+            
+            {/* Hero Visual */}
+            <div className="relative py-8">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 blur-3xl rounded-full opacity-50" />
+              <img 
+                src={robotMiner} 
+                alt="RobuxMiner robot character" 
+                className="relative w-full max-w-md mx-auto drop-shadow-2xl hover-lift"
+              />
+            </div>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 hover-lift"
+                onClick={handleCTAClick}
+              >
+                <Rocket className="mr-2 h-5 w-5" />
+                GET RICH
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6"
+                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Learn More
+              </Button>
             </div>
 
-            {/* Hero Illustration */}
-            <div className="relative lg:pl-12 animate-fade-in">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 blur-3xl rounded-full" />
-                <img 
-                  src={robotMiner} 
-                  alt="RobuxMiner robot character" 
-                  className="relative w-full max-w-md mx-auto drop-shadow-2xl hover-lift"
-                />
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-8 pt-12 max-w-2xl mx-auto">
+              <div className="space-y-1">
+                <div className="text-3xl font-bold text-primary" data-count="50000">0</div>
+                <div className="text-sm text-muted-foreground">Active Users</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-bold text-primary" data-count="98">0</div>
+                <div className="text-sm text-muted-foreground">% Success</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-bold text-primary" data-count="7">0</div>
+                <div className="text-sm text-muted-foreground">Days Avg</div>
               </div>
             </div>
           </div>
