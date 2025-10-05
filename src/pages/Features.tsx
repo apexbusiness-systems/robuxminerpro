@@ -1,8 +1,8 @@
 const Features = () => {
   const features = [
     {
-      title: "Advanced Mining Algorithm",
-      description: "Our proprietary algorithm maximizes efficiency and reduces processing time by up to 300%.",
+      title: "Smart Learning System",
+      description: "Our AI-powered system helps you learn official Robux earning strategies faster and more efficiently.",
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
@@ -10,8 +10,8 @@ const Features = () => {
       )
     },
     {
-      title: "Real-time Analytics",
-      description: "Monitor your mining progress with live statistics and performance metrics.",
+      title: "Real-time Progress Tracking",
+      description: "Monitor your learning progress with live statistics and achievement metrics.",
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -65,7 +65,7 @@ const Features = () => {
             Powerful Features
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-slide-up">
-            Discover the advanced features that make RobuxMinerPro the most efficient and reliable mining platform available today.
+            Discover the features that make RobuxMinerPro the best way to learn official Robux earning strategies.
           </p>
         </div>
 
@@ -113,10 +113,10 @@ const Features = () => {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Experience These Features?</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of users who are already benefiting from our advanced mining platform.
+            Join thousands of users learning safe, official ways to earn Robux.
           </p>
           <button className="inline-flex items-center justify-center rounded-md text-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 py-3 glow-effect">
-            Start Mining Now
+            Get Started
           </button>
         </div>
       </div>

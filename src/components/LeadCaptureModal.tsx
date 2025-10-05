@@ -25,7 +25,8 @@ export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) 
 
     setIsSubmitting(true);
 
-    const endpoint = import.meta.env.VITE_LEADS_ENDPOINT_URL;
+    // Lead capture endpoint - configure in hosting/edge function
+    const endpoint = null; // TODO: Configure lead capture endpoint
     if (endpoint) {
       try {
         const params = new URLSearchParams(window.location.search);

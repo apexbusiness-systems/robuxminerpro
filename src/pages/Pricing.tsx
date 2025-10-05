@@ -4,12 +4,12 @@ const Pricing = () => {
       name: "Starter",
       price: "Free",
       period: "forever",
-      description: "Perfect for getting started with basic mining",
+      description: "Perfect for getting started with learning basics",
       features: [
-        "Basic mining algorithm",
-        "Up to 100 Robux/day",
+        "Basic learning modules",
+        "Official earning guides",
         "Email support",
-        "Standard processing speed"
+        "Community access"
       ],
       cta: "Get Started",
       popular: false
@@ -18,13 +18,13 @@ const Pricing = () => {
       name: "Pro",
       price: "$9.99",
       period: "/month",
-      description: "Ideal for serious miners who want more power",
+      description: "Ideal for serious learners who want more features",
       features: [
-        "Advanced mining algorithm",
-        "Up to 1,000 Robux/day",
+        "Advanced learning paths",
+        "AI mentor access",
         "Priority support",
-        "2x processing speed",
-        "Real-time analytics",
+        "Premium tutorials",
+        "Real-time progress tracking",
         "Multi-device sync"
       ],
       cta: "Upgrade to Pro",
@@ -34,16 +34,16 @@ const Pricing = () => {
       name: "Enterprise",
       price: "$29.99",
       period: "/month",
-      description: "Maximum performance for professional users",
+      description: "Maximum features for professional creators",
       features: [
-        "Premium mining algorithm",
-        "Unlimited Robux/day",
-        "24/7 dedicated support",
-        "5x processing speed",
+        "All Pro features",
+        "Dedicated mentor sessions",
+        "24/7 support",
         "Advanced analytics",
+        "Custom learning paths",
         "API access",
-        "Custom integrations",
-        "Priority processing"
+        "Team collaboration",
+        "Priority updates"
       ],
       cta: "Go Enterprise",
       popular: false

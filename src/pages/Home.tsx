@@ -107,8 +107,8 @@ const Home = () => {
   const handleProviderSelect = async (provider: 'google' | 'discord' | 'email') => {
     setShowProviderModal(false);
     
-    // Capture lead
-    const endpoint = import.meta.env.VITE_LEADS_ENDPOINT_URL;
+    // Capture lead - configure in hosting/edge function
+    const endpoint = null; // TODO: Configure lead capture endpoint
     if (endpoint) {
       try {
         const params = new URLSearchParams(window.location.search);
