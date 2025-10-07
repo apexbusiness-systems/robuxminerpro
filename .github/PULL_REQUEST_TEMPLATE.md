@@ -17,5 +17,11 @@ Planned version bump: ☐ patch  ☐ minor  ☐ none  (pre-GA v0.y.z; GA → v1.
 - Highlights:
 - Changes (feat/fix/breaking):
 
+## LLM Gates (docs-only until approved)
+- [ ] References AI/LLM_READINESS.md and AI/SECRETS_POLICY.md
+- [ ] No code touching env/CI/package files
+- [ ] Safety copy complies (no 'free Robux/generator/mining')
+- [ ] Evidence plan attached for manual tests (will run post-publish)
+
 ---
 *Refs: [Conventional Commits](https://www.conventionalcommits.org/); [Lighthouse/PWA](https://developers.google.com/web/tools/lighthouse); [WCAG](https://www.w3.org/WAI/WCAG21/quickref/)*
