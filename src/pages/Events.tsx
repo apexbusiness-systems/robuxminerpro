@@ -23,7 +23,7 @@ export default function Events() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {displayEvents.map((event: any, i) => (
-          <Card key={i} className={event.status === 'live' ? 'border-success bg-success/10' : ''}>
+          <Card key={i} className={event.status === 'live' ? 'border-green-500 bg-green-50' : ''}>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
@@ -31,7 +31,7 @@ export default function Events() {
                   {event.title}
                 </CardTitle>
                 {event.status === 'live' && (
-                  <span className="px-2 py-1 bg-success text-success-foreground text-xs rounded-full">
+                  <span className="px-2 py-1 bg-green-500 text-white text-xs rounded-full">
                     LIVE
                   </span>
                 )}

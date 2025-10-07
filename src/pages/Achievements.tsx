@@ -24,10 +24,10 @@ export default function Achievements() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {displayAchievements.map((achievement: any, i) => (
-          <Card key={i} className={`${achievement.earned ? 'bg-gradient-to-br from-primary/10 to-primary/20 border-primary' : ''}`}>
+          <Card key={i} className={`${achievement.earned ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-300' : ''}`}>
             <CardHeader>
               <div className="flex items-center gap-3">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${achievement.earned ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${achievement.earned ? 'bg-yellow-500 text-white' : 'bg-muted'}`}>
                   {achievement.earned ? '🏆' : '🔒'}
                 </div>
                 <div>

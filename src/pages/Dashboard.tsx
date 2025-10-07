@@ -42,7 +42,7 @@ export default function Dashboard() {
             <CardTitle>Per Minute</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-success">
+            <div className="text-2xl font-bold text-green-500">
               {data.session.perMinute}/min
             </div>
           </CardContent>
@@ -53,7 +53,7 @@ export default function Dashboard() {
             <CardTitle>Session Time</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-info">
+            <div className="text-2xl font-bold text-blue-500">
               {data.session.elapsed}
             </div>
           </CardContent>
