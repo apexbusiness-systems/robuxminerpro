@@ -1,4 +1,3 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -13,26 +12,26 @@ serve(async (req) => {
 
   try {
     const { messages } = await req.json();
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
-    if (!OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY is not configured');
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY is not configured');
     }
 
     console.log('Received chat request with', messages.length, 'messages');
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { 
             role: 'system', 
-            content: 'You are a helpful AI strategy assistant for RobuxMinerPro. Help users learn official ways to earn Robux through creating content, Premium subscriptions, and legitimate game development. Never suggest free Robux generators or scams. Keep answers clear and concise.' 
+            content: 'You are a helpful learning assistant for RobuxMinerPro. Teach users official ways to get Robux: buy on roblox.com/robux, Roblox Premium monthly stipend, create and sell items/games, or buy gift cards. NEVER suggest free Robux, generators, mining, hacks, or off-platform trades—Roblox states these are scams. Use everyday words, short sentences (≈20 words max), active voice. Keep answers clear, friendly, grade-8 reading level.' 
           },
           ...messages,
         ],
@@ -42,14 +41,21 @@ serve(async (req) => {
 
     if (!response.ok) {
       if (response.status === 429) {
-        console.error('OpenAI rate limit exceeded');
-        return new Response(JSON.stringify({ error: 'Rate limit exceeded, please try again later.' }), {
+        console.error('Lovable AI rate limit exceeded');
+        return new Response(JSON.stringify({ error: 'Rate limit exceeded. Please try again in a moment.' }), {
           status: 429,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
+      if (response.status === 402) {
+        console.error('Lovable AI credits exhausted');
+        return new Response(JSON.stringify({ error: 'Service temporarily unavailable. Please try again later.' }), {
+          status: 402,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
       const errorText = await response.text();
-      console.error('OpenAI API error:', response.status, errorText);
+      console.error('Lovable AI error:', response.status, errorText);
       return new Response(JSON.stringify({ error: 'AI service error' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

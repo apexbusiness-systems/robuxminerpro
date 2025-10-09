@@ -13,9 +13,18 @@ export default function Mentor() {
   }, []);
 
   const handleSafety = (message: string): string | null => {
-    const forbidden = ['free robux', 'robux generator', 'free membership', 'hack', 'cheat', 'generator'];
-    if (forbidden.some(term => message.toLowerCase().includes(term))) {
-      return "I can't help with that. For legitimate Robux information, visit https://roblox.com/support. Remember, Roblox has stated that 'free Robux or membership generators' are scams.";
+    const lowerMsg = message.toLowerCase();
+    const forbidden = [
+      /\bfree\s+robux\b/i,
+      /\brobux[\W_]*generator\b/i,
+      /\brobux[\W_]*min(e|ing)\b/i,
+      /\bfree\s+membership\b/i,
+      /\bhack/i,
+      /\bcheat/i
+    ];
+    
+    if (forbidden.some(pattern => pattern.test(lowerMsg))) {
+      return "We only teach official ways to get Robux. Learn more at help.roblox.com.";
     }
     return null;
   };
