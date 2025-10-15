@@ -2,3 +2,15 @@ project_id = "huaxdvjartkzlgjlzwzg"
 
 [functions.chat]
 verify_jwt = false
+
+[functions.faq-helper]
+verify_jwt = false
+
+[functions.squad-collaborate]
+verify_jwt = false
+
+[functions.rate-limiter]
+verify_jwt = false
+
+[functions.load-test]
+verify_jwt = false
