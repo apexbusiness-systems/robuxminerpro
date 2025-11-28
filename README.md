@@ -8,6 +8,43 @@
 
 There are several ways of editing your app.
 
+### Verify the GitHub remote
+
+If pushes or saves are failing because the repository URL still points to an old project, reset the remote to the current GitHub URL before making changes:
+
+```sh
+# Replace <NEW_REPO_URL> with this repository's actual GitHub URL
+git remote remove origin 2>/dev/null || true
+git remote add origin <NEW_REPO_URL>
+git remote -v
+```
+
+You can also confirm connectivity after updating the URL:
+
+```sh
+npm run check:git-remote
+```
+
+To enforce that the remote matches the expected GitHub repository when running the check (useful after renames or transfers), set `EXPECTED_GIT_REMOTE`:
+
+```sh
+EXPECTED_GIT_REMOTE=<NEW_REPO_URL> npm run check:git-remote
+```
+
+To automatically fix a missing or stale `origin` during the check, provide both `EXPECTED_GIT_REMOTE` and `AUTO_FIX_GIT_REMOTE=1`:
+
+```sh
+EXPECTED_GIT_REMOTE=<NEW_REPO_URL> AUTO_FIX_GIT_REMOTE=1 npm run check:git-remote
+```
+
+The script will add or update `origin` to the expected URL before re-validating connectivity.
+
+The check runs with `GIT_TERMINAL_PROMPT=0` so it will fail fast instead of hanging for credentials if your remote requires authentication.
+
+For SSH remotes, the check also sets `GIT_SSH_COMMAND` to disable interactive host key or password prompts and uses a short timeout. If your environment needs custom SSH options, override `GIT_SSH_COMMAND` when invoking the script.
+
+You should see the new URL in the `fetch` and `push` columns. Once the remote is corrected, the rest of the workflows below will work normally.
+
 **Use Lovable**
 
 Simply visit the [Lovable Project](https://lovable.dev/projects/e56efeb6-ea61-4d9b-853b-adab59068f7d) and start prompting.
