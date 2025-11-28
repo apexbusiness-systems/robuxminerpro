@@ -8,6 +8,58 @@
 
 There are several ways of editing your app.
 
+### Verify the GitHub remote
+
+If pushes or saves are failing because the repository URL still points to an old project, reset the remote to the current GitHub URL before making changes:
+
+```sh
+# Replace <NEW_REPO_URL> with this repository's actual GitHub URL
+git remote remove origin 2>/dev/null || true
+git remote add origin <NEW_REPO_URL>
+git remote -v
+```
+
+You can also confirm connectivity after updating the URL:
+
+```sh
+npm run check:git-remote
+```
+
+To enforce that the remote matches the expected GitHub repository when running the check (useful after renames or transfers), set `EXPECTED_GIT_REMOTE`:
+
+```sh
+EXPECTED_GIT_REMOTE=<NEW_REPO_URL> npm run check:git-remote
+```
+
+When running in GitHub Actions, the check will automatically infer the expected remote from `GITHUB_SERVER_URL` and `GITHUB_REPOSITORY` if `EXPECTED_GIT_REMOTE` is not provided. This ensures CI fails fast when the workflow token cannot reach the intended repository URL.
+
+To automatically fix a missing or stale `origin` during the check, provide both `EXPECTED_GIT_REMOTE` and `AUTO_FIX_GIT_REMOTE=1`:
+
+```sh
+EXPECTED_GIT_REMOTE=<NEW_REPO_URL> AUTO_FIX_GIT_REMOTE=1 npm run check:git-remote
+```
+
+The script will add or update `origin` to the expected URL before re-validating connectivity.
+
+The check runs with `GIT_TERMINAL_PROMPT=0` so it will fail fast instead of hanging for credentials if your remote requires authentication.
+
+For SSH remotes, the check also sets `GIT_SSH_COMMAND` to disable interactive host key or password prompts and uses a short timeout. If your environment needs custom SSH options, override `GIT_SSH_COMMAND` when invoking the script.
+
+If the expected URL uses HTTPS but your local remote uses SSH (or vice versa), the script now recognizes them as the same repository as long as the host and `<owner>/<repo>` slug match. You can still normalize the protocol by setting `AUTO_FIX_GIT_REMOTE=1 EXPECTED_GIT_REMOTE=<NEW_REPO_URL>`.
+Connectivity checks are now opt-in to avoid hangs on locked-down networks. To verify reachability in addition to configuration, enable `VERIFY_GIT_CONNECTIVITY=1`:
+
+VERIFY_GIT_CONNECTIVITY=1 npm run check:git-remote
+
+When you only need to report the current remote state without failing the build (for example, to scope whether the connection is configured after a rename), run in status mode:
+
+```sh
+GIT_REMOTE_STATUS=1 npm run check:git-remote
+```
+
+Status mode will exit successfully even if the remote is missing or unreachable so you can gather diagnostics without blocking pipelines.
+
+You should see the new URL in the `fetch` and `push` columns. Once the remote is corrected, the rest of the workflows below will work normally.
+
 **Use Lovable**
 
 Simply visit the [Lovable Project](https://lovable.dev/projects/e56efeb6-ea61-4d9b-853b-adab59068f7d) and start prompting.
