@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react';
 import { get } from '@/shared/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import type { Event } from '@/types';
 
 export default function Events() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    get('/events').then(setEvents);
+    get<Event[]>('/events').then(data => setEvents(data || []));
   }, []);
 
-  const defaultEvents = [
+  const defaultEvents: Event[] = [
     { title: 'Double Robux Weekend', description: 'Earn 2x Robux on all mining activities', status: 'live', endsIn: '2 days', participants: 1234 },
     { title: 'Referral Bonus', description: 'Invite friends and earn bonus rewards', status: 'ongoing', reward: '50 Robux per referral', participants: 567 }
   ];
@@ -22,7 +23,7 @@ export default function Events() {
       <h1 className="text-3xl font-bold mb-8">Events & Leaderboards</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {displayEvents.map((event: any, i) => (
+        {displayEvents.map((event, i) => (
           <Card key={i} className={event.status === 'live' ? 'border-green-500 bg-green-50' : ''}>
             <CardHeader>
               <div className="flex items-center justify-between">
