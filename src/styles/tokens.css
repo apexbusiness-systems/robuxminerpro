@@ -87,8 +87,8 @@ pre code {
 .cta-mentor:hover,.cta-mentor:focus-visible{filter:brightness(1.05);outline:0}
 
 /* modal */
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:45}
-.modal{width:min(720px,90vw);max-height:80vh;overflow:auto;border-radius:12px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.65);display:grid;place-items:center;z-index:9999;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.modal{width:min(720px,90vw);max-height:80vh;overflow:auto;border-radius:12px;position:relative;z-index:10000}
 
 /* Focus ring */
 :focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
