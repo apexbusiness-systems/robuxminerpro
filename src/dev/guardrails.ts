@@ -66,8 +66,10 @@ function assertAssets() {
   }
 }
 
+type GuardrailHit = { node: Element; from: string; to: string };
+
 export function runGuardrails() {
-  const hits: any[] = [];
+  const hits: GuardrailHit[] = [];
   try {
     // Remove legacy SSR fallback hero if present
     const ssr = document.getElementById('hero-ssr');

@@ -5,6 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+type LoadTestError = { userId: number; message: number; status?: number; error?: string };
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -25,7 +27,7 @@ serve(async (req) => {
       successful: 0,
       failed: 0,
       rateLimited: 0,
-      errors: [] as any[],
+      errors: [] as LoadTestError[],
       avgResponseTime: 0,
       maxResponseTime: 0,
       minResponseTime: Infinity,
@@ -58,13 +60,17 @@ serve(async (req) => {
             results.minResponseTime = Math.min(results.minResponseTime, responseTime);
           } else {
             results.failed++;
-            results.errors.push({ userId, message: i, status: response.status });
-          }
-        } catch (error) {
-          results.failed++;
-          results.errors.push({ userId, message: i, error: error instanceof Error ? error.message : 'Unknown error' });
+          results.errors.push({ userId, message: i, status: response.status });
         }
+      } catch (error) {
+        results.failed++;
+        results.errors.push({
+          userId,
+          message: i,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
       }
+    }
     };
 
     // Run concurrent users

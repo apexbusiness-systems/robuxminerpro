@@ -1,5 +1,5 @@
-type AnyObj = Record<string,unknown>;
-const STUBS: Record<string,unknown> = {
+type AnyObj = Record<string, unknown>;
+const STUBS: Record<string, unknown> = {
   "/earnings/session/active": { balance:0, perMinute:0, elapsed:"00:00:00" },
   "/earnings/streak": { days:0 },
   "/earnings/milestones": [],
@@ -11,7 +11,7 @@ const STUBS: Record<string,unknown> = {
   "/learning-paths/user-progress": []
 };
 
-export async function get(path: string): Promise<any>{
+export async function get<T = unknown>(path: string): Promise<T | AnyObj | null> {
   try{
     const res = await fetch(path, { headers: { accept:"application/json" }});
     if(res.status===204) return null;
@@ -22,7 +22,7 @@ export async function get(path: string): Promise<any>{
   }
 }
 
-function stub(path:string): any{
+function stub(path:string): AnyObj | unknown{
   const key = Object.keys(STUBS).find(k=> path.includes(k));
   return key ? STUBS[key] : {};
 }

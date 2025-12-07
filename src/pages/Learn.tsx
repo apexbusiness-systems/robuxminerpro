@@ -5,13 +5,21 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 
 export default function Learn() {
-  const [learningPaths, setLearningPaths] = useState([]);
+  type LearningPath = {
+    title: string;
+    description: string;
+    progress: number;
+    modules: number;
+    completed: number;
+  };
+
+  const [learningPaths, setLearningPaths] = useState<LearningPath[]>([]);
 
   useEffect(() => {
     get('/learning-paths').then(setLearningPaths);
   }, []);
 
-  const defaultPaths = [
+  const defaultPaths: LearningPath[] = [
     { title: 'Mining Basics', description: 'Learn the fundamentals of efficient mining', progress: 75, modules: 4, completed: 3 },
     { title: 'Advanced Strategies', description: 'Master advanced techniques for maximum earnings', progress: 25, modules: 6, completed: 1 },
     { title: 'Safety & Security', description: 'Protect your account and avoid scams', progress: 100, modules: 3, completed: 3 }
@@ -24,7 +32,7 @@ export default function Learn() {
       <h1 className="text-3xl font-bold mb-8">Learning Paths</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {displayPaths.map((path: any, i) => (
+        {displayPaths.map((path, i) => (
           <Card key={i}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
