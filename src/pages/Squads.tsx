@@ -4,10 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 export default function Squads() {
-  const [squads, setSquads] = useState([]);
+  type Squad = {
+    name: string;
+    description: string;
+  };
+
+  const [squads, setSquads] = useState<Squad[]>([]);
 
   useEffect(() => {
-    get('/squads').then(setSquads);
+    get<Squad[]>('/squads').then((data) => {
+      if (Array.isArray(data)) setSquads(data);
+    });
   }, []);
 
   return (
@@ -31,7 +38,7 @@ export default function Squads() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {squads.map((squad: any, i) => (
+          {squads.map((squad, i) => (
             <Card key={i}>
               <CardHeader>
                 <CardTitle>{squad.name}</CardTitle>

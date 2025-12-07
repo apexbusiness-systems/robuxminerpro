@@ -4,13 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
 export default function Achievements() {
-  const [achievements, setAchievements] = useState([]);
+  type Achievement = {
+    title: string;
+    description: string;
+    progress: number;
+    maxProgress: number;
+    earned: boolean;
+  };
+
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
-    get('/achievements').then(setAchievements);
+    get<Achievement[]>('/achievements').then((data) => {
+      if (Array.isArray(data)) setAchievements(data);
+    });
   }, []);
 
-  const defaultAchievements = [
+  const defaultAchievements: Achievement[] = [
     { title: 'First Steps', description: 'Complete your first mining session', progress: 100, maxProgress: 100, earned: true },
     { title: 'Streak Master', description: 'Maintain a 7-day login streak', progress: 3, maxProgress: 7, earned: false },
     { title: 'Robux Collector', description: 'Earn 1,000 total Robux', progress: 250, maxProgress: 1000, earned: false }
@@ -23,7 +33,7 @@ export default function Achievements() {
       <h1 className="text-3xl font-bold mb-8">Achievements</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {displayAchievements.map((achievement: any, i) => (
+        {displayAchievements.map((achievement, i) => (
           <Card key={i} className={`${achievement.earned ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-300' : ''}`}>
             <CardHeader>
               <div className="flex items-center gap-3">

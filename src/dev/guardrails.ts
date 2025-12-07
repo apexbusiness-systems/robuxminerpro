@@ -14,7 +14,9 @@ function isVisible(el: Element) {
   return (el as HTMLElement).offsetParent !== null || (el as HTMLElement).matches('body,html');
 }
 
-function sanitizeTextNode(node: Text, hits: { node: Element; from: string; to: string }[]) {
+type SanitizedHit = { node: Element; from: string; to: string };
+
+function sanitizeTextNode(node: Text, hits: SanitizedHit[]) {
   const parent = node.parentElement as Element | null;
   if (!parent || !isVisible(parent)) return;
   const t = (node.textContent || '').trim();
@@ -34,7 +36,7 @@ function sanitizeTextNode(node: Text, hits: { node: Element; from: string; to: s
   }
 }
 
-function walk(node: Node, hits: { node: Element; from: string; to: string }[]) {
+function walk(node: Node, hits: SanitizedHit[]) {
   // skip non-content containers
   if (node instanceof Element && node.matches('script,style,noscript,template')) return;
   if (node.nodeType === Node.TEXT_NODE) {
@@ -67,7 +69,7 @@ function assertAssets() {
 }
 
 export function runGuardrails() {
-  const hits: any[] = [];
+  const hits: SanitizedHit[] = [];
   try {
     // Remove legacy SSR fallback hero if present
     const ssr = document.getElementById('hero-ssr');
