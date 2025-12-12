@@ -4,11 +4,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 
+type LearningPath = {
+  title: string;
+  description: string;
+  progress: number;
+  modules: number;
+  completed: number;
+};
+
 export default function Learn() {
-  const [learningPaths, setLearningPaths] = useState([]);
+  const [learningPaths, setLearningPaths] = useState<LearningPath[]>([]);
 
   useEffect(() => {
-    get('/learning-paths').then(setLearningPaths);
+    get<LearningPath[]>('/learning-paths').then(setLearningPaths);
   }, []);
 
   const defaultPaths = [
@@ -24,7 +32,7 @@ export default function Learn() {
       <h1 className="text-3xl font-bold mb-8">Learning Paths</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {displayPaths.map((path: any, i) => (
+        {displayPaths.map((path, i) => (
           <Card key={i}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

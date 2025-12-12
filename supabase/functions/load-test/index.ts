@@ -20,12 +20,13 @@ serve(async (req) => {
     console.log(`Starting load test: ${concurrentUsers} users × ${messagesPerUser} messages to ${targetFunction}`);
 
     const startTime = Date.now();
+    type LoadTestError = { userId: number; message: number; status?: number; error?: string };
     const results = {
       totalRequests: 0,
       successful: 0,
       failed: 0,
       rateLimited: 0,
-      errors: [] as any[],
+      errors: [] as LoadTestError[],
       avgResponseTime: 0,
       maxResponseTime: 0,
       minResponseTime: Infinity,

@@ -3,11 +3,20 @@ import { get } from '@/shared/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
+type EventInfo = {
+  title: string;
+  description: string;
+  status?: string;
+  endsIn?: string;
+  reward?: string;
+  participants?: number;
+};
+
 export default function Events() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<EventInfo[]>([]);
 
   useEffect(() => {
-    get('/events').then(setEvents);
+    get<EventInfo[]>('/events').then(setEvents);
   }, []);
 
   const defaultEvents = [
@@ -22,7 +31,7 @@ export default function Events() {
       <h1 className="text-3xl font-bold mb-8">Events & Leaderboards</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {displayEvents.map((event: any, i) => (
+        {displayEvents.map((event, i) => (
           <Card key={i} className={event.status === 'live' ? 'border-green-500 bg-green-50' : ''}>
             <CardHeader>
               <div className="flex items-center justify-between">
