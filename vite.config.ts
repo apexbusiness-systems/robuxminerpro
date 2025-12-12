@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => ({
       }
     })
   ].filter(Boolean),
+  envPrefix: ["VITE_", "OMNILINK_"],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
