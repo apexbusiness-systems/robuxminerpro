@@ -36,6 +36,15 @@ npm i
 npm run dev
 ```
 
+### Environment configuration
+
+Copy `docs/env.example` to a local `.env` and fill in:
+- `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, optionally `VITE_SUPABASE_FUNCTIONS_URL`
+- `VITE_LEADS_ENDPOINT_URL`
+- `OMNILINK_ENABLED`, `OMNILINK_BASE_URL`, `OMNILINK_TENANT_ID`
+
+The app will fail fast if Supabase env vars are missing to avoid silent misconfigurations.
+
 **Edit a file directly in GitHub**
 
 - Navigate to the desired file(s).

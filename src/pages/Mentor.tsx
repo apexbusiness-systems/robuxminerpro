@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getSupabaseFunctionUrl } from '@/integrations/supabase/config';
 
 export default function Mentor() {
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
@@ -53,7 +54,8 @@ export default function Mentor() {
     let assistantContent = '';
     
     try {
-      const response = await fetch('https://huaxdvjartkzlgjlzwzg.supabase.co/functions/v1/chat', {
+      const functionUrl = getSupabaseFunctionUrl('/chat');
+      const response = await fetch(functionUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, userMsg] }),
