@@ -53,7 +53,11 @@ export default function Mentor() {
     let assistantContent = '';
     
     try {
-      const response = await fetch('https://huaxdvjartkzlgjlzwzg.supabase.co/functions/v1/chat', {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      if (!supabaseUrl) {
+        throw new Error('VITE_SUPABASE_URL is not configured');
+      }
+      const response = await fetch(`${supabaseUrl}/functions/v1/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, userMsg] }),
