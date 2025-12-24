@@ -74,13 +74,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .single();
 
       if (error) {
-        console.error('Error fetching profile:', error);
         return null;
       }
 
       return data;
-    } catch (error) {
-      console.error('Error in fetchProfile:', error);
+    } catch {
       return null;
     }
   };
@@ -91,8 +89,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .from('profiles')
         .update({ last_login: new Date().toISOString() })
         .eq('user_id', userId);
-    } catch (error) {
-      console.error('Error updating last activity:', error);
+    } catch {
+      // Ignore update errors
     }
   };
 
@@ -100,8 +98,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id);
-        
         setSession(session);
         setUser(session?.user ?? null);
 
@@ -152,8 +148,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         title: "Signed out",
         description: "You have been successfully signed out.",
       });
-    } catch (error) {
-      console.error('Error signing out:', error);
+    } catch {
       toast({
         title: "Error",
         description: "Failed to sign out. Please try again.",
@@ -184,8 +179,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         title: "Profile updated",
         description: "Your profile has been successfully updated.",
       });
-    } catch (error) {
-      console.error('Error updating profile:', error);
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update profile. Please try again.",
