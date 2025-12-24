@@ -585,12 +585,6 @@ const Home = () => {
         </div>
       )}
 
-      {/* Lead Capture Modal */}
-      <LeadCaptureModal 
-        open={showLeadModal} 
-        onOpenChange={setShowLeadModal} 
-      />
-
       {/* Provider Modal */}
       <Dialog open={showProviderModal} onOpenChange={setShowProviderModal}>
         <DialogContent 

@@ -112,8 +112,7 @@ export default function Mentor() {
 
       const finalMessages = [...messages, userMsg, { role: 'assistant' as const, content: assistantContent }];
       localStorage.setItem('chat-transcript', JSON.stringify(finalMessages));
-    } catch (error) {
-      console.error('Chat error:', error);
+    } catch {
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: 'Sorry, I encountered an error. Please try again.' 
