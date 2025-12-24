@@ -44,7 +44,7 @@ export async function get<T = unknown>(path: string): Promise<T | null> {
 
       const startTime = new Date(data.start_time).getTime();
       const now = new Date().getTime();
-      const elapsedMs = now - startTime;
+      const elapsedMs = Math.max(0, now - startTime);
 
       // Format elapsed time as HH:MM:SS
       const hours = Math.floor(elapsedMs / 3600000);
