@@ -1,0 +1,65 @@
+name: Performance Audit
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'placeholder-key' }}
+
+      - name: Serve production build
+        run: |
+          npx http-server dist -p 8080 &
+          sleep 5
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            http://localhost:8080/
+            http://localhost:8080/#/pricing
+            http://localhost:8080/#/features
+          budgetPath: ./lighthouse-budget.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: Performance Summary
+        run: |
+          echo "📊 Lighthouse Performance Audit Complete"
+          echo "View detailed reports in the artifacts"
+          echo ""
+          echo "Performance Targets:"
+          echo "- Performance Score: ≥90"
+          echo "- Accessibility Score: ≥90"
+          echo "- Best Practices Score: ≥90"
+          echo "- SEO Score: ≥90"
+          echo ""
+          echo "Key Metrics:"
+          echo "- First Contentful Paint: <1.8s"
+          echo "- Speed Index: <3.4s"
+          echo "- Largest Contentful Paint: <2.5s"
+          echo "- Total Blocking Time: <300ms"
+          echo "- Cumulative Layout Shift: <0.1"

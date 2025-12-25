@@ -1,0 +1,119 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  security-scan:
+    name: Security & Secrets Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Secret Detection
+        run: |
+          echo "🔍 Scanning for exposed secrets..."
+          if grep -rE '(sk-proj-|sk-|pk_live_|SUPABASE_SERVICE_ROLE_KEY|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)' --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist .; then
+            echo "❌ SECRET DETECTED IN CODE - This is a security violation!"
+            echo "Please remove all hardcoded secrets and use environment variables."
+            exit 1
+          fi
+          echo "✅ No secrets detected"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dependency Audit
+        run: |
+          echo "🔒 Running security audit..."
+          npm audit --audit-level=high || true
+          echo "⚠️  Review security findings above"
+
+  lint-and-type:
+    name: Lint & Type Checking
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript type checking
+        run: npm run type-check
+
+  build-test:
+    name: Build Production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for production
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'placeholder-key' }}
+
+      - name: Check bundle size
+        run: |
+          echo "📦 Bundle sizes:"
+          du -sh dist/
+          du -h dist/assets/*.js | sort -h
+
+          # Warn if total size exceeds 5MB
+          SIZE=$(du -s dist/ | cut -f1)
+          if [ $SIZE -gt 5120 ]; then
+            echo "⚠️  Warning: dist/ folder exceeds 5MB"
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  status-check:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [security-scan, lint-and-type, build-test]
+    if: always()
+    steps:
+      - name: Check all jobs
+        run: |
+          if [ "${{ needs.security-scan.result }}" != "success" ] || \
+             [ "${{ needs.lint-and-type.result }}" != "success" ] || \
+             [ "${{ needs.build-test.result }}" != "success" ]; then
+            echo "❌ CI Pipeline Failed"
+            exit 1
+          fi
+          echo "✅ All CI checks passed!"
