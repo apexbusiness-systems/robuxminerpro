@@ -1,0 +1,126 @@
+name: PR Quality Report
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  quality-report:
+    name: Generate Quality Checklist
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security scan
+        id: security
+        run: |
+          echo "Running security scan..."
+          if grep -rE '(sk-proj-|sk-|pk_live_|SUPABASE_SERVICE_ROLE_KEY)' --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist . > /dev/null; then
+            echo "status=❌ FAILED" >> $GITHUB_OUTPUT
+            echo "secrets_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "status=✅ PASSED" >> $GITHUB_OUTPUT
+            echo "secrets_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run linter
+        id: lint
+        run: |
+          if npm run lint > /dev/null 2>&1; then
+            echo "status=✅ PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "status=⚠️  WARNINGS" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run type check
+        id: typecheck
+        run: |
+          if npm run type-check > /dev/null 2>&1; then
+            echo "status=✅ PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "status=❌ FAILED" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build check
+        id: build
+        run: |
+          if npm run build > /dev/null 2>&1; then
+            echo "status=✅ PASSED" >> $GITHUB_OUTPUT
+            SIZE=$(du -sh dist/ | cut -f1)
+            echo "size=$SIZE" >> $GITHUB_OUTPUT
+          else
+            echo "status=❌ FAILED" >> $GITHUB_OUTPUT
+            echo "size=N/A" >> $GITHUB_OUTPUT
+          fi
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'placeholder-key' }}
+
+      - name: Check for breaking changes
+        id: breaking
+        run: |
+          # Check for common breaking changes
+          BREAKING=false
+          if git diff origin/main...HEAD -- 'src/integrations/supabase/types.ts' | grep -q '^-'; then
+            BREAKING=true
+          fi
+          echo "breaking=$BREAKING" >> $GITHUB_OUTPUT
+
+      - name: Post quality report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const report = `## 🔍 Quality Checklist
+
+            ### Automated Checks
+            - **Security Scan:** ${{ steps.security.outputs.status }}
+              ${steps.security.outputs.secrets_found === 'true' ? '  ⚠️  **SECRETS DETECTED - DO NOT MERGE**' : ''}
+            - **ESLint:** ${{ steps.lint.outputs.status }}
+            - **TypeScript:** ${{ steps.typecheck.outputs.status }}
+            - **Build:** ${{ steps.build.outputs.status }} (Size: ${{ steps.build.outputs.size }})
+            - **Breaking Changes:** ${steps.breaking.outputs.breaking === 'true' ? '⚠️  Potential breaking changes detected' : '✅ None detected'}
+
+            ### Manual Verification Required
+            - [ ] No console errors in browser DevTools
+            - [ ] Performance: Lighthouse scores ≥90
+            - [ ] Accessibility: WCAG violations <5
+            - [ ] Feature flags: New features default to \`enabled: false\`
+            - [ ] Rate limiting: Tested and working correctly
+            - [ ] Mobile responsive: Tested on mobile viewport
+            - [ ] Cross-browser: Tested in Chrome, Firefox, Safari
+
+            ### Pre-Merge Checklist
+            - [ ] All CI checks passing
+            - [ ] Code reviewed by at least 1 person
+            - [ ] Documentation updated (if applicable)
+            - [ ] Tests added/updated (if applicable)
+            - [ ] No merge conflicts
+            - [ ] CHANGELOG.md updated (for releases)
+
+            ### Performance Budget
+            - **Target:** 5MB total, individual chunks <500KB
+            - **Current:** ${{ steps.build.outputs.size }}
+
+            ---
+            *This report is automatically generated. Review all items before merging.*
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
