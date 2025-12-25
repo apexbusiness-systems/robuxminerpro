@@ -49,13 +49,25 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    sourcemap: false,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production',
+        drop_debugger: true,
+        pure_funcs: mode === 'production' ? ['console.log', 'console.debug'] : []
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          router: ['react-router-dom']
+          router: ['react-router-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-toast'],
+          charts: ['recharts']
         }
       }
-    }
+    },
+    chunkSizeWarningLimit: 1000
   }
 }));
