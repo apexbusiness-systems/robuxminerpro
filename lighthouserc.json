@@ -1,0 +1,16 @@
+{
+  "ci": {
+    "collect": {
+      "numberOfRuns": 1
+    },
+    "assert": {
+      "assertions": {
+        "first-contentful-paint": ["warn", { "maxNumericValue": 5000 }],
+        "interactive": ["warn", { "maxNumericValue": 6000 }],
+        "largest-contentful-paint": ["warn", { "maxNumericValue": 6000 }],
+        "speed-index": ["warn", { "maxNumericValue": 6000 }],
+        "resource-summary:script:size": ["warn", { "maxNumericValue": 750000 }]
+      }
+    }
+  }
+}
