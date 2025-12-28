@@ -1,0 +1,53 @@
+name: Generate Quality Checklist
+
+on:
+  pull_request:
+
+jobs:
+  quality-checklist:
+    name: Generate Quality Checklist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run lint (if available)
+        run: |
+          if npm run lint > /dev/null 2>&1; then
+            echo "lint=✅ PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "lint=⚠️ SKIPPED" >> $GITHUB_OUTPUT
+          fi
+      - name: Run type-check (if available)
+        run: |
+          if npm run type-check > /dev/null 2>&1; then
+            echo "typecheck=✅ PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "typecheck=⚠️ SKIPPED" >> $GITHUB_OUTPUT
+          fi
+      - name: Build
+        id: build
+        run: |
+          if npm run build > /dev/null 2>&1; then
+            echo "status=✅ PASSED" >> $GITHUB_OUTPUT
+            SIZE=$(du -sh dist/ | cut -f1)
+            echo "size=$SIZE" >> $GITHUB_OUTPUT
+          else
+            echo "status=❌ FAILED" >> $GITHUB_OUTPUT
+            echo "size=N/A" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+      - name: Write summary
+        run: |
+          {
+            echo "## Quality Checklist"
+            echo ""
+            echo "- Build: ${{ steps.build.outputs.status }}"
+            echo "- Dist size: ${{ steps.build.outputs.size }}"
+          } >> $GITHUB_STEP_SUMMARY

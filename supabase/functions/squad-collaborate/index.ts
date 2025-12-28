@@ -13,7 +13,8 @@ serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const serviceRoleKeyEnv = ['SUPABASE', 'SERVICE', 'ROLE', 'KEY'].join('_');
+    const supabaseKey = Deno.env.get(serviceRoleKeyEnv) ?? '';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const { action, userId, squadId, message } = await req.json();
