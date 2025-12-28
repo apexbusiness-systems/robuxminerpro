@@ -21,6 +21,12 @@ const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const HealthCheck = lazy(() => import("./pages/HealthCheck"));
 const Status = lazy(() => import("./pages/Status"));
+const Docs = lazy(() => import("./pages/Docs"));
+const Help = lazy(() => import("./pages/Help"));
+const Community = lazy(() => import("./pages/Community"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Cookies = lazy(() => import("./pages/Cookies"));
+const Api = lazy(() => import("./pages/Api"));
 
 // Lazy load authenticated pages
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -30,6 +36,8 @@ const Learn = lazy(() => import("./pages/Learn"));
 const Events = lazy(() => import("./pages/Events"));
 const Payments = lazy(() => import("./pages/Payments"));
 const Mentor = lazy(() => import("./pages/Mentor"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Settings = lazy(() => import("./pages/Settings"));
 
 const queryClient = new QueryClient();
 
@@ -64,6 +72,12 @@ const App = () => {
                       <Route path="/terms" element={<Terms />} />
                       <Route path="/status" element={<Status />} />
                       <Route path="/health" element={<HealthCheck />} />
+                      <Route path="/docs" element={<Docs />} />
+                      <Route path="/help" element={<Help />} />
+                      <Route path="/community" element={<Community />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/cookies" element={<Cookies />} />
+                      <Route path="/api" element={<Api />} />
                       
                       {/* Auth route */}
                       <Route path="/auth" element={
@@ -106,6 +120,16 @@ const App = () => {
                       <Route path="/mentor" element={
                         <ProtectedRoute>
                           <Mentor />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/profile" element={
+                        <ProtectedRoute>
+                          <Profile />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/settings" element={
+                        <ProtectedRoute>
+                          <Settings />
                         </ProtectedRoute>
                       } />
                       
