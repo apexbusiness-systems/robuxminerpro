@@ -29,22 +29,23 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 15%;
 
-    /* Brand colors - ROBOMiner Pro vibrant theme */
-    --primary: 280 100% 70%;
+    /* Brand colors - ROBOMiner Pro vibrant theme (WCAG compliant) */
+    --primary: 280 80% 55%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 320 100% 75%;
+    --primary-glow: 320 80% 60%;
 
     /* Secondary elements */
     --secondary: 220 15% 95%;
     --secondary-foreground: 220 15% 15%;
 
-    /* Muted content */
+    /* Muted content - WCAG AA compliant (4.5:1 contrast ratio minimum) */
     --muted: 220 15% 96%;
-    --muted-foreground: 220 10% 50%;
+    --muted-foreground: 220 12% 40%;
 
-    /* Accent colors */
-    --accent: 280 100% 70%;
+    /* Accent colors - WCAG AA compliant */
+    --accent: 280 80% 55%;
     --accent-foreground: 0 0% 100%;
+    --accent-dark: 280 80% 35%;
 
     /* Status colors */
     --destructive: 0 84% 60%;
@@ -57,17 +58,17 @@
     /* Form elements */
     --border: 220 15% 90%;
     --input: 220 15% 95%;
-    --ring: 280 100% 70%;
+    --ring: 280 80% 55%;
 
     /* Layout */
     --radius: 0.75rem;
 
-    /* Custom design tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(280 100% 70%), hsl(320 100% 75%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 15% 8%), hsl(280 100% 15%));
-    --gradient-accent: linear-gradient(45deg, hsl(280 100% 70%), hsl(320 100% 75%), hsl(260 100% 80%));
+    /* Custom design tokens - WCAG compliant gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(280 80% 55%), hsl(320 80% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 15% 8%), hsl(280 80% 15%));
+    --gradient-accent: linear-gradient(45deg, hsl(280 80% 55%), hsl(320 80% 60%), hsl(260 80% 65%));
     --shadow-glow: 0 0 40px hsl(var(--primary) / 0.25);
-    --shadow-elegant: 0 10px 30px -10px hsl(280 100% 70% / 0.15);
+    --shadow-elegant: 0 10px 30px -10px hsl(280 80% 55% / 0.15);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
@@ -88,7 +89,7 @@
   }
 
   .dark {
-    /* Dark theme for RobuxMinerPro */
+    /* Dark theme for RobuxMinerPro - WCAG AA compliant */
     --background: 220 15% 8%;
     --foreground: 220 15% 95%;
 
@@ -98,28 +99,29 @@
     --popover: 220 20% 10%;
     --popover-foreground: 220 15% 95%;
 
-    --primary: 280 100% 70%;
+    --primary: 280 80% 65%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 320 100% 75%;
+    --primary-glow: 320 80% 70%;
 
     --secondary: 220 20% 15%;
     --secondary-foreground: 220 15% 85%;
 
     --muted: 220 20% 12%;
-    --muted-foreground: 220 10% 60%;
+    --muted-foreground: 220 10% 70%;
 
-    --accent: 280 100% 70%;
+    --accent: 280 80% 65%;
     --accent-foreground: 0 0% 100%;
+    --accent-dark: 280 80% 50%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 20% 20%;
     --input: 220 20% 15%;
-    --ring: 280 100% 70%;
+    --ring: 280 80% 65%;
 
     /* Enhanced gradients for dark mode */
-    --gradient-hero: linear-gradient(135deg, hsl(220 15% 8%), hsl(280 100% 12%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 15% 8%), hsl(280 80% 15%));
     --shadow-glow: 0 0 40px hsl(var(--primary) / 0.35);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -207,11 +209,11 @@
   .text-shimmer {
     background: linear-gradient(
       90deg,
-      hsl(280 100% 70%) 0%,
-      hsl(320 100% 75%) 25%,
-      hsl(260 100% 80%) 50%,
-      hsl(280 100% 70%) 75%,
-      hsl(320 100% 75%) 100%
+      hsl(280 80% 55%) 0%,
+      hsl(320 80% 60%) 25%,
+      hsl(260 80% 65%) 50%,
+      hsl(280 80% 55%) 75%,
+      hsl(320 80% 60%) 100%
     );
     background-size: 200% 100%;
     -webkit-background-clip: text;
@@ -345,5 +347,30 @@
 
   .primary-button:hover {
     background: hsl(from var(--primary) h s calc(l * 0.9));
+  }
+
+  /* WCAG AA compliant badge text colors for light backgrounds */
+  .text-accent-high-contrast {
+    color: hsl(280 80% 35%);
+  }
+
+  .text-success-high-contrast {
+    color: hsl(142 76% 26%);
+  }
+
+  .text-primary-high-contrast {
+    color: hsl(280 80% 35%);
+  }
+
+  .dark .text-accent-high-contrast {
+    color: hsl(280 80% 65%);
+  }
+
+  .dark .text-success-high-contrast {
+    color: hsl(142 76% 50%);
+  }
+
+  .dark .text-primary-high-contrast {
+    color: hsl(280 80% 65%);
   }
 }

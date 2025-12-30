@@ -228,7 +228,7 @@ const Home = () => {
       <section id="features" className="py-24 lg:py-40 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-            <Badge className="bg-accent/10 text-accent border-accent/20">Features</Badge>
+            <Badge className="bg-accent/10 text-accent-high-contrast border-accent/20">Features</Badge>
             <h2 className="text-4xl lg:text-5xl font-bold">Everything You Need to Succeed</h2>
             <p className="text-xl text-muted-foreground">
               Professional tools and guidance for legitimate Robux earning
@@ -339,7 +339,7 @@ const Home = () => {
       <section className="py-24 lg:py-40 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-            <Badge className="bg-accent/10 text-accent border-accent/20">Pricing</Badge>
+            <Badge className="bg-accent/10 text-accent-high-contrast border-accent/20">Pricing</Badge>
             <h2 className="text-4xl lg:text-5xl font-bold">Choose Your Plan</h2>
             <p className="text-xl text-muted-foreground">
               Start free, upgrade when you're ready
@@ -439,7 +439,7 @@ const Home = () => {
       <section className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-            <Badge className="bg-success/10 text-success border-success/20">Testimonials</Badge>
+            <Badge className="bg-success/10 text-success-high-contrast border-success/20">Testimonials</Badge>
             <h2 className="text-4xl lg:text-5xl font-bold">Loved by Thousands</h2>
           </div>
 
