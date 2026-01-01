@@ -11,6 +11,7 @@ import ChatDock from "@/shared/ChatDock";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AuthPage from "@/components/auth/AuthPage";
+import { I18nProvider } from "@/i18n/I18nProvider";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/Home"));
@@ -53,17 +54,18 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <ErrorBoundary>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AuthProvider>
-              <div className="flex flex-col min-h-screen">
-                <Navigation />
-                
-                <main id="main" className="flex-1" tabIndex={-1}>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Routes>
+        <I18nProvider>
+          <ErrorBoundary>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <AuthProvider>
+                <div className="flex flex-col min-h-screen">
+                  <Navigation />
+                  
+                  <main id="main" className="flex-1" tabIndex={-1}>
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Routes>
                       {/* Public routes */}
                       <Route path="/" element={<Home />} />
                       <Route path="/features" element={<Features />} />
@@ -134,17 +136,18 @@ const App = () => {
                       } />
                       
                       <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </Suspense>
-                </main>
-                
-                <Footer />
-                
-                <ChatDock open={isOpen} onClose={() => setIsOpen(false)} />
-              </div>
-            </AuthProvider>
-          </BrowserRouter>
-        </ErrorBoundary>
+                      </Routes>
+                    </Suspense>
+                  </main>
+                  
+                  <Footer />
+                  
+                  <ChatDock open={isOpen} onClose={() => setIsOpen(false)} />
+                </div>
+              </AuthProvider>
+            </BrowserRouter>
+          </ErrorBoundary>
+        </I18nProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

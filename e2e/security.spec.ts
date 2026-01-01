@@ -25,13 +25,15 @@ test.describe('XSS Prevention', () => {
     let scriptExecuted = false;
 
     await page.addInitScript(() => {
-      (window as any).__xssTest = false;
+      (window as Window & { __xssTest?: boolean }).__xssTest = false;
     });
 
     // Try to inject script via URL
     await page.goto('/?q=<script>window.__xssTest=true</script>');
 
-    scriptExecuted = await page.evaluate(() => (window as any).__xssTest);
+    scriptExecuted = await page.evaluate(
+      () => (window as Window & { __xssTest?: boolean }).__xssTest
+    );
 
     expect(scriptExecuted).toBe(false);
   });
