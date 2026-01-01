@@ -42,7 +42,7 @@ export async function get<T = unknown>(path: string): Promise<T | null> {
 
       if (error || !data) return stub<T>(path);
 
-      const startTime = new Date(data.start_time).getTime();
+      const startTime = data.start_time ? new Date(data.start_time).getTime() : new Date().getTime();
       const now = new Date().getTime();
       const elapsedMs = Math.max(0, now - startTime);
 
