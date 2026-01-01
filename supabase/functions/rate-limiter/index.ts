@@ -1,25 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.58.0';
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.58.0";
+import { getRateLimitForAction } from "../_shared/rate-limiter.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-// Rate limit configurations by tier
-const RATE_LIMITS = {
-  free: {
-    chatRequestsPerHour: 20,
-    faqRequestsPerHour: 10,
-  },
-  premium: {
-    chatRequestsPerHour: 200,
-    faqRequestsPerHour: 100,
-  },
-  enterprise: {
-    chatRequestsPerHour: 1000,
-    faqRequestsPerHour: 500,
-  },
 };
 
 serve(async (req) => {
@@ -46,24 +31,14 @@ serve(async (req) => {
       console.error('Profile fetch error:', profileError);
     }
 
-    const tier = profile?.premium_tier || 'free';
-    const limits = RATE_LIMITS[tier as keyof typeof RATE_LIMITS] || RATE_LIMITS.free;
+    const tier = profile?.premium_tier;
 
     // Check rate limit
     const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-    
-    let limitKey: string;
-    let maxRequests: number;
-
-    if (action === 'chat') {
-      limitKey = 'chat';
-      maxRequests = limits.chatRequestsPerHour;
-    } else if (action === 'faq') {
-      limitKey = 'faq';
-      maxRequests = limits.faqRequestsPerHour;
-    } else {
-      throw new Error('Invalid action');
-    }
+    const { limitKey, maxRequests, tier: resolvedTier } = getRateLimitForAction(
+      tier,
+      action,
+    );
 
     const { data: recentRequests, error: requestError } = await supabase
       .from('rate_limit_log')
@@ -79,11 +54,15 @@ serve(async (req) => {
     if (requestCount >= maxRequests) {
       return new Response(JSON.stringify({ 
         allowed: false, 
-        tier,
+        tier: resolvedTier,
         limit: maxRequests,
         current: requestCount,
         resetAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-        message: `Rate limit exceeded. ${tier === 'free' ? 'Upgrade to Premium for higher limits.' : 'Please try again later.'}`,
+        message: `Rate limit exceeded. ${
+          resolvedTier === "free"
+            ? "Upgrade to Premium for higher limits."
+            : "Please try again later."
+        }`,
       }), {
         status: 429,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -99,7 +78,7 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({ 
       allowed: true, 
-      tier,
+      tier: resolvedTier,
       limit: maxRequests,
       current: requestCount + 1,
       remaining: maxRequests - requestCount - 1,
