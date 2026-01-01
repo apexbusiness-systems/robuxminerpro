@@ -39,8 +39,10 @@ test.describe('Core Web Vitals', () => {
 
         const observer = new PerformanceObserver((list) => {
           const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1] as any;
-          lcpValue = lastEntry.startTime;
+          const lastEntry = entries[entries.length - 1] as PerformanceEntry | undefined;
+          if (lastEntry) {
+            lcpValue = lastEntry.startTime;
+          }
         });
 
         observer.observe({ type: 'largest-contentful-paint', buffered: true });
@@ -91,9 +93,14 @@ test.describe('Core Web Vitals', () => {
         let clsValue = 0;
 
         const observer = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries() as any[]) {
-            if (!entry.hadRecentInput) {
-              clsValue += entry.value;
+          const entries = list.getEntries() as PerformanceEntry[];
+          for (const entry of entries) {
+            const layoutShiftEntry = entry as PerformanceEntry & {
+              hadRecentInput?: boolean;
+              value?: number;
+            };
+            if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
+              clsValue += layoutShiftEntry.value;
             }
           }
         });
