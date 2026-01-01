@@ -13,9 +13,11 @@ import {
 import robotMiner from '@/assets/robot-miner.png';
 import robuxCoins from '@/assets/robux-coins.png';
 import heroSvg from '@/assets/hero.svg';
+import { useI18n } from '@/i18n/I18nProvider';
 
 const Home = () => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [ctaDismissed, setCtaDismissed] = useState(() => 
     sessionStorage.getItem('rmp_cta_dismissed') === '1'
   );
@@ -154,23 +156,23 @@ const Home = () => {
             <div className="space-y-8 animate-slide-up">
               <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
                 <Sparkles className="w-4 h-4" />
-                Trusted by 50K+ Users
+                {t('home.badge.trusted')}
               </Badge>
               
               <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
-                  RobuxMinerPro
+                  {t('home.hero.title')}
                 </span>
               </h1>
               
               <img 
                 src={heroSvg} 
-                alt="Earn Robux" 
+                alt={t('home.hero.imageAlt')}
                 className="w-full max-w-md"
               />
               
               <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
-                Learn safe, official ways to get Robux.
+                {t('home.hero.subtitle')}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
@@ -180,7 +182,7 @@ const Home = () => {
                   onClick={handleCTAClick}
                 >
                   <Rocket className="mr-2 h-5 w-5" />
-                  GET RICH
+                  {t('home.hero.ctaPrimary')}
                 </Button>
                 <Button 
                   size="lg" 
@@ -188,7 +190,7 @@ const Home = () => {
                   className="text-lg px-8 py-6"
                   onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  Learn More
+                  {t('home.hero.ctaSecondary')}
                 </Button>
               </div>
 
@@ -196,15 +198,15 @@ const Home = () => {
               <div className="grid grid-cols-3 gap-6 pt-12 border-t border-border mt-8">
                 <div className="space-y-1">
                   <div className="text-3xl font-bold text-primary" data-count="50000">0</div>
-                  <div className="text-sm text-muted-foreground">Active Users</div>
+                  <div className="text-sm text-muted-foreground">{t('home.stats.activeUsers')}</div>
                 </div>
                 <div className="space-y-1">
                   <div className="text-3xl font-bold text-primary" data-count="98">0</div>
-                  <div className="text-sm text-muted-foreground">% Success</div>
+                  <div className="text-sm text-muted-foreground">{t('home.stats.successRate')}</div>
                 </div>
                 <div className="space-y-1">
                   <div className="text-3xl font-bold text-primary" data-count="7">0</div>
-                  <div className="text-sm text-muted-foreground">Days Avg</div>
+                  <div className="text-sm text-muted-foreground">{t('home.stats.avgDays')}</div>
                 </div>
               </div>
             </div>
@@ -215,7 +217,7 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 blur-3xl rounded-full" />
                 <img 
                   src={robotMiner} 
-                  alt="RobuxMiner robot character" 
+                  alt={t('home.hero.robotAlt')}
                   className="relative w-full max-w-md mx-auto drop-shadow-2xl hover-lift"
                 />
               </div>
@@ -228,10 +230,10 @@ const Home = () => {
       <section id="features" className="py-24 lg:py-40 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-            <Badge className="bg-accent/10 text-accent border-accent/20">Features</Badge>
-            <h2 className="text-4xl lg:text-5xl font-bold">Everything You Need to Succeed</h2>
+            <Badge className="bg-accent/10 text-accent-high-contrast border-accent/20">{t('home.features.badge')}</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold">{t('home.features.title')}</h2>
             <p className="text-xl text-muted-foreground">
-              Professional tools and guidance for legitimate Robux earning
+              {t('home.features.subtitle')}
             </p>
           </div>
 
@@ -239,38 +241,38 @@ const Home = () => {
             {[
               {
                 icon: Shield,
-                title: "100% Safe & Compliant",
-                description: "Only official, platform-approved methods. Your account stays protected.",
+                title: t('home.features.safe.title'),
+                description: t('home.features.safe.description'),
                 color: "text-success"
               },
               {
                 icon: Zap,
-                title: "Quick Setup",
-                description: "Get started in under 60 seconds. No technical knowledge required.",
+                title: t('home.features.setup.title'),
+                description: t('home.features.setup.description'),
                 color: "text-primary"
               },
               {
                 icon: TrendingUp,
-                title: "Proven Results",
-                description: "98% of users see their first payout within 7 days.",
+                title: t('home.features.results.title'),
+                description: t('home.features.results.description'),
                 color: "text-accent"
               },
               {
                 icon: Users,
-                title: "Community Support",
-                description: "Join 50K+ active members sharing strategies and tips.",
+                title: t('home.features.community.title'),
+                description: t('home.features.community.description'),
                 color: "text-primary-glow"
               },
               {
                 icon: Lock,
-                title: "Privacy First",
-                description: "Your data is encrypted and never shared. Private by default.",
+                title: t('home.features.privacy.title'),
+                description: t('home.features.privacy.description'),
                 color: "text-warning"
               },
               {
                 icon: Trophy,
-                title: "Achievement System",
-                description: "Earn badges and unlock rewards as you progress.",
+                title: t('home.features.achievements.title'),
+                description: t('home.features.achievements.description'),
                 color: "text-success"
               }
             ].map((feature, idx) => (
@@ -291,31 +293,31 @@ const Home = () => {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
+      <section id="how-it-works" className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-            <Badge className="bg-primary/10 text-primary border-primary/20">Simple Process</Badge>
-            <h2 className="text-4xl lg:text-5xl font-bold">Start Earning in 3 Steps</h2>
+            <Badge className="bg-primary/10 text-primary border-primary/20">{t('home.howItWorks.badge')}</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold">{t('home.howItWorks.title')}</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
             {[
               {
                 step: "1",
-                title: "Connect Your Account",
-                description: "Quick & secure signup. Choose your preferred method.",
+                title: t('home.howItWorks.step1.title'),
+                description: t('home.howItWorks.step1.description'),
                 icon: Target
               },
               {
                 step: "2",
-                title: "Follow the Guide",
-                description: "Step-by-step instructions for legitimate earning methods.",
+                title: t('home.howItWorks.step2.title'),
+                description: t('home.howItWorks.step2.description'),
                 icon: CheckCircle2
               },
               {
                 step: "3",
-                title: "Get Your Robux",
-                description: "Withdraw directly to your account. Fast & hassle-free.",
+                title: t('home.howItWorks.step3.title'),
+                description: t('home.howItWorks.step3.description'),
                 icon: DollarSign
               }
             ].map((step, idx) => (
@@ -336,61 +338,61 @@ const Home = () => {
       </section>
 
       {/* PRICING */}
-      <section className="py-24 lg:py-40 border-b border-border">
+      <section id="pricing" className="py-24 lg:py-40 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-            <Badge className="bg-accent/10 text-accent border-accent/20">Pricing</Badge>
-            <h2 className="text-4xl lg:text-5xl font-bold">Choose Your Plan</h2>
+            <Badge className="bg-accent/10 text-accent-high-contrast border-accent/20">{t('home.pricing.badge')}</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold">{t('home.pricing.title')}</h2>
             <p className="text-xl text-muted-foreground">
-              Start free, upgrade when you're ready
+              {t('home.pricing.subtitle')}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
             {[
               {
-                name: "Starter",
+                name: t('home.pricing.starter.name'),
                 price: "Free",
-                description: "Perfect for beginners",
+                description: t('home.pricing.starter.description'),
                 features: [
-                  "Basic earning guides",
-                  "Community access",
-                  "Email support",
-                  "Achievement tracking"
+                  t('home.pricing.starter.features.0'),
+                  t('home.pricing.starter.features.1'),
+                  t('home.pricing.starter.features.2'),
+                  t('home.pricing.starter.features.3')
                 ],
-                cta: "Start Free",
+                cta: t('home.pricing.starter.cta'),
                 popular: false
               },
               {
-                name: "Pro",
+                name: t('home.pricing.pro.name'),
                 price: "$9.99",
                 period: "/month",
-                description: "For serious earners",
+                description: t('home.pricing.pro.description'),
                 features: [
-                  "All Starter features",
-                  "Advanced strategies",
-                  "Priority support",
-                  "Squad collaboration",
-                  "Analytics dashboard",
-                  "Exclusive events"
+                  t('home.pricing.pro.features.0'),
+                  t('home.pricing.pro.features.1'),
+                  t('home.pricing.pro.features.2'),
+                  t('home.pricing.pro.features.3'),
+                  t('home.pricing.pro.features.4'),
+                  t('home.pricing.pro.features.5')
                 ],
-                cta: "Go Pro",
+                cta: t('home.pricing.pro.cta'),
                 popular: true
               },
               {
-                name: "Elite",
+                name: t('home.pricing.elite.name'),
                 price: "$24.99",
                 period: "/month",
-                description: "Maximum earning potential",
+                description: t('home.pricing.elite.description'),
                 features: [
-                  "All Pro features",
-                  "1-on-1 mentorship",
-                  "Custom strategies",
-                  "VIP Discord channel",
-                  "Early feature access",
-                  "Revenue optimization"
+                  t('home.pricing.elite.features.0'),
+                  t('home.pricing.elite.features.1'),
+                  t('home.pricing.elite.features.2'),
+                  t('home.pricing.elite.features.3'),
+                  t('home.pricing.elite.features.4'),
+                  t('home.pricing.elite.features.5')
                 ],
-                cta: "Get Elite",
+                cta: t('home.pricing.elite.cta'),
                 popular: false
               }
             ].map((plan, idx) => (
@@ -399,7 +401,7 @@ const Home = () => {
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                     <Badge className="bg-primary text-primary-foreground border-primary shadow-lg">
                       <Crown className="w-3 h-3 mr-1" />
-                      Most Popular
+                      {t('home.pricing.popular')}
                     </Badge>
                   </div>
                 )}
@@ -436,29 +438,29 @@ const Home = () => {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
+      <section id="testimonials" className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-            <Badge className="bg-success/10 text-success border-success/20">Testimonials</Badge>
-            <h2 className="text-4xl lg:text-5xl font-bold">Loved by Thousands</h2>
+            <Badge className="bg-success/10 text-success-high-contrast border-success/20">{t('home.testimonials.badge')}</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold">{t('home.testimonials.title')}</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
-                quote: "Got my first payout in just 6 days. The guides are crystal clear and actually work!",
-                author: "Alex M.",
-                role: "Pro Member"
+                quote: t('home.testimonials.quote1'),
+                author: t('home.testimonials.author1'),
+                role: t('home.testimonials.role1')
               },
               {
-                quote: "Finally, a platform that doesn't feel sketchy. Everything is legitimate and transparent.",
-                author: "Jordan K.",
-                role: "Elite Member"
+                quote: t('home.testimonials.quote2'),
+                author: t('home.testimonials.author2'),
+                role: t('home.testimonials.role2')
               },
               {
-                quote: "The community alone is worth it. So many helpful people sharing real strategies.",
-                author: "Sam R.",
-                role: "Pro Member"
+                quote: t('home.testimonials.quote3'),
+                author: t('home.testimonials.author3'),
+                role: t('home.testimonials.role3')
               }
             ].map((testimonial, idx) => (
               <Card key={idx} className="border-border/50 hover:border-primary/50 transition-all hover-lift">
@@ -483,34 +485,34 @@ const Home = () => {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 lg:py-32 border-b border-border">
+      <section id="faq" className="py-20 lg:py-32 border-b border-border">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-16 space-y-4">
-            <Badge className="bg-primary/10 text-primary border-primary/20">FAQ</Badge>
-            <h2 className="text-4xl lg:text-5xl font-bold">Common Questions</h2>
+            <Badge className="bg-primary/10 text-primary border-primary/20">{t('home.faq.badge')}</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold">{t('home.faq.title')}</h2>
           </div>
 
           <div className="space-y-4">
             {[
               {
-                q: "Is this allowed by Roblox?",
-                a: "Yes. We only share platform-compliant, official earning methods approved by Roblox."
+                q: t('home.faq.q1'),
+                a: t('home.faq.a1')
               },
               {
-                q: "How fast can I see results?",
-                a: "Most users see their first payout within 7 days of following our guides."
+                q: t('home.faq.q2'),
+                a: t('home.faq.a2')
               },
               {
-                q: "Is my account safe?",
-                a: "Absolutely. We use only legitimate methods that comply with platform rules."
+                q: t('home.faq.q3'),
+                a: t('home.faq.a3')
               },
               {
-                q: "Can I cancel anytime?",
-                a: "Yes. No contracts or commitments. Cancel with one click."
+                q: t('home.faq.q4'),
+                a: t('home.faq.a4')
               },
               {
-                q: "What payment methods do you accept?",
-                a: "We accept all major credit cards, PayPal, and cryptocurrency."
+                q: t('home.faq.q5'),
+                a: t('home.faq.a5')
               }
             ].map((faq, idx) => (
               <details key={idx} className="group border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-colors">
@@ -533,13 +535,13 @@ const Home = () => {
           <div className="max-w-3xl mx-auto space-y-8">
             <Badge className="inline-flex items-center gap-2 bg-primary/20 text-primary border-primary/30">
               <Clock className="w-4 h-4" />
-              Limited Time: First Month 50% Off
+              {t('home.finalCta.badge')}
             </Badge>
             <h2 className="text-4xl lg:text-6xl font-bold">
-              Ready to Start Earning?
+              {t('home.finalCta.title')}
             </h2>
             <p className="text-xl text-muted-foreground">
-              Join 50,000+ users already earning legitimately with RobuxMinerPro
+              {t('home.finalCta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button 
@@ -548,11 +550,11 @@ const Home = () => {
                 onClick={handleCTAClick}
               >
                 <Rocket className="mr-2 h-6 w-6" />
-                Get Started Free
+                {t('home.finalCta.cta')}
               </Button>
             </div>
             <p className="text-sm text-muted-foreground pt-4">
-              No credit card required • Cancel anytime • 30-day money-back guarantee
+              {t('home.finalCta.note')}
             </p>
           </div>
         </div>
@@ -565,9 +567,9 @@ const Home = () => {
             className="btn-primary" 
             onClick={handleCTAClick}
             onKeyDown={handleCTAKeyDown}
-            aria-label="Get Rich - Open sign up options"
+            aria-label={t('home.stickyCta.aria')}
           >
-            GET RICH
+            {t('home.stickyCta.label')}
           </button>
           <button 
             className="close" 
@@ -593,7 +595,7 @@ const Home = () => {
           onKeyDown={handleModalKeyDown}
         >
           <DialogHeader>
-            <DialogTitle>Choose your path</DialogTitle>
+            <DialogTitle>{t('home.provider.title')}</DialogTitle>
           </DialogHeader>
           <div className="provider-grid">
             <button 

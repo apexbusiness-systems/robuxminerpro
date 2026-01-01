@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+jobs:
+  security-secrets-detection:
+    name: Security & Secrets Detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan for exposed secrets
+        run: |
+          echo "🔍 Scanning for exposed secrets..."
+          if rg -n --hidden \
+            --glob '!.git/*' \
+            --glob '!node_modules/*' \
+            --glob '!dist/*' \
+            --glob '!docs/**' \
+            --glob '!AI/**' \
+            "(sk-proj-[A-Za-z0-9]{10,}|sk-[A-Za-z0-9]{16,}|pk_live_[A-Za-z0-9]{10,})" .; then
+            echo "❌ SECRET DETECTED IN CODE - This is a security violation!"
+            echo "Please remove all hardcoded secrets and use environment variables."
+            exit 1
+          fi
+
+  lighthouse-performance-audit:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Serve build
+        run: npx http-server dist -p 8080 &
+      - name: Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: http://localhost:8080/
+          configPath: ./lighthouserc.json

@@ -11,6 +11,7 @@ import ChatDock from "@/shared/ChatDock";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AuthPage from "@/components/auth/AuthPage";
+import { I18nProvider } from "@/i18n/I18nProvider";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/Home"));
@@ -21,6 +22,12 @@ const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const HealthCheck = lazy(() => import("./pages/HealthCheck"));
 const Status = lazy(() => import("./pages/Status"));
+const Docs = lazy(() => import("./pages/Docs"));
+const Help = lazy(() => import("./pages/Help"));
+const Community = lazy(() => import("./pages/Community"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Cookies = lazy(() => import("./pages/Cookies"));
+const Api = lazy(() => import("./pages/Api"));
 
 // Lazy load authenticated pages
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -30,6 +37,8 @@ const Learn = lazy(() => import("./pages/Learn"));
 const Events = lazy(() => import("./pages/Events"));
 const Payments = lazy(() => import("./pages/Payments"));
 const Mentor = lazy(() => import("./pages/Mentor"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Settings = lazy(() => import("./pages/Settings"));
 
 const queryClient = new QueryClient();
 
@@ -45,17 +54,18 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <ErrorBoundary>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AuthProvider>
-              <div className="flex flex-col min-h-screen">
-                <Navigation />
-                
-                <main id="main" className="flex-1">
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Routes>
+        <I18nProvider>
+          <ErrorBoundary>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <AuthProvider>
+                <div className="flex flex-col min-h-screen">
+                  <Navigation />
+                  
+                  <main id="main" className="flex-1" tabIndex={-1}>
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Routes>
                       {/* Public routes */}
                       <Route path="/" element={<Home />} />
                       <Route path="/features" element={<Features />} />
@@ -64,6 +74,12 @@ const App = () => {
                       <Route path="/terms" element={<Terms />} />
                       <Route path="/status" element={<Status />} />
                       <Route path="/health" element={<HealthCheck />} />
+                      <Route path="/docs" element={<Docs />} />
+                      <Route path="/help" element={<Help />} />
+                      <Route path="/community" element={<Community />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/cookies" element={<Cookies />} />
+                      <Route path="/api" element={<Api />} />
                       
                       {/* Auth route */}
                       <Route path="/auth" element={
@@ -108,19 +124,30 @@ const App = () => {
                           <Mentor />
                         </ProtectedRoute>
                       } />
+                      <Route path="/profile" element={
+                        <ProtectedRoute>
+                          <Profile />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/settings" element={
+                        <ProtectedRoute>
+                          <Settings />
+                        </ProtectedRoute>
+                      } />
                       
                       <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </Suspense>
-                </main>
-                
-                <Footer />
-                
-                <ChatDock open={isOpen} onClose={() => setIsOpen(false)} />
-              </div>
-            </AuthProvider>
-          </BrowserRouter>
-        </ErrorBoundary>
+                      </Routes>
+                    </Suspense>
+                  </main>
+                  
+                  <Footer />
+                  
+                  <ChatDock open={isOpen} onClose={() => setIsOpen(false)} />
+                </div>
+              </AuthProvider>
+            </BrowserRouter>
+          </ErrorBoundary>
+        </I18nProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

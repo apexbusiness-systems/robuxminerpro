@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
+import { useI18n } from '@/i18n/I18nProvider';
 import { 
   User, 
   Settings, 
@@ -25,11 +26,13 @@ import {
   CreditCard
 } from 'lucide-react';
 import logo from '@/assets/logo.svg';
+import wordmark from '@/assets/wordmark.svg';
 
 const Navigation: React.FC = () => {
   const { user, profile, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const { t, locale, setLocale, availableLocales } = useI18n();
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: Home },
@@ -58,22 +61,68 @@ const Navigation: React.FC = () => {
   };
 
   if (!user) {
+    const landingLinks = [
+      { label: t('nav.features'), hash: '#features' },
+      { label: t('nav.howItWorks'), hash: '#how-it-works' },
+      { label: t('nav.pricing'), hash: '#pricing' },
+      { label: t('nav.testimonials'), hash: '#testimonials' },
+      { label: t('nav.faq'), hash: '#faq' },
+    ];
+
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container relative h-16 px-4">
           <div className="flex h-full items-center justify-between">
-            <Link to="/" className="flex items-center hover:scale-105 transition-transform duration-200">
+            <Link to="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-200">
               <img 
                 src={logo} 
-                alt="RobuxMinerPro logo" 
-                className="w-auto"
-                style={{ height: '8.7615rem', objectFit: 'contain' }}
+                alt={t('nav.logoAlt')}
+                className="h-12 w-auto"
+              />
+              <img
+                src={wordmark}
+                alt={t('nav.wordmarkAlt')}
+                className="hidden sm:block h-8 w-auto"
               />
             </Link>
 
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent whitespace-nowrap">
-              RobuxMinerPro
-            </span>
+            <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
+              {landingLinks.map((item) => (
+                <a
+                  key={item.hash}
+                  href={location.pathname === '/' ? item.hash : `/${item.hash}`}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-3">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    {t('nav.language')}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {availableLocales.map((option) => (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={() => setLocale(option.value)}
+                    >
+                      <span className="flex w-full items-center justify-between gap-3">
+                        {option.label}
+                        {locale === option.value ? '✓' : null}
+                      </span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button asChild size="sm">
+                <Link to="/auth">{t('nav.signIn')}</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -85,12 +134,16 @@ const Navigation: React.FC = () => {
       <div className="container relative h-16 px-4">
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center hover:scale-105 transition-transform duration-200">
+          <Link to="/" className="flex items-center gap-2 hover:scale-105 transition-transform duration-200">
             <img 
               src={logo} 
-              alt="RobuxMinerPro logo" 
-              className="w-auto"
-              style={{ height: '8.7615rem', objectFit: 'contain' }}
+              alt={t('nav.logoAlt')}
+              className="h-10 w-auto"
+            />
+            <img
+              src={wordmark}
+              alt={t('nav.wordmarkAlt')}
+              className="hidden lg:block h-7 w-auto"
             />
           </Link>
 
@@ -126,6 +179,26 @@ const Navigation: React.FC = () => {
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  {t('nav.language')}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {availableLocales.map((option) => (
+                  <DropdownMenuItem
+                    key={option.value}
+                    onClick={() => setLocale(option.value)}
+                  >
+                    <span className="flex w-full items-center justify-between gap-3">
+                      {option.label}
+                      {locale === option.value ? '✓' : null}
+                    </span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             {/* Robux Display */}
             {profile && (
               <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-full border border-yellow-400/20">
