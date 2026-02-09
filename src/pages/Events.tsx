@@ -8,7 +8,10 @@ export default function Events() {
   const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    get<Event[]>('/events').then(data => setEvents(data || []));
+    get<Event[]>('/events').then(data => {
+      const safe = Array.isArray(data) ? data : [];
+      setEvents(safe);
+    });
   }, []);
 
   const defaultEvents: Event[] = [

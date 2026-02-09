@@ -57,10 +57,16 @@ export default function Mentor() {
       if (!supabaseUrl) {
         throw new Error('VITE_SUPABASE_URL is not configured');
       }
+      const searchParams = new URLSearchParams(window.location.search);
+      const isHighIntent = searchParams.get('intent') === 'high';
+
       const response = await fetch(`${supabaseUrl}/functions/v1/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMsg] }),
+        body: JSON.stringify({ 
+          messages: [...messages, userMsg],
+          isHighIntent 
+        }),
       });
 
       if (!response.ok || !response.body) throw new Error('Failed to get AI response');
