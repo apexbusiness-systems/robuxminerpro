@@ -18,6 +18,8 @@ const Terms = () => {
               By accessing and using RobuxMinerPro services, you accept and agree to be bound by 
               the terms and provision of this agreement. These Terms of Service constitute a 
               legally binding agreement between you and RobuxMinerPro.
+              
+              DISCLAIMER: RobuxMinerPro is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Roblox Corporation or any of its subsidiaries or its affiliates.
             </p>
           </section>
 

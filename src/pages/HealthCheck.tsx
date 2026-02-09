@@ -1,9 +1,36 @@
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+
 const HealthCheck = () => {
-  const healthData = {
-    status: 'ok',
+  const [healthData, setHealthData] = useState({
+    status: 'checking...',
     name: 'robuxminerpro', 
-    time: new Date().toISOString()
-  };
+    time: new Date().toISOString(),
+    apiLatency: 0,
+    dbStatus: 'unknown'
+  });
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      const start = performance.now();
+      try {
+        const { error } = await supabase.from('profiles').select('count', { count: 'exact', head: true });
+        const end = performance.now();
+        
+        setHealthData({
+          status: error ? 'degraded' : 'ok',
+          name: 'robuxminerpro',
+          time: new Date().toISOString(),
+          apiLatency: Math.round(end - start),
+          dbStatus: error ? 'error' : 'connected'
+        });
+      } catch (err) {
+        setHealthData(prev => ({ ...prev, status: 'error', dbStatus: 'unreachable' }));
+      }
+    };
+    
+    checkHealth();
+  }, []);
 
 
   return (
@@ -48,11 +75,15 @@ const HealthCheck = () => {
               </div>
               <div className="flex justify-between">
                 <span>Database</span>
-                <span className="text-success">✓ Operational</span>
+                <span className={healthData.dbStatus === 'connected' ? "text-success" : "text-destructive"}>
+                  {healthData.dbStatus === 'connected' ? '✓ Operational' : '⚠ Issue Detected'}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span>Cache Layer</span>
-                <span className="text-success">✓ Operational</span>
+                <span>API Latency</span>
+                <span className={healthData.apiLatency < 500 ? "text-success" : "text-warning"}>
+                  {healthData.apiLatency > 0 ? `${healthData.apiLatency}ms` : 'Checking...'}
+                </span>
               </div>
             </div>
           </div>

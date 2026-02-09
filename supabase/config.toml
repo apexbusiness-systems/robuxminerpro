@@ -4,13 +4,13 @@ project_id = "huaxdvjartkzlgjlzwzg"
 verify_jwt = false
 
 [functions.faq-helper]
-verify_jwt = false
+verify_jwt = true
 
 [functions.squad-collaborate]
-verify_jwt = false
+verify_jwt = true
 
 [functions.rate-limiter]
-verify_jwt = false
+verify_jwt = true
 
 [functions.load-test]
-verify_jwt = false
+verify_jwt = true

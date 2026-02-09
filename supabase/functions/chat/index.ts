@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, isHighIntent } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
     if (!LOVABLE_API_KEY) {
@@ -19,6 +19,7 @@ serve(async (req) => {
     }
 
     console.log('Received chat request with', messages.length, 'messages');
+    if (isHighIntent) console.log('High Intent Mode: ACTIVE');
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -31,7 +32,7 @@ serve(async (req) => {
         messages: [
           { 
             role: 'system', 
-            content: 'You are a helpful learning assistant for RobuxMinerPro. Teach users official ways to get Robux: buy on roblox.com/robux, Roblox Premium monthly stipend, create and sell items/games, or buy gift cards. NEVER suggest free Robux, generators, mining, hacks, or off-platform trades—Roblox states these are scams. Use everyday words, short sentences (≈20 words max), active voice. Keep answers clear, friendly, grade-8 reading level.' 
+            content: 'You are a helpful learning assistant for RobuxMinerPro. Teach users official ways to get Robux: buy on roblox.com/robux, Roblox Premium monthly stipend, create and sell items/games, or buy gift cards. NEVER suggest free Robux, generators, mining, hacks, or off-platform trades—Roblox states these are scams. Use everyday words, short sentences (≈20 words max), active voice. Keep answers clear, friendly, grade-8 reading level.' + (isHighIntent ? ' END WITH A STRONG CALL TO ACTION: "Ready to start? Click Get Started now!"' : '')
           },
           ...messages,
         ],

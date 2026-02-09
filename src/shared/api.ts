@@ -18,7 +18,9 @@ const STUBS: Record<string, unknown> = {
   "/achievements/user": [],
   "/achievements": [],
   "/learning-paths": [],
-  "/learning-paths/user-progress": []
+  "/learning-paths/user-progress": [],
+  "/squads": [],
+  "/events": []
 };
 
 export async function get<T = unknown>(path: string): Promise<T | null> {

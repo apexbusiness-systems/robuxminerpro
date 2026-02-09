@@ -13,7 +13,7 @@ test.describe('RobuxMinerPro E2E Production Sanity', () => {
     await expect(heroHeading).toBeVisible();
 
     // Check "Get Rich" CTA
-    const ctaButton = page.locator('button', { hasText: 'GET RICH' }).first();
+    const ctaButton = page.locator('button', { hasText: 'Get Started' }).first();
     await expect(ctaButton).toBeVisible();
   });
 
@@ -34,7 +34,7 @@ test.describe('RobuxMinerPro E2E Production Sanity', () => {
     await page.goto('/');
 
     // Click the "GET RICH" button.
-    const ctaButton = page.getByRole('button', { name: 'GET RICH' }).first();
+    const ctaButton = page.getByRole('button', { name: 'Get Started' }).first();
     await expect(ctaButton).toBeVisible();
     await ctaButton.click({ force: true });
 
@@ -60,6 +60,16 @@ test.describe('RobuxMinerPro E2E Production Sanity', () => {
     await expect(page.getByText('System Health')).toBeVisible();
     // Use exact match to avoid strict mode violation with multiple "ok" texts
     await expect(page.getByText('ok', { exact: true })).toBeVisible();
+  });
+
+  test('Squads route is protected and redirects to auth', async ({ page }) => {
+    await page.goto('/squads');
+    await expect(page).toHaveURL(/\/auth/);
+  });
+
+  test('Events route is protected and redirects to auth', async ({ page }) => {
+    await page.goto('/events');
+    await expect(page).toHaveURL(/\/auth/);
   });
 
 });

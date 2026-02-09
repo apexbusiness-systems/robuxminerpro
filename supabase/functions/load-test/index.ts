@@ -17,6 +17,13 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (Deno.env.get("ALLOW_LOAD_TEST") !== "true") {
+    return new Response(JSON.stringify({ error: "not_found" }), { 
+      status: 404,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+
   try {
     const { targetFunction, concurrentUsers, messagesPerUser } = await req.json();
     

@@ -8,7 +8,10 @@ export default function Squads() {
   const [squads, setSquads] = useState<Squad[]>([]);
 
   useEffect(() => {
-    get<Squad[]>('/squads').then(data => setSquads(data || []));
+    get<Squad[]>('/squads').then(data => {
+      const safe = Array.isArray(data) ? data : [];
+      setSquads(safe);
+    });
   }, []);
 
   return (
