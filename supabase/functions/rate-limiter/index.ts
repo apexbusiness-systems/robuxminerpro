@@ -18,7 +18,23 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get(serviceRoleKeyEnv) ?? '';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { userId, action } = await req.json();
+    const { action } = await req.json();
+
+    // Get the session from the Authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing Authorization header');
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
+
+    if (userError || !user) {
+      console.error('Auth error:', userError);
+      throw new Error('Unauthorized');
+    }
+
+    const userId = user.id;
 
     // Get user tier
     const { data: profile, error: profileError } = await supabase
