@@ -28,7 +28,10 @@ const Home = () => {
 
   // Scroll progress
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+    let raftId: number | null = null;
+
+    const updateProgress = () => {
       const doc = document.documentElement;
       const max = (doc.scrollHeight - doc.clientHeight) || 1;
       const pct = Math.min(100, Math.max(0, (window.scrollY / max) * 100));
@@ -36,11 +39,24 @@ const Home = () => {
       if (progressRef.current) {
         progressRef.current.style.setProperty('--pct', String(pct));
       }
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        raftId = window.requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
     };
     
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (raftId !== null) {
+        window.cancelAnimationFrame(raftId);
+      }
+    };
   }, []);
 
   // Reveal-on-view
