@@ -1,32 +1,32 @@
-import { describe, it, expect } from "vitest";
+import { test, expect } from "@playwright/test";
 import { cn } from "../../src/lib/utils";
 
-describe("cn utility", () => {
-  it("merges class names", () => {
+test.describe("cn utility", () => {
+  test("merges class names", () => {
     expect(cn("a", "b")).toBe("a b");
   });
 
-  it("handles conditional classes", () => {
+  test("handles conditional classes", () => {
     expect(cn("a", true && "b", false && "c")).toBe("a b");
   });
 
-  it("handles falsy values", () => {
+  test("handles falsy values", () => {
     expect(cn("a", null, undefined, false, "")).toBe("a");
   });
 
-  it("handles objects", () => {
+  test("handles objects", () => {
     expect(cn({ a: true, b: false, c: true }, "d")).toBe("a c d");
   });
 
-  it("handles arrays", () => {
+  test("handles arrays", () => {
     expect(cn(["a", "b"], ["c", "d"])).toBe("a b c d");
   });
 
-  it("handles nested arrays and objects", () => {
+  test("handles nested arrays and objects", () => {
     expect(cn(["a", { b: true, c: false }], "d")).toBe("a b d");
   });
 
-  it("handles tailwind conflicts with tailwind-merge", () => {
+  test("handles tailwind conflicts with tailwind-merge", () => {
     // Basic conflict: last one wins
     expect(cn("p-4", "p-8")).toBe("p-8");
 
@@ -40,7 +40,7 @@ describe("cn utility", () => {
     expect(cn("px-2 py-1 bg-red-500", "p-4 bg-blue-500")).toBe("p-4 bg-blue-500");
   });
 
-  it("handles zero as a number (edge case)", () => {
+  test("handles zero as a number (edge case)", () => {
     // In clsx, 0 is falsy and should be ignored
     // @ts-ignore - testing runtime behavior
     expect(cn("a", 0)).toBe("a");
