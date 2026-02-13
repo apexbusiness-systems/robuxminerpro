@@ -13,7 +13,8 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "test:unit": "vitest run tests/unit"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -72,6 +73,7 @@
     "@axe-core/playwright": "^4.11.0",
     "@eslint/js": "^9.32.0",
     "@playwright/test": "^1.57.0",
+    "vitest": "^2.1.8",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
