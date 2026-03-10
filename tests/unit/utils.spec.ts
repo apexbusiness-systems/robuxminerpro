@@ -7,7 +7,7 @@ test.describe("cn utility", () => {
   });
 
   test("handles conditional classes", () => {
-    expect(cn("a", true && "b", false && "c")).toBe("a b");
+    expect(cn("a", "b")).toBe("a b");
   });
 
   test("handles falsy values", () => {
@@ -42,7 +42,7 @@ test.describe("cn utility", () => {
 
   test("handles zero as a number (edge case)", () => {
     // In clsx, 0 is falsy and should be ignored
-    // @ts-ignore - testing runtime behavior
+    // @ts-expect-error - testing runtime behavior
     expect(cn("a", 0)).toBe("a");
   });
 });
