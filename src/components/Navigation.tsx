@@ -158,24 +158,24 @@ const Navigation: React.FC = () => {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
-            
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 hover:text-primary group ${
-                  isActive ? 'text-primary' : 'text-muted-foreground'
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                <span>{item.name}</span>
-                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-200 group-hover:w-full ${
-                  isActive ? 'w-full' : ''
-                }`} />
-              </Link>
-            );
-          })}
-        </nav>
+
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 hover:text-primary group ${
+                    isActive ? 'text-primary' : 'text-muted-foreground'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{item.name}</span>
+                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-200 group-hover:w-full ${
+                    isActive ? 'w-full' : ''
+                  }`} />
+                </Link>
+              );
+            })}
+          </nav>
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
