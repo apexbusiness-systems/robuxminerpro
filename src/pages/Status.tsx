@@ -5,6 +5,15 @@ interface StatusItem {
   status: 'operational' | 'degraded' | 'outage';
   uptime: string;
 }
+const statusItems: StatusItem[] = [
+  { name: "Mining Service", status: "operational", uptime: "99.98%" },
+  { name: "API Gateway", status: "operational", uptime: "99.95%" },
+  { name: "User Dashboard", status: "operational", uptime: "99.99%" },
+  { name: "Payment Processing", status: "operational", uptime: "99.97%" },
+  { name: "Support System", status: "operational", uptime: "99.94%" },
+  { name: "Analytics Engine", status: "operational", uptime: "99.96%" }
+];
+
 
 const Status = () => {
   const [lastUpdated, setLastUpdated] = useState<string>('');
@@ -12,15 +21,6 @@ const Status = () => {
   useEffect(() => {
     setLastUpdated(new Date().toLocaleString());
   }, []);
-
-  const statusItems: StatusItem[] = [
-    { name: 'Mining Service', status: 'operational', uptime: '99.98%' },
-    { name: 'API Gateway', status: 'operational', uptime: '99.95%' },
-    { name: 'User Dashboard', status: 'operational', uptime: '99.99%' },
-    { name: 'Payment Processing', status: 'operational', uptime: '99.97%' },
-    { name: 'Support System', status: 'operational', uptime: '99.94%' },
-    { name: 'Analytics Engine', status: 'operational', uptime: '99.96%' }
-  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {

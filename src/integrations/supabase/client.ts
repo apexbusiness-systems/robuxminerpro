@@ -33,10 +33,13 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
   );
 }
 
+const supabaseUrl = configuredUrl ?? ENV_FALLBACK.url;
+const supabasePublishableKey = configuredKey ?? ENV_FALLBACK.key;
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+export const supabase = createClient<Database>(supabaseUrl, supabasePublishableKey, {
   auth: {
     storage: localStorage,
     persistSession: true,

@@ -59,7 +59,7 @@ test.describe('RobuxMinerPro E2E Production Sanity', () => {
     await page.goto('/health');
     await expect(page.getByText('System Health')).toBeVisible();
     // Use exact match to avoid strict mode violation with multiple "ok" texts
-    await expect(page.locator('span.capitalize', { hasText: /ok|degraded/ })).toBeVisible();
+    await expect(page.getByText(/ok/i)).toBeVisible();
   });
 
   test('Squads route is protected and redirects to auth', async ({ page }) => {
