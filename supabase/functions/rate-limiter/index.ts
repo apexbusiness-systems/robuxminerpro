@@ -56,23 +56,23 @@ serve(async (req) => {
       action,
     );
 
-    const { data: recentRequests, error: requestError } = await supabase
+    const { count: requestCount, error: requestError } = await supabase
       .from('rate_limit_log')
-      .select('id')
+      .select('id', { count: 'exact', head: true })
       .eq('user_id', userId)
       .eq('action_type', limitKey)
       .gte('created_at', hourAgo);
 
     if (requestError) throw requestError;
 
-    const requestCount = recentRequests?.length || 0;
+    const actualRequestCount = requestCount || 0;
 
-    if (requestCount >= maxRequests) {
+    if (actualRequestCount >= maxRequests) {
       return new Response(JSON.stringify({ 
         allowed: false, 
         tier: resolvedTier,
         limit: maxRequests,
-        current: requestCount,
+        current: actualRequestCount,
         resetAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
         message: `Rate limit exceeded. ${
           resolvedTier === "free"
@@ -96,8 +96,8 @@ serve(async (req) => {
       allowed: true, 
       tier: resolvedTier,
       limit: maxRequests,
-      current: requestCount + 1,
-      remaining: maxRequests - requestCount - 1,
+      current: actualRequestCount + 1,
+      remaining: maxRequests - actualRequestCount - 1,
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
