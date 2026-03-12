@@ -1,0 +1,12 @@
+🧹 chore: Remove redundant Sonner toaster component
+
+🎯 **What:** Removed unused `Sonner` component from `src/App.tsx`, deleted `src/components/ui/sonner.tsx`, and uninstalled `sonner` and `next-themes` dependencies.
+
+💡 **Why:** The application uses Shadcn UI's default `use-toast` (`Toaster` component) for notifications. `Sonner` was imported and rendered but unused throughout the app, creating redundant components in the DOM and unnecessary dependencies. Removing it reduces bundle size, cleans up the DOM, and simplifies the codebase.
+
+✅ **Verification:**
+- Ran `npm run build` to verify the build process succeeds.
+- Updated `e2e/ui-components.spec.ts` to remove the `[data-sonner-toaster]` check and verified the test suite passes against the standard Radix UI toast region.
+- Verified unit tests and linting pass.
+
+✨ **Result:** A cleaner DOM, removal of two unneeded dependencies (`sonner` and `next-themes`), and fewer redundant imports.
