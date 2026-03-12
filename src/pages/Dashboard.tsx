@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { get } from '@/shared/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PipCompanionDemo } from '@/components/pip/PipCompanionDemo';
 
 export default function Dashboard() {
   const [data, setData] = useState({
@@ -87,6 +88,11 @@ export default function Dashboard() {
             </ul>
           </CardContent>
         </Card>
+      </div>
+      
+      {/* Algo-Forge Gamification Persistent PiP */}
+      <div className="mt-12">
+        <PipCompanionDemo />
       </div>
     </main>
   );
