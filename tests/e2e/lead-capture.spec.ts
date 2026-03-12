@@ -4,7 +4,7 @@ test.describe('Lead Capture Modal', () => {
   test('should successfully submit lead and show success message', async ({ page }) => {
     // Intercept the network request to the leads endpoint
     await page.route('**/*', async (route) => {
-      if (route.request().method() === 'POST' && route.request().url().includes('mock-leads-endpoint.com')) {
+      if (route.request().method() === 'POST' && route.request().url().includes('leads')) {
         await route.fulfill({
           status: 200,
           contentType: 'application/json',

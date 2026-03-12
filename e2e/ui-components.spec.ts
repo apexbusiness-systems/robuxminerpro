@@ -50,7 +50,7 @@ test.describe('Toast Notifications', () => {
     await page.goto('/');
 
     // Toaster components should be mounted
-    const toaster = page.locator('[data-sonner-toaster], [role="region"][aria-label*="notification"]');
+    const toaster = page.locator('[role="region"][aria-label*="notification"]');
     // Just verify the page loads correctly; toaster may not be visible until triggered
     await expect(page.locator('body')).toBeVisible();
   });
