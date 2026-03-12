@@ -1,8 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { EarningsSession, EarningsStreak, Achievement } from '@/types';
 
-type AnyObj = Record<string, unknown>;
-
 // Fallback stubs for offline/unauthenticated mode
 const STUBS: Record<string, unknown> = {
   "/earnings/session/active": { balance: 0, perMinute: 0, elapsed: "00:00:00" } as EarningsSession,
