@@ -2,6 +2,7 @@
   "ci": {
     "collect": {
       "startServerCommand": "npm run preview",
+      "startServerReadyPattern": "Local:",
       "url": ["http://localhost:8080/"],
       "numberOfRuns": 1
     },
