@@ -18,6 +18,55 @@ const emailSchema = z.string().email({ message: "Invalid email address" }).max(2
 const passwordSchema = z.string().min(8, { message: "Password must be at least 8 characters" }).max(128);
 const phoneSchema = z.string().regex(/^\+[1-9]\d{1,14}$/, { message: "Invalid phone number format" });
 
+
+interface FormInputProps {
+  id: string;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  icon: React.ReactNode;
+  error?: string;
+  disabled?: boolean;
+  rightElement?: React.ReactNode;
+}
+
+const FormInput: React.FC<FormInputProps> = ({
+  id,
+  label,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  icon,
+  error,
+  disabled,
+  rightElement,
+}) => {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id}>{label}</Label>
+      <div className="relative">
+        <div className="absolute left-3 top-3 h-4 w-4 text-muted-foreground flex items-center justify-center">
+          {icon}
+        </div>
+        <Input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className={`pl-10 ${rightElement ? "pr-10" : ""}`}
+          disabled={disabled}
+        />
+        {rightElement}
+      </div>
+      {error && <p className="text-sm text-destructive">{error}</p>}
+    </div>
+  );
+};
+
 interface AuthPageProps {
   mode?: 'signin' | 'signup';
 }
@@ -286,42 +335,34 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
 
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'signin' | 'signup')}>
               <TabsContent value="signin" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signin-email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signin-email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        validateEmail(e.target.value);
-                      }}
-                      className="pl-10"
-                      disabled={isLoading}
-                    />
-                  </div>
-                  {emailError && <p className="text-sm text-destructive">{emailError}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signin-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Your password"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        validatePassword(e.target.value);
-                      }}
-                      className="pl-10 pr-10"
-                      disabled={isLoading}
-                    />
+                <FormInput
+                  id="signin-email"
+                  label="Email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    validateEmail(e.target.value);
+                  }}
+                  icon={<Mail />}
+                  error={emailError}
+                  disabled={isLoading}
+                />
+                <FormInput
+                  id="signin-password"
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Your password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    validatePassword(e.target.value);
+                  }}
+                  icon={<Lock />}
+                  error={passwordError}
+                  disabled={isLoading}
+                  rightElement={
                     <Button
                       type="button"
                       variant="ghost"
@@ -330,15 +371,10 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={isLoading}
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
-                  </div>
-                  {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
-                </div>
+                  }
+                />
 
                 <Button
                   type="button"
@@ -351,78 +387,58 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
               </TabsContent>
 
               <TabsContent value="signup" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-name">Display Name</Label>
-                  <div className="relative">
-                    <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signup-name"
-                      type="text"
-                      placeholder="Your display name"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      className="pl-10"
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        validateEmail(e.target.value);
-                      }}
-                      className="pl-10"
-                      disabled={isLoading}
-                    />
-                  </div>
-                  {emailError && <p className="text-sm text-destructive">{emailError}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-phone">Phone (Optional)</Label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signup-phone"
-                      type="tel"
-                      placeholder="+1234567890"
-                      value={phone}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                        validatePhone(e.target.value);
-                      }}
-                      className="pl-10"
-                      disabled={isLoading}
-                    />
-                  </div>
-                  {phoneError && <p className="text-sm text-destructive">{phoneError}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signup-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Create a strong password"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        validatePassword(e.target.value);
-                      }}
-                      className="pl-10 pr-10"
-                      disabled={isLoading}
-                    />
+                <FormInput
+                  id="signup-name"
+                  label="Display Name"
+                  type="text"
+                  placeholder="Your display name"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  icon={<UserIcon />}
+                  disabled={isLoading}
+                />
+                <FormInput
+                  id="signup-email"
+                  label="Email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    validateEmail(e.target.value);
+                  }}
+                  icon={<Mail />}
+                  error={emailError}
+                  disabled={isLoading}
+                />
+                <FormInput
+                  id="signup-phone"
+                  label="Phone (Optional)"
+                  type="tel"
+                  placeholder="+1234567890"
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    validatePhone(e.target.value);
+                  }}
+                  icon={<Phone />}
+                  error={phoneError}
+                  disabled={isLoading}
+                />
+                <FormInput
+                  id="signup-password"
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a strong password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    validatePassword(e.target.value);
+                  }}
+                  icon={<Lock />}
+                  error={passwordError}
+                  disabled={isLoading}
+                  rightElement={
                     <Button
                       type="button"
                       variant="ghost"
@@ -431,29 +447,21 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={isLoading}
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
-                  </div>
-                  {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-confirm-password">Confirm Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signup-confirm-password"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm your password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="pl-10 pr-10"
-                      disabled={isLoading}
-                    />
+                  }
+                />
+                <FormInput
+                  id="signup-confirm-password"
+                  label="Confirm Password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  icon={<Lock />}
+                  error={password !== confirmPassword && confirmPassword ? "Passwords do not match" : undefined}
+                  disabled={isLoading}
+                  rightElement={
                     <Button
                       type="button"
                       variant="ghost"
@@ -462,17 +470,10 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       disabled={isLoading}
                     >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
-                  </div>
-                  {password !== confirmPassword && confirmPassword && (
-                    <p className="text-sm text-destructive">Passwords do not match</p>
-                  )}
-                </div>
+                  }
+                />
 
                 <Button
                   type="button"
