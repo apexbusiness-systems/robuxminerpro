@@ -23,6 +23,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, CartesianGrid, Tooltip, ResponsiveContainer, XAxis } from 'recharts';
 import { get } from '@/shared/api';
 import { RewardUnboxing } from '@/components/gamification/RewardUnboxing';
+import { PipAgent } from '@/components/pip/PipAgent';
+import { MentorPip } from '@/components/gamification/MentorPip';
 
 interface DashboardData {
   session: {
@@ -99,6 +101,7 @@ const Dashboard: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [showReward, setShowReward] = useState(false);
+  const [isPipActive, setIsPipActive] = useState(false);
   const [tick, setTick] = useState(0);
 
   // Live-update clock for the chart
@@ -437,6 +440,7 @@ const Dashboard: React.FC = () => {
                     color: '#0a0a0d',
                     boxShadow: '0 8px 32px rgba(255,255,255,0.15)'
                   }}
+                  onClick={() => setIsPipActive(true)}
                 >
                   ACTIVATE NEURAL BRIDGE
                   <ExternalLink className="h-4 w-4" />
@@ -480,6 +484,15 @@ const Dashboard: React.FC = () => {
           </div>
         </footer>
       </div>
+
+      {/* === PiP Agent Window ===================================================== */}
+      {isPipActive && (
+        <PipAgent width={340} height={520}>
+          <div className="w-screen h-screen bg-[#050508] overflow-hidden">
+             <MentorPip onClose={() => setIsPipActive(false)} />
+          </div>
+        </PipAgent>
+      )}
 
       {/* === Reward Overlay ====================================================== */}
       <AnimatePresence>
