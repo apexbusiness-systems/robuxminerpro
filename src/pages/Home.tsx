@@ -10,7 +10,7 @@ import {
   Zap, Shield, TrendingUp, Users, CheckCircle2, Star, Trophy, Target, 
   Sparkles, Rocket, Crown, DollarSign, Lock, Clock
 } from 'lucide-react';
-import robotMiner from '@/assets/robot-miner.png';
+import robotMiner from '@/assets/robot-miner-transparent.png';
 import robuxCoins from '@/assets/robux-coins.png';
 import { HeroTitle } from '@/components/HeroTitle';
 import heroPng from '@/assets/hero.png';
@@ -234,48 +234,54 @@ const Home = () => {
                 icon: Shield,
                 title: t('home.features.safe.title'),
                 description: t('home.features.safe.description'),
-                color: "text-success"
+                color: "text-emerald-500",
+                bg: "bg-emerald-500/10"
               },
               {
                 icon: Zap,
                 title: t('home.features.setup.title'),
                 description: t('home.features.setup.description'),
-                color: "text-primary"
+                color: "text-blue-500",
+                bg: "bg-blue-500/10"
               },
               {
                 icon: TrendingUp,
                 title: t('home.features.results.title'),
                 description: t('home.features.results.description'),
-                color: "text-accent"
+                color: "text-purple-500",
+                bg: "bg-purple-500/10"
               },
               {
                 icon: Users,
                 title: t('home.features.community.title'),
                 description: t('home.features.community.description'),
-                color: "text-primary-glow"
+                color: "text-pink-500",
+                bg: "bg-pink-500/10"
               },
               {
                 icon: Lock,
                 title: t('home.features.privacy.title'),
                 description: t('home.features.privacy.description'),
-                color: "text-warning"
+                color: "text-amber-500",
+                bg: "bg-amber-500/10"
               },
               {
                 icon: Trophy,
                 title: t('home.features.achievements.title'),
                 description: t('home.features.achievements.description'),
-                color: "text-success"
+                color: "text-emerald-500",
+                bg: "bg-emerald-500/10"
               }
             ].map((feature, idx) => (
-              <Card key={idx} className="group hover-lift border-border/50 hover:border-primary/50 transition-all">
+              <Card key={idx} className="group hover-lift transition-all bg-card border-border/50 shadow-lg relative overflow-hidden">
                 <CardHeader>
-                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-${feature.color} to-${feature.color}/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <div className={`w-12 h-12 rounded-lg ${feature.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <feature.icon className={`w-6 h-6 ${feature.color}`} />
                   </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  <CardTitle className="text-xl text-card-foreground">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base">{feature.description}</CardDescription>
+                  <CardDescription className="text-base text-muted-foreground">{feature.description}</CardDescription>
                 </CardContent>
               </Card>
             ))}
@@ -387,7 +393,7 @@ const Home = () => {
                 popular: false
               }
             ].map((plan, idx) => (
-              <Card key={idx} className={`relative ${plan.popular ? 'border-primary shadow-xl scale-105 hover-lift' : 'border-border/50 hover:border-primary/50'} transition-all`}>
+              <Card key={idx} className={`relative ${plan.popular ? 'border-primary shadow-xl scale-105 hover-lift bg-card' : 'bg-card border-border/50 hover:border-primary/50'} transition-all`}>
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                     <Badge className="bg-primary text-primary-foreground border-primary shadow-lg">
@@ -454,7 +460,7 @@ const Home = () => {
                 role: t('home.testimonials.role3')
               }
             ].map((testimonial, idx) => (
-              <Card key={idx} className="border-border/50 hover:border-primary/50 transition-all hover-lift">
+              <Card key={idx} className="bg-card border-border/50 hover:border-primary/50 transition-all hover-lift shadow-sm">
                 <CardHeader>
                   <div className="flex gap-1 mb-4">
                     {[...Array(5)].map((_, i) => (

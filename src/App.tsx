@@ -12,6 +12,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AuthPage from "@/components/auth/AuthPage";
 import { I18nProvider } from "@/i18n/I18nProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/Home"));
@@ -55,9 +56,10 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <I18nProvider>
-          <ErrorBoundary>
-            <Toaster />
-            <BrowserRouter>
+          <ThemeProvider defaultTheme="dark" storageKey="rmp-theme">
+            <ErrorBoundary>
+              <Toaster />
+              <BrowserRouter>
               <AuthProvider>
                 <div className="flex flex-col min-h-screen">
                   <Navigation />
@@ -146,8 +148,9 @@ const App = () => {
               </AuthProvider>
             </BrowserRouter>
           </ErrorBoundary>
-        </I18nProvider>
-      </TooltipProvider>
+        </ThemeProvider>
+      </I18nProvider>
+    </TooltipProvider>
     </QueryClientProvider>
   );
 };

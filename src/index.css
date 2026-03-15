@@ -98,25 +98,25 @@
   }
 
   .dark {
-    /* High-Density APEX Dark Theme */
-    --background: 240 10% 4%;
-    --foreground: 0 0% 98%;
+    /* High-Density APEX Dark Theme - Deep Slate */
+    --background: 222.2 47.4% 11.2%; /* slate-900 */
+    --foreground: 210 40% 98%; /* slate-50 */
 
-    --card: 240 10% 6%;
-    --card-foreground: 0 0% 98%;
+    --card: 222.2 47.4% 16.2%; /* Slightly lighter than bg */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 240 10% 6%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 217.2 32.6% 17.5%;
+    --popover-foreground: 210 40% 98%;
 
     --primary: 280 100% 70%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 280 100% 70%;
 
-    --secondary: 240 10% 10%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 217.2 32.6% 17.5%; /* slate-800 */
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 240 10% 8%;
-    --muted-foreground: 240 5% 65%;
+    --muted: 215 27.9% 16.9%; /* slate-700 */
+    --muted-foreground: 215 20.2% 80%; /* Bright readable text */
 
     --accent: 320 100% 65%;
     --accent-foreground: 0 0% 100%;
@@ -125,8 +125,8 @@
     --destructive: 0 100% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 10% 12%;
-    --input: 240 10% 10%;
+    --border: 215 27.9% 16.9%; /* slate-700 */
+    --input: 217.2 32.6% 17.5%;
     --ring: 280 100% 70%;
   }
 }
