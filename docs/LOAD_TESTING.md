@@ -1,5 +1,8 @@
 # Load Testing Guide
 
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
+
 ## Overview
 RobuxMinerPro includes a load testing edge function to stress-test rate limits and concurrent user handling.
 

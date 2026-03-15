@@ -1,5 +1,8 @@
 # QA Smoke Testing
 
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
+
 ## Pre-Deploy Checklist
 
 ### Endpoint Checks (curl -I)

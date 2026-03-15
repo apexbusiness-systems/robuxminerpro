@@ -1,5 +1,8 @@
 # Post-Publish Evidence Bundle Checklist
 
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
+
 ## PROMPT 8 - SPA Fallback Check
 
 **Verification Commands** (run after publish):

@@ -1,5 +1,8 @@
 # Secrets Handling Policy
 
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
+
 ## Core Principle
 **Never commit secrets to the repository.** All API keys, tokens, and sensitive credentials live in platform secret managers (Supabase Secrets, Cloud Secrets) or local `.env` files that are gitignored.
 
