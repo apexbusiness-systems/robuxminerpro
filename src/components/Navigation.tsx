@@ -73,17 +73,21 @@ const Navigation: React.FC = () => {
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container relative h-16 px-4">
           <div className="flex h-full items-center justify-between">
-            <Link to="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-200">
-              <img 
-                src={logo} 
-                alt={t('nav.logoAlt')}
-                className="h-12 w-auto"
-              />
-              <img
-                src={wordmark}
-                alt={t('nav.wordmarkAlt')}
-                className="hidden sm:block h-8 w-auto"
-              />
+            <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
+              <div className="relative">
+                <img 
+                  src={logo} 
+                  alt={t('nav.logoAlt')}
+                  className="h-16 w-auto drop-shadow-[0_0_25px_rgba(139,92,246,0.5)] group-hover:rotate-[360deg] transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                  ROBUX<span className="text-primary-glow">MINER</span>
+                </span>
+                <span className="text-[8px] sm:text-[10px] font-black tracking-[0.4em] text-primary-glow uppercase mt-1">APEX PRO EDITION</span>
+              </div>
             </Link>
 
             <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
@@ -134,24 +138,24 @@ const Navigation: React.FC = () => {
       <div className="container relative h-16 px-4">
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 hover:scale-105 transition-transform duration-200">
-            <img 
-              src={logo} 
-              alt={t('nav.logoAlt')}
-              className="h-10 w-auto"
-            />
-            <img
-              src={wordmark}
-              alt={t('nav.wordmarkAlt')}
-              className="hidden lg:block h-7 w-auto"
-            />
+          <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
+            <div className="relative">
+              <img 
+                src={logo} 
+                alt={t('nav.logoAlt')}
+                className="h-16 w-auto drop-shadow-[0_0_25px_rgba(139,92,246,0.5)] group-hover:rotate-[360deg] transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                ROBUX<span className="text-primary-glow">MINER</span>
+              </span>
+              <span className="text-[10px] font-black tracking-[0.4em] text-primary-glow uppercase mt-1">APEX PRO EDITION</span>
+            </div>
           </Link>
 
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block pointer-events-none">
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent whitespace-nowrap">
-              RobuxMinerPro
-            </span>
-          </div>
+          {/* Centered Brand Title removed for cleaner layout as per user feedback */}
 
           {/* Navigation Items */}
           <nav className="hidden md:flex items-center space-x-6">
@@ -209,19 +213,24 @@ const Navigation: React.FC = () => {
               </div>
             )}
 
-            {/* User Dropdown */}
+            {/* User Dropdown - APEX High-Density Polish */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
+                <Button variant="ghost" className="relative h-14 w-14 rounded-2xl p-0 overflow-hidden border-2 border-white/10 hover:border-primary-glow/50 transition-all shadow-2xl group active:scale-95">
+                  <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/20 transition-colors" />
+                  <Avatar className="h-full w-full rounded-none">
                     <AvatarImage 
                       src={profile?.avatar_url || ''} 
                       alt={profile?.display_name || 'User'} 
+                      className="object-cover"
                     />
-                    <AvatarFallback className={getTierColor(profile?.subscription_tier || 'free')}>
+                    <AvatarFallback className={`${getTierColor(profile?.subscription_tier || 'free')} text-white font-black text-xl rounded-none w-full h-full flex items-center justify-center`}>
                       {profile?.display_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
+                  <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent flex items-end justify-center pb-1">
+                    <div className="w-8 h-[2px] bg-primary-glow shadow-[0_0_10px_rgba(139,92,246,1)] rounded-full" />
+                  </div>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>

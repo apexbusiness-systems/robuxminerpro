@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 import robotMiner from '@/assets/robot-miner.png';
 import robuxCoins from '@/assets/robux-coins.png';
-import heroSvg from '@/assets/hero.svg';
+import { HeroTitle } from '@/components/HeroTitle';
+import heroPng from '@/assets/hero.png';
 import { useI18n } from '@/i18n/I18nProvider';
 
 const Home = () => {
@@ -159,17 +160,7 @@ const Home = () => {
                 {t('home.badge.trusted')}
               </Badge>
               
-              <h1 className="text-5xl lg:text-7xl font-bold tracking-tight">
-                <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
-                  {t('home.hero.title')}
-                </span>
-              </h1>
-              
-              <img 
-                src={heroSvg} 
-                alt={t('home.hero.imageAlt')}
-                className="w-full max-w-md"
-              />
+              <HeroTitle />
               
               <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
                 {t('home.hero.subtitle')}

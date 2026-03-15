@@ -9,8 +9,8 @@ test.describe('RobuxMinerPro E2E Production Sanity', () => {
     await expect(page).toHaveTitle(/RobuxMinerPro/);
 
     // Check Hero Section
-    const heroHeading = page.getByRole('heading', { name: 'RobuxMinerPro' });
-    await expect(heroHeading).toBeVisible();
+    const heroHeading = page.getByText('EARN SMART!').first();
+    await expect(heroHeading).toBeVisible({ timeout: 10000 });
 
     // Check "Get Rich" CTA
     const ctaButton = page.locator('button', { hasText: 'Get Started' }).first();

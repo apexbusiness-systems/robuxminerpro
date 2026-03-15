@@ -1,5 +1,8 @@
 # Welcome to your Lovable project
 
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/e56efeb6-ea61-4d9b-853b-adab59068f7d

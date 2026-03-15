@@ -1,3 +1,6 @@
+
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
 ### ARTIFACT: Handover
 
 **What's complete:**

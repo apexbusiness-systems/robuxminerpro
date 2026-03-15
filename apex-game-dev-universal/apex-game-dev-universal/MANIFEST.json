@@ -1,0 +1,55 @@
+{
+  "name": "apex-game-dev-universal",
+  "version": "1.0.0",
+  "description": "Omnipotent Game Development Intelligence - Universal LLM Edition",
+  "author": "APEX Business Systems Ltd.",
+  "license": "Proprietary",
+  "edition": "universal",
+  "mode": "prompt_only",
+  "llm_agnostic": true,
+  "compatible_with": [
+    "ChatGPT (GPT-4, GPT-o1, GPT-o3)",
+    "Claude (all versions)",
+    "Gemini (all versions)",
+    "Llama 3",
+    "Mistral (all)",
+    "DeepSeek",
+    "Qwen",
+    "Grok",
+    "Any instruction-following LLM"
+  ],
+  "installation": {
+    "method": "system_prompt_injection",
+    "instructions": "Paste the full contents of SKILL.md into the LLM's system prompt, custom instructions, or agent configuration."
+  },
+  "domains_covered": [
+    "2D game development",
+    "3D game development",
+    "FPS development",
+    "RPG systems",
+    "Turn-based game mechanics",
+    "Free-roam / open world",
+    "RTS game development",
+    "Platformer mechanics",
+    "Puzzle game systems",
+    "Multiplayer / networking",
+    "Shader programming",
+    "Game AI and pathfinding",
+    "Gamification systems",
+    "Performance optimization",
+    "Platform porting",
+    "Game audio systems",
+    "Procedural generation"
+  ],
+  "engines_covered": [
+    "Unity", "Unreal Engine 5", "Godot 4",
+    "GameMaker Studio 2", "Phaser.js", "Babylon.js",
+    "Three.js", "libGDX", "MonoGame", "Cocos2d-x",
+    "LÖVE2D", "Bevy", "custom engines"
+  ],
+  "languages_covered": [
+    "C++", "C#", "GDScript", "Lua", "Java", "Kotlin",
+    "Swift", "Rust", "JavaScript", "TypeScript", "Python",
+    "HLSL", "GLSL", "MSL", "Blueprint", "GML", "Haxe"
+  ]
+}

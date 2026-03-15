@@ -1,5 +1,8 @@
 # Feature Parity Matrix
 
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
+
 | Feature | Route/UI | Endpoint(s) | Read/Write | Flag | Status |
 |---------|----------|-------------|------------|------|--------|
 | AI Strategy Assistant | /mentor | /api/ai/recommendations | Read | N/A | ✅ Active |

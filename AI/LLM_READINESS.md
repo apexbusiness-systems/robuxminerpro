@@ -1,5 +1,8 @@
 # LLM Readiness Specification
 
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
+
 ## 1. Objective
 Enable safe, compliant AI-powered features for RobuxMinerPro using vetted LLM providers with proper guardrails.
 

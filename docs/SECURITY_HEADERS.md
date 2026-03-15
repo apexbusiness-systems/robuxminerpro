@@ -1,5 +1,8 @@
 # Security Headers & CSP
 
+**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+
+
 ## Required Headers
 
 ### Content Security Policy (CSP)
