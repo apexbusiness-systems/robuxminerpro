@@ -12,6 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useI18n } from '@/i18n/I18nProvider';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { 
   User, 
   Settings, 
@@ -103,6 +104,7 @@ const Navigation: React.FC = () => {
             </nav>
 
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
@@ -183,6 +185,7 @@ const Navigation: React.FC = () => {
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
