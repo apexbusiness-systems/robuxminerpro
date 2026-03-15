@@ -42,6 +42,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
+  bypassMockLogin: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,6 +59,26 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Mock data for development/demo mode
+const MOCK_USER: User = {
+  id: 'apex-mock-user-id',
+  email: 'apex@example.com',
+  app_metadata: {},
+  user_metadata: { display_name: 'APEX Explorer' },
+  aud: 'authenticated',
+  created_at: new Date().toISOString(),
+};
+
+const MOCK_PROFILE: Profile = {
+  id: 'mock-profile-id',
+  user_id: 'apex-mock-user-id',
+  display_name: 'APEX Explorer',
+  total_robux: 15420,
+  mining_power: 2.5,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -65,7 +86,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  const isSupabaseValid = () => {
+    return !import.meta.env.VITE_SUPABASE_URL?.includes('your-project-ref');
+  };
+
   const fetchProfile = async (userId: string) => {
+    if (!isSupabaseValid()) return MOCK_PROFILE;
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -84,6 +110,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const updateLastActivity = async (userId: string) => {
+    if (!isSupabaseValid()) return;
     try {
       await supabase
         .from('profiles')
@@ -95,48 +122,52 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   useEffect(() => {
-    // Set up auth state listener FIRST
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Update last activity
           updateLastActivity(session.user.id);
-          
-          // Fetch profile with timeout to prevent hanging
-          setTimeout(async () => {
-            const profileData = await fetchProfile(session.user.id);
-            setProfile(profileData);
-          }, 0);
+          const profileData = await fetchProfile(session.user.id);
+          setProfile(profileData);
+        } else if (!isSupabaseValid()) {
+          // Fallback for demo mode
+          setUser(MOCK_USER);
+          setProfile(MOCK_PROFILE);
         } else {
           setProfile(null);
         }
-
         setLoading(false);
       }
     );
 
-    // THEN check for existing session
+    // Initial check
+    const sessionTimeout = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
+      clearTimeout(sessionTimeout);
       if (session?.user) {
+        setSession(session);
+        setUser(session.user);
         updateLastActivity(session.user.id);
-        
-        setTimeout(async () => {
-          const profileData = await fetchProfile(session.user.id);
-          setProfile(profileData);
-          setLoading(false);
-        }, 0);
+        fetchProfile(session.user.id).then(setProfile);
+        setLoading(false);
+      } else if (!isSupabaseValid()) {
+        // Force mock state if Supabase isn't configured
+        setUser(MOCK_USER);
+        setProfile(MOCK_PROFILE);
+        setLoading(false);
       } else {
         setLoading(false);
       }
     });
 
     return () => subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const signOut = async () => {
@@ -195,6 +226,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setProfile(profileData);
   };
 
+  const bypassMockLogin = () => {
+    setUser(MOCK_USER);
+    setProfile(MOCK_PROFILE);
+    setLoading(false);
+    toast({
+      title: "APEX Bypass Active",
+      description: "Logged in as APEX Explorer (Mock Mode)",
+    });
+  };
+
   const value = {
     user,
     session,
@@ -203,6 +244,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     signOut,
     updateProfile,
     refreshProfile,
+    bypassMockLogin,
   };
 
   return (

@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthError, User } from '@supabase/supabase-js';
 import { Eye, EyeOff, Mail, Lock, User as UserIcon, Phone, Chrome } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 import { z } from 'zod';
 
 // Validation schemas
@@ -74,6 +75,7 @@ interface AuthPageProps {
 const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { bypassMockLogin } = useAuth();
   
   // Form state
   const [email, setEmail] = useState('');
@@ -332,6 +334,18 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
                 </span>
               </div>
             </div>
+
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => {
+                bypassMockLogin();
+                navigate('/dashboard');
+              }}
+              className="w-full border-primary/20 hover:border-primary/50 text-primary-glow bg-primary/10 hover:bg-primary/20"
+            >
+              🚀 APEX EMERGENCY BYPASS (Dev Mode)
+            </Button>
 
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'signin' | 'signup')}>
               <TabsContent value="signin" className="space-y-4">
