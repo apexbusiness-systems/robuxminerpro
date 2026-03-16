@@ -30,12 +30,24 @@ Enable safe, compliant AI-powered features for RobuxMinerPro using vetted LLM pr
 
 ### Refusal Patterns
 If user asks for forbidden content:
-> "We only teach official ways to get Robux. Learn more at help.roblox.com."
+> "⚠️ SAFETY FLAG: What you're describing sounds like a common Roblox scam..."
 
 Auto-rejection regex (case-insensitive):
 - `\bfree\s+robux\b`
-- `\brobux(?:\W+|_)?generator\b`
-- `\brobux(?:\W+|_)?min(?:e|ing)\b`
+- `\brobux[\W_]*generator\b`
+- `\brobux[\W_]*min(e|ing)\b`
+- `\bfree\s+membership\b`
+- `\bhack`
+- `\bcheat`
+- `\bobby\s+for\s+robux\b`
+- `\btrading\s+platform\b`
+- `\bsomeone\s+will\s+give\s+robux\b`
+- `\broblox\s+gift\s+card\s+code\b`
+- `\benter\s+your\s+password\b`
+- `\bpassword\b`
+- `\baccount\s+sharing\b`
+- `\bexploit\b`
+- `\bbotting\b`
 
 ## 4. Product Surface Map
 
