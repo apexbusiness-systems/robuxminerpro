@@ -54,7 +54,7 @@ export default function Mentor() {
         { role: 'assistant' as const, content: safetyCheck }
       ];
       setMessages(newMessages);
-      localStorage.setItem('chat-transcript', JSON.stringify(newMessages));
+      localStorage.setItem('chat-transcript', JSON.stringify(newMessages.slice(-100)));
       setInput('');
       return;
     }
@@ -69,7 +69,7 @@ export default function Mentor() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        navigate('/login');
+        navigate('/auth');
         return;
       }
 

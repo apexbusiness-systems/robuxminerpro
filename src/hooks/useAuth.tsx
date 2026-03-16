@@ -244,7 +244,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     signOut,
     updateProfile,
     refreshProfile,
-    bypassMockLogin,
+    bypassMockLogin: import.meta.env.DEV
+      ? bypassMockLogin
+      : () => {
+          if (import.meta.env.DEV) return;
+          console.warn('[Auth] bypassMockLogin is disabled in production');
+        },
   }), [user, session, profile, loading, signOut, updateProfile, refreshProfile, bypassMockLogin]);
 
   return (

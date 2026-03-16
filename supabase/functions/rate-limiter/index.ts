@@ -2,12 +2,26 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.58.0";
 import { getRateLimitForAction } from "../_shared/rate-limiter.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const ALLOWED_ORIGINS = [
+  'https://robuxminerpro.com',
+  'https://www.robuxminerpro.com',
+  'http://localhost:8080',
+];
+
+function getCorsHeaders(req: Request): Record<string, string> {
+  const origin = req.headers.get('Origin') ?? '';
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin)
+    ? origin
+    : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Vary': 'Origin',
+  };
+}
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -44,10 +58,10 @@ serve(async (req) => {
       .single();
 
     if (profileError) {
-      console.error('Profile fetch error:', profileError);
+      console.error('Profile fetch error — defaulting to free tier:', profileError);
     }
 
-    const tier = profile?.premium_tier;
+    const tier: string = profile?.premium_tier ?? 'free';
 
     // Check rate limit
     const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
