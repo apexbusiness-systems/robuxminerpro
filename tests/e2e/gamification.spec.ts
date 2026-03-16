@@ -5,8 +5,8 @@ test.describe('Algo-Forge Gamification Engine', () => {
   test('Persistent PiP Agent can be launched from Dashboard', async ({ page }) => {
     // Navigate to Dashboard (requires auth in a real app, assuming a test route or mocked auth here)
     // For the sake of the E2E verification, we'll navigate directly to a page rendering the component
-    // Assuming the app is running locally on port 5173
-    await page.goto('http://localhost:5173/dashboard');
+    // Assuming the app is running locally on port 8085
+    await page.goto('http://localhost:8085/dashboard');
 
     // Wait for the PiP launch button
     const launcher = page.getByRole('button', { name: /Launch APEX PiP Companion/i });
@@ -25,7 +25,7 @@ test.describe('Algo-Forge Gamification Engine', () => {
 
   test('High-Voltage Reward Unboxing flow triggers correctly', async ({ page }) => {
     // Navigate to the dashboard
-    await page.goto('http://localhost:8080/dashboard');
+    await page.goto('http://localhost:8085/dashboard');
     
     // Simulate a reward drop via the wrapper button
     await page.getByRole('button', { name: /Simulate Reward Drop/i }).click();

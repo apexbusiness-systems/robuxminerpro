@@ -10,7 +10,7 @@ import {
   Zap, Shield, TrendingUp, Users, CheckCircle2, Star, Trophy, Target, 
   Sparkles, Rocket, Crown, DollarSign, Lock, Clock
 } from 'lucide-react';
-
+import robotMiner from '@/assets/robot-miner-transparent.png';
 import robuxCoins from '@/assets/robux-coins.png';
 import { HeroTitle } from '@/components/HeroTitle';
 import heroPng from '@/assets/hero.png';
@@ -207,7 +207,7 @@ const Home = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 blur-3xl rounded-full" />
                 <img 
-                  src="/rbp-avatar-icon.png"
+                  src={robotMiner}
                   alt={t('home.hero.robotAlt')}
                   className="relative w-full max-w-md mx-auto drop-shadow-2xl hover-lift"
                 />
