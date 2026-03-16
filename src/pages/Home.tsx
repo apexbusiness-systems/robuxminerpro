@@ -559,7 +559,7 @@ const Home = () => {
 
       {/* Sticky CTA - Always visible */}
       {!ctaDismissed && (
-        <div className="sticky-cta" role="region" aria-label="Get Rich">
+        <div className="sticky-cta" role="region" aria-label="Get Started">
           <button 
             className="btn-primary" 
             onClick={handleCTAClick}

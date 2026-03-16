@@ -7,8 +7,8 @@ export function HeroTitle() {
       style={{ fontFamily: "'Press Start 2P', monospace", transform: 'skewX(-8deg)' }}
     >
       <div className="flex flex-col items-center gap-6 lg:gap-8 transform origin-center transition-transform duration-500 hover:scale-[1.02]">
-        <HeroTextLine text="EARN SMART!" />
-        <HeroTextLine text="EARN MORE!" />
+        <HeroTextLine text="EARN" />
+        <HeroTextLine text="ROBUX!" />
       </div>
     </div>
   );
