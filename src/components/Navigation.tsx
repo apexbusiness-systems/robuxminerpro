@@ -26,8 +26,8 @@ import {
   Calendar,
   CreditCard
 } from 'lucide-react';
-import logo from '@/assets/logo.svg';
-import wordmark from '@/assets/wordmark.svg';
+
+
 
 const Navigation: React.FC = () => {
   const { user, profile, signOut } = useAuth();
@@ -77,17 +77,19 @@ const Navigation: React.FC = () => {
             <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
               <div className="relative">
                 <img 
-                  src={logo} 
+                  src="/official_logo.png"
                   alt={t('nav.logoAlt')}
-                  className="h-16 w-auto drop-shadow-[0_0_25px_rgba(139,92,246,0.5)] group-hover:rotate-[360deg] transition-transform duration-700"
+                  className="h-14 sm:h-16 w-auto drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
+                <div className="absolute inset-0 bg-purple-500/10 blur-xl animate-pulse rounded-full" />
               </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                  ROBUX<span className="text-primary-glow">MINER</span>
+              <div className="flex flex-col leading-none justify-center">
+                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                  ROBUX<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">MINER</span>
                 </span>
-                <span className="text-[8px] sm:text-[10px] font-black tracking-[0.4em] text-primary-glow uppercase mt-1">APEX PRO EDITION</span>
+                <span className="text-[10px] sm:text-[12px] font-black tracking-[0.4em] text-cyan-400 uppercase mt-1 opacity-90 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+                  APEX PRO EDITION
+                </span>
               </div>
             </Link>
 
@@ -143,17 +145,19 @@ const Navigation: React.FC = () => {
           <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
             <div className="relative">
               <img 
-                src={logo} 
+                src="/official_logo.png"
                 alt={t('nav.logoAlt')}
-                className="h-16 w-auto drop-shadow-[0_0_25px_rgba(139,92,246,0.5)] group-hover:rotate-[360deg] transition-transform duration-700"
+                className="h-14 sm:h-16 w-auto drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
+              <div className="absolute inset-0 bg-purple-500/10 blur-xl animate-pulse rounded-full" />
             </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                ROBUX<span className="text-primary-glow">MINER</span>
+            <div className="flex flex-col leading-none justify-center">
+              <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                ROBUX<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">MINER</span>
               </span>
-              <span className="text-[10px] font-black tracking-[0.4em] text-primary-glow uppercase mt-1">APEX PRO EDITION</span>
+              <span className="text-[10px] sm:text-[12px] font-black tracking-[0.4em] text-cyan-400 uppercase mt-1 opacity-90 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+                APEX PRO EDITION
+              </span>
             </div>
           </Link>
 
