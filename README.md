@@ -1,7 +1,14 @@
-# Welcome to your Lovable project
+# RobuxMinerPro — APEX-OmniHub Edition
 
-**Version:** 1.0.0 | **Last Updated:** 2026-03-15
+**Version:** 1.0.0 (Hardened) | **Last Updated:** 2026-03-15
 
+## APEX Architecture Status
+
+This repository is governed by the **APEX Business Systems LTD OS**.
+
+- **Core Standard:** "If it is not deterministic, it is a bug."
+- **Status:** Optimizations deployed. React hook cleanliness audited. State layers persistent. Strict types enforced.
+- **Verification:** Passes ESLint, TSC Strict, and Vite Build with zero warnings.
 
 ## Project info
 

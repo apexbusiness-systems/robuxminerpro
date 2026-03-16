@@ -42,8 +42,20 @@ interface DashboardData {
   recommendations: string[];
 }
 
+const CACHE_KEY = 'apex_dashboard_data';
+
+const getCachedData = (): DashboardData | null => {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) return JSON.parse(cached);
+  } catch {
+    // Ignore error
+  }
+  return null;
+};
+
 // ─── Stat Card ─────────────────────────────────────────────────────────────────
-const StatCard = ({
+const StatCard = React.memo(({
   label,
   value,
   sub,
@@ -89,17 +101,17 @@ const StatCard = ({
       style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}
     />
   </motion.div>
-);
+));
 
 // ─── Main Dashboard ────────────────────────────────────────────────────────────
 const Dashboard: React.FC = () => {
-  const [data, setData] = useState<DashboardData>({
+  const [data, setData] = useState<DashboardData>(() => getCachedData() || {
     session: { balance: 0, perMinute: 0, elapsed: '00:00:00', totalEarned: 0 },
     streak: { days: 0, multiplier: 1, nextMilestone: 7 },
     milestones: [],
     recommendations: []
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!getCachedData());
   const [showReward, setShowReward] = useState(false);
   const [isPipActive, setIsPipActive] = useState(false);
   const [tick, setTick] = useState(0);
@@ -121,13 +133,13 @@ const Dashboard: React.FC = () => {
   }, [tick]);
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(!getCachedData());
     Promise.all([
       get<DashboardData['streak']>('/earnings/streak'),
       get<DashboardData['session']>('/earnings/session/active'),
       get<string[]>('/ai/recommendations')
     ]).then(([streak, session, recs]) => {
-      setData({
+      const freshData = {
         session: (session || { balance: 0, perMinute: 0.5, elapsed: '00:00:00', totalEarned: 0 }) as DashboardData['session'],
         streak: (streak || { days: 3, multiplier: 1.5, nextMilestone: 7 }) as DashboardData['streak'],
         milestones: [],
@@ -137,12 +149,18 @@ const Dashboard: React.FC = () => {
           'Refer a friend — earn 2,500 R$ bonus',
           'Open weekly loot crate before reset'
         ]
-      });
+      };
+      setData(freshData);
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(freshData));
+      } catch {
+        // ignore
+      }
       setIsLoading(false);
     });
   }, []);
 
-  const cardDelay = (i: number) => i * 0.08;
+  const cardDelay = React.useCallback((i: number) => i * 0.08, []);
 
   return (
     /* Force dark-mode palette inline regardless of Tailwind dark class */

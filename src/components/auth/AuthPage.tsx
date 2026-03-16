@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,7 +33,7 @@ interface FormInputProps {
   rightElement?: React.ReactNode;
 }
 
-const FormInput: React.FC<FormInputProps> = ({
+const FormInput: React.FC<FormInputProps> = React.memo(({
   id,
   label,
   type = "text",
@@ -66,7 +66,8 @@ const FormInput: React.FC<FormInputProps> = ({
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
-};
+});
+FormInput.displayName = 'FormInput';
 
 interface AuthPageProps {
   mode?: 'signin' | 'signup';
@@ -108,7 +109,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
   }, [navigate]);
 
   // Real-time validation
-  const validateEmail = (value: string) => {
+  const validateEmail = useCallback((value: string) => {
     try {
       emailSchema.parse(value);
       setEmailError('');
@@ -119,9 +120,9 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
       }
       return false;
     }
-  };
+  }, []);
 
-  const validatePassword = (value: string) => {
+  const validatePassword = useCallback((value: string) => {
     try {
       passwordSchema.parse(value);
       setPasswordError('');
@@ -132,9 +133,9 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
       }
       return false;
     }
-  };
+  }, []);
 
-  const validatePhone = (value: string) => {
+  const validatePhone = useCallback((value: string) => {
     if (!value) {
       setPhoneError('');
       return true;
@@ -149,7 +150,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
       }
       return false;
     }
-  };
+  }, []);
 
   const handleEmailAuth = async (isSignUp: boolean) => {
     setError('');
@@ -240,7 +241,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
     }
   };
 
-  const handleAuthError = (error: AuthError) => {
+  const handleAuthError = useCallback((error: AuthError) => {
     let message = 'An unexpected error occurred';
     
     switch (error.message) {
@@ -266,7 +267,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
       description: message,
       variant: "destructive",
     });
-  };
+  }, [toast]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/30 p-4">
