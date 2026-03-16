@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import { useState, useEffect, createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -86,11 +86,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const isSupabaseValid = () => {
+  const isSupabaseValid = useCallback(() => {
     return !import.meta.env.VITE_SUPABASE_URL?.includes('your-project-ref');
-  };
+  }, []);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = useCallback(async (userId: string) => {
     if (!isSupabaseValid()) return MOCK_PROFILE;
     try {
       const { data, error } = await supabase
@@ -107,9 +107,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch {
       return null;
     }
-  };
+  }, [isSupabaseValid]);
 
-  const updateLastActivity = async (userId: string) => {
+  const updateLastActivity = useCallback(async (userId: string) => {
     if (!isSupabaseValid()) return;
     try {
       await supabase
@@ -119,7 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch {
       // Ignore update errors
     }
-  };
+  }, [isSupabaseValid]);
 
   useEffect(() => {
     // Set up auth state listener
@@ -170,7 +170,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
@@ -186,9 +186,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
-  const updateProfile = async (updates: Partial<Profile>) => {
+  const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     if (!user) return;
 
     try {
@@ -217,16 +217,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         variant: "destructive",
       });
     }
-  };
+  }, [user, toast]);
 
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     if (!user) return;
 
     const profileData = await fetchProfile(user.id);
     setProfile(profileData);
-  };
+  }, [user, fetchProfile]);
 
-  const bypassMockLogin = () => {
+  const bypassMockLogin = useCallback(() => {
     setUser(MOCK_USER);
     setProfile(MOCK_PROFILE);
     setLoading(false);
@@ -234,9 +234,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       title: "APEX Bypass Active",
       description: "Logged in as APEX Explorer (Mock Mode)",
     });
-  };
+  }, [toast]);
 
-  const value = {
+  const value = useMemo(() => ({
     user,
     session,
     profile,
@@ -245,7 +245,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     updateProfile,
     refreshProfile,
     bypassMockLogin,
-  };
+  }), [user, session, profile, loading, signOut, updateProfile, refreshProfile, bypassMockLogin]);
 
   return (
     <AuthContext.Provider value={value}>

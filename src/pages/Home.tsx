@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { LeadCaptureModal } from '@/components/LeadCaptureModal';
@@ -90,24 +90,24 @@ const Home = () => {
     return () => io.disconnect();
   }, []);
 
-  const handleDismissCTA = () => {
+  const handleDismissCTA = useCallback(() => {
     setCtaDismissed(true);
     sessionStorage.setItem('rmp_cta_dismissed', '1');
-  };
+  }, []);
 
-  const handleCTAClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
+  const handleCTAClick = useCallback((e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
     setShowLeadModal(true);
-  };
+  }, []);
 
-  const handleCTAKeyDown = (e: React.KeyboardEvent) => {
+  const handleCTAKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleCTAClick();
     }
-  };
+  }, [handleCTAClick]);
 
-  const handleProviderSelect = async (provider: 'google' | 'discord' | 'email') => {
+  const handleProviderSelect = useCallback(async (provider: 'google' | 'discord' | 'email') => {
     setShowProviderModal(false);
     
     // Capture lead
@@ -136,13 +136,13 @@ const Home = () => {
     }
     
     navigate('/auth', { state: { provider } });
-  };
+  }, [navigate]);
 
-  const handleModalKeyDown = (e: React.KeyboardEvent) => {
+  const handleModalKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setShowProviderModal(false);
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
