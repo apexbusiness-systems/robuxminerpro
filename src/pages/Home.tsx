@@ -27,42 +27,34 @@ const Home = () => {
   const progressRef = useRef<HTMLDivElement | null>(null);
   const modalRef = useFocusTrap(showProviderModal);
 
-  // Scroll progress
+  // Elements for IntersectionObservers
+  const revealElements = useRef<Set<HTMLElement>>(new Set());
+  const countElements = useRef<Set<HTMLElement>>(new Set());
+
+  // Performance-optimized Scroll Progress and Viewport Observers
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const doc = document.documentElement;
-      const max = (doc.scrollHeight - doc.clientHeight) || 1;
-      const pct = Math.min(100, Math.max(0, (window.scrollY / max) * 100));
-      
-      if (progressRef.current) {
-        progressRef.current.style.setProperty('--pct', String(pct));
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const doc = document.documentElement;
+          const scrollMax = (doc.scrollHeight - doc.clientHeight) || 1;
+          const pct = Math.min(100, Math.max(0, (window.scrollY / scrollMax) * 100));
+
+          if (progressRef.current) {
+            progressRef.current.style.setProperty('--pct', String(pct));
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
-    
+
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Reveal-on-view
-  useEffect(() => {
-    const els = Array.from(document.querySelectorAll('.reveal'));
-    if (!('IntersectionObserver' in window) || !els.length) return;
     
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('in');
-      });
-    }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
-    
-    els.forEach(el => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-
-  // Count-up for metrics
-  useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
-    
+    // Setup Observers for Reveal and Count-up
     const animate = (el: HTMLElement) => {
       const target = Number(el.dataset.count || 0);
       const dur = 900;
@@ -76,18 +68,40 @@ const Home = () => {
       
       requestAnimationFrame(step);
     };
-    
-    const io = new IntersectionObserver((entries) => {
+
+    const revealIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+        }
+      });
+    }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+
+    const countIo = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           animate(e.target as HTMLElement);
-          io.unobserve(e.target);
+          countIo.unobserve(e.target);
         }
       });
     }, { threshold: 0.6 });
-    
-    els.forEach(el => io.observe(el));
-    return () => io.disconnect();
+
+    revealElements.current.forEach(el => revealIo.observe(el));
+    countElements.current.forEach(el => countIo.observe(el));
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      revealIo.disconnect();
+      countIo.disconnect();
+    };
+  }, []);
+
+  const setRevealRef = useCallback((node: HTMLElement | null) => {
+    if (node) revealElements.current.add(node);
+  }, []);
+
+  const setCountRef = useCallback((node: HTMLElement | null) => {
+    if (node) countElements.current.add(node);
   }, []);
 
   const handleDismissCTA = useCallback(() => {
@@ -188,15 +202,15 @@ const Home = () => {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-6 pt-12 border-t border-border mt-8">
                 <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="50000">0</div>
+                  <div className="text-3xl font-bold text-primary" data-count="50000" ref={setCountRef}>0</div>
                   <div className="text-sm text-muted-foreground">{t('home.stats.activeUsers')}</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="98">0</div>
+                  <div className="text-3xl font-bold text-primary" data-count="98" ref={setCountRef}>0</div>
                   <div className="text-sm text-muted-foreground">{t('home.stats.successRate')}</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="7">0</div>
+                  <div className="text-3xl font-bold text-primary" data-count="7" ref={setCountRef}>0</div>
                   <div className="text-sm text-muted-foreground">{t('home.stats.avgDays')}</div>
                 </div>
               </div>
@@ -218,7 +232,7 @@ const Home = () => {
       </section>
 
       {/* FEATURES GRID */}
-      <section id="features" className="py-24 lg:py-40 border-b border-border">
+      <section id="features" className="py-24 lg:py-40 border-b border-border reveal" ref={setRevealRef}>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
             <Badge className="bg-accent/10 text-accent-high-contrast border-accent/20">{t('home.features.badge')}</Badge>
@@ -290,7 +304,7 @@ const Home = () => {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how-it-works" className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
+      <section id="how-it-works" className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border reveal" ref={setRevealRef}>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
             <Badge className="bg-primary/10 text-primary border-primary/20">{t('home.howItWorks.badge')}</Badge>
@@ -335,7 +349,7 @@ const Home = () => {
       </section>
 
       {/* PRICING */}
-      <section id="pricing" className="py-24 lg:py-40 border-b border-border">
+      <section id="pricing" className="py-24 lg:py-40 border-b border-border reveal" ref={setRevealRef}>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
             <Badge className="bg-accent/10 text-accent-high-contrast border-accent/20">{t('home.pricing.badge')}</Badge>
@@ -435,7 +449,7 @@ const Home = () => {
       </section>
 
       {/* TESTIMONIALS */}
-      <section id="testimonials" className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border">
+      <section id="testimonials" className="py-24 lg:py-40 bg-gradient-to-b from-background to-muted/20 border-b border-border reveal" ref={setRevealRef}>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
             <Badge className="bg-success/10 text-success-high-contrast border-success/20">{t('home.testimonials.badge')}</Badge>
@@ -482,7 +496,7 @@ const Home = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-20 lg:py-32 border-b border-border">
+      <section id="faq" className="py-20 lg:py-32 border-b border-border reveal" ref={setRevealRef}>
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-16 space-y-4">
             <Badge className="bg-primary/10 text-primary border-primary/20">{t('home.faq.badge')}</Badge>
@@ -527,7 +541,7 @@ const Home = () => {
       </section>
 
       {/* FINAL CTA */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-primary/10 via-background to-accent/10">
+      <section className="py-20 lg:py-32 bg-gradient-to-br from-primary/10 via-background to-accent/10 reveal" ref={setRevealRef}>
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-8">
             <Badge className="inline-flex items-center gap-2 bg-primary/20 text-primary border-primary/30">
