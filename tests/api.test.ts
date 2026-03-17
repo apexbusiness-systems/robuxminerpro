@@ -18,20 +18,20 @@ describe('api.ts get() utility', () => {
   });
 
   it('returns stub data when user is not authenticated', async () => {
-    (supabase.auth.getSession as any).mockResolvedValue({
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
       data: { session: null },
       error: null,
-    });
+    } as Awaited<ReturnType<typeof supabase.auth.getSession>>);
 
     const result = await get('/earnings/session/active');
     expect(result).toEqual({ balance: 0, perMinute: 0, elapsed: "00:00:00" });
   });
 
   it('returns data from Supabase for /earnings/session/active when authenticated', async () => {
-    (supabase.auth.getSession as any).mockResolvedValue({
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
       data: { session: { user: { id: 'test-user-id' } } },
       error: null,
-    });
+    } as Awaited<ReturnType<typeof supabase.auth.getSession>>);
 
     const mockData = {
       start_time: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
@@ -43,36 +43,38 @@ describe('api.ts get() utility', () => {
     const eqMock = vi.fn().mockReturnValue({ maybeSingle: maybeSingleMock });
     const secondEqMock = vi.fn().mockReturnValue({ eq: eqMock });
 
-    (supabase.from as any).mockReturnValue({
+    vi.mocked(supabase.from).mockReturnValue({
       select: vi.fn().mockReturnValue({
         eq: secondEqMock
       }),
-    });
+    } as unknown as ReturnType<typeof supabase.from>);
 
     const result = await get('/earnings/session/active');
     expect(result).toMatchObject({
       balance: 100,
       perMinute: 1, // 2 * 0.5
     });
-    expect((result as any).elapsed).toMatch(/^\d{2}:\d{2}:\d{2}$/);
+
+    const resultObj = result as { elapsed: string };
+    expect(resultObj.elapsed).toMatch(/^\d{2}:\d{2}:\d{2}$/);
   });
 
   it('returns fallback stub when Supabase query fails with an error', async () => {
-    (supabase.auth.getSession as any).mockResolvedValue({
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
       data: { session: { user: { id: 'test-user-id' } } },
       error: null,
-    });
+    } as Awaited<ReturnType<typeof supabase.auth.getSession>>);
 
     // Mock query failure
     const maybeSingleMock = vi.fn().mockResolvedValue({ data: null, error: { message: 'DB Error' } });
     const eqMock = vi.fn().mockReturnValue({ maybeSingle: maybeSingleMock });
     const secondEqMock = vi.fn().mockReturnValue({ eq: eqMock });
 
-    (supabase.from as any).mockReturnValue({
+    vi.mocked(supabase.from).mockReturnValue({
       select: vi.fn().mockReturnValue({
         eq: secondEqMock
       }),
-    });
+    } as unknown as ReturnType<typeof supabase.from>);
 
     const result = await get('/earnings/session/active');
     // Should return stub
@@ -81,7 +83,7 @@ describe('api.ts get() utility', () => {
 
   it('returns fallback stub when an exception occurs in the try-catch block', async () => {
     // Force an error in getSession to trigger the catch block in get()
-    (supabase.auth.getSession as any).mockRejectedValue(new Error('Auth failed unexpectedly'));
+    vi.mocked(supabase.auth.getSession).mockRejectedValue(new Error('Auth failed unexpectedly'));
 
     const result = await get('/earnings/session/active');
     // Should return stub due to catch block
@@ -89,10 +91,10 @@ describe('api.ts get() utility', () => {
   });
 
   it('handles /earnings/streak path correctly when authenticated', async () => {
-    (supabase.auth.getSession as any).mockResolvedValue({
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
       data: { session: { user: { id: 'test-user-id' } } },
       error: null,
-    });
+    } as Awaited<ReturnType<typeof supabase.auth.getSession>>);
 
     const today = new Date().toISOString();
     const mockData = {
@@ -103,21 +105,21 @@ describe('api.ts get() utility', () => {
     const singleMock = vi.fn().mockResolvedValue({ data: mockData, error: null });
     const eqMock = vi.fn().mockReturnValue({ single: singleMock });
 
-    (supabase.from as any).mockReturnValue({
+    vi.mocked(supabase.from).mockReturnValue({
       select: vi.fn().mockReturnValue({
         eq: eqMock
       }),
-    });
+    } as unknown as ReturnType<typeof supabase.from>);
 
     const result = await get('/earnings/streak');
     expect(result).toEqual({ days: 5 });
   });
 
   it('returns default streak of 0 when streak is broken', async () => {
-    (supabase.auth.getSession as any).mockResolvedValue({
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
       data: { session: { user: { id: 'test-user-id' } } },
       error: null,
-    });
+    } as Awaited<ReturnType<typeof supabase.auth.getSession>>);
 
     const longAgo = new Date('2020-01-01').toISOString();
     const mockData = {
@@ -128,11 +130,11 @@ describe('api.ts get() utility', () => {
     const singleMock = vi.fn().mockResolvedValue({ data: mockData, error: null });
     const eqMock = vi.fn().mockReturnValue({ single: singleMock });
 
-    (supabase.from as any).mockReturnValue({
+    vi.mocked(supabase.from).mockReturnValue({
       select: vi.fn().mockReturnValue({
         eq: eqMock
       }),
-    });
+    } as unknown as ReturnType<typeof supabase.from>);
 
     const result = await get('/earnings/streak');
     expect(result).toEqual({ days: 0 });
