@@ -6,32 +6,32 @@ import { useToast } from '@/hooks/use-toast';
 interface Profile {
   id: string;
   user_id: string;
-  username?: string;
-  display_name?: string;
-  avatar_url?: string;
+  username?: string | null;
+  display_name?: string | null;
+  avatar_url?: string | null;
   total_robux: number;
   mining_power: number;
-  referral_code?: string;
-  referred_by?: string;
-  last_login?: string;
+  referral_code?: string | null;
+  referred_by?: string | null;
+  last_login?: string | null;
   created_at: string;
   updated_at: string;
   // Enterprise fields (optional for backward compatibility)
-  phone?: string;
+  phone?: string | null;
   email_verified?: boolean;
   phone_verified?: boolean;
   two_factor_enabled?: boolean;
-  subscription_tier?: string;
-  subscription_expires_at?: string;
+  subscription_tier?: string | null;
+  subscription_expires_at?: string | null;
   profile_completion_percentage?: number;
-  last_activity?: string;
-  timezone?: string;
-  language?: string;
+  last_activity?: string | null;
+  timezone?: string | null;
+  language?: string | null;
   notification_preferences?: {
     email: boolean;
     push: boolean;
     in_app: boolean;
-  };
+  } | null;
 }
 
 interface AuthContextType {
@@ -123,6 +123,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [isSupabaseValid]);
 
   useEffect(() => {
+    if (!isSupabaseValid()) {
+      setUser(MOCK_USER);
+      setProfile(MOCK_PROFILE);
+      setLoading(false);
+      return;
+    }
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -133,10 +140,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           updateLastActivity(session.user.id);
           const profileData = await fetchProfile(session.user.id);
           setProfile(profileData);
-        } else if (!isSupabaseValid()) {
-          // Fallback for demo mode
-          setUser(MOCK_USER);
-          setProfile(MOCK_PROFILE);
         } else {
           setProfile(null);
         }
@@ -157,17 +160,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         updateLastActivity(session.user.id);
         fetchProfile(session.user.id).then(setProfile);
         setLoading(false);
-      } else if (!isSupabaseValid()) {
-        // Force mock state if Supabase isn't configured
-        setUser(MOCK_USER);
-        setProfile(MOCK_PROFILE);
-        setLoading(false);
       } else {
         setLoading(false);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      if (subscription) subscription.unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

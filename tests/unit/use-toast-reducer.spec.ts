@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "vitest";
 import { reducer } from "../../src/hooks/use-toast";
 
 test.describe("use-toast reducer", () => {

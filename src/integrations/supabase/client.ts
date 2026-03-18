@@ -47,13 +47,27 @@ if (!isSupabaseConfigured) {
 const supabaseUrl = configuredUrl ?? ENV_FALLBACK.url;
 const supabasePublishableKey = configuredKey ?? ENV_FALLBACK.key;
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
+// Safe local storage adapter for non-browser environments
+const safeStorage = {
+  getItem: (key: string) => {
+    if (typeof globalThis.window === 'undefined') return null;
+    return globalThis.window.localStorage.getItem(key);
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof globalThis.window === 'undefined') return;
+    globalThis.window.localStorage.setItem(key, value);
+  },
+  removeItem: (key: string) => {
+    if (typeof globalThis.window === 'undefined') return;
+    globalThis.window.localStorage.removeItem(key);
+  }
+};
 
 export const supabase = createClient<Database>(supabaseUrl, supabasePublishableKey, {
   auth: {
-    storage: localStorage,
+    storage: safeStorage,
     persistSession: true,
     autoRefreshToken: true,
   },
 });
+

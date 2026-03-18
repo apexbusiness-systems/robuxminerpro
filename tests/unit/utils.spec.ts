@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "vitest";
 import { getRandomInt } from "../../src/lib/utils";
 
 test.describe("getRandomInt utility", () => {

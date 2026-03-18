@@ -13,6 +13,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import AuthPage from "@/components/auth/AuthPage";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/Home"));
@@ -55,6 +56,7 @@ const App = () => {
           <ThemeProvider defaultTheme="dark" storageKey="rmp-theme">
             <ErrorBoundary>
               <Toaster />
+              <Analytics />
               <BrowserRouter>
               <AuthProvider>
                 <div className="flex flex-col min-h-screen">

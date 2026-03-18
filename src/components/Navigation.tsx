@@ -35,13 +35,13 @@ const Navigation: React.FC = () => {
   const { t, locale, setLocale, availableLocales } = useI18n();
 
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: Home },
-    { name: 'Squads', path: '/squads', icon: Users },
-    { name: 'Achievements', path: '/achievements', icon: Trophy },
-    { name: 'Learn', path: '/learn', icon: BookOpen },
-    { name: 'Events', path: '/events', icon: Calendar },
-    { name: 'Payments', path: '/payments', icon: CreditCard },
-  ];
+    { name: 'Dashboard', path: '/dashboard', icon: Home, show: true },
+    { name: 'Squads', path: '/squads', icon: Users, show: import.meta.env.VITE_FEATURE_SQUADS === 'true' },
+    { name: 'Achievements', path: '/achievements', icon: Trophy, show: true },
+    { name: 'Learn', path: '/learn', icon: BookOpen, show: true },
+    { name: 'Events', path: '/events', icon: Calendar, show: true },
+    { name: 'Payments', path: '/payments', icon: CreditCard, show: import.meta.env.VITE_FEATURE_PAYMENTS === 'true' },
+  ].filter(item => item.show);
 
   const handleSignOut = async () => {
     await signOut();

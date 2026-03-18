@@ -44,9 +44,13 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'robots.txt', 'sitemap.xml', 'icon-192.png', 'icon-512.png'],
       workbox: {
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
         navigateFallback: '/index.html',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2,webmanifest,txt,xml}']
       },
       manifest: {
         name: 'RobuxMinerPro',
@@ -67,6 +71,12 @@ export default defineConfig(({ mode }) => ({
             src: '/icon-512.png',
             sizes: '512x512',
             type: 'image/png'
+          },
+          {
+            src: '/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       }
