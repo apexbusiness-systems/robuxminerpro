@@ -16,39 +16,60 @@ export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) 
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const modalRef = useFocusTrap(open);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
     
     if (!email || !consent) return;
 
     setIsSubmitting(true);
 
+    const payload = {
+      email,
+      consent: true,
+      source: 'hero',
+      url: globalThis.window.location.href,
+      referrer: document.referrer || null,
+      utm: {
+        source: new URLSearchParams(globalThis.window.location.search).get('utm_source'),
+        medium: new URLSearchParams(globalThis.window.location.search).get('utm_medium'),
+        campaign: new URLSearchParams(globalThis.window.location.search).get('utm_campaign'),
+      },
+      timestamp: new Date().toISOString(),
+    };
+
     const endpoint = import.meta.env.VITE_LEADS_ENDPOINT_URL;
     if (endpoint) {
       try {
-        const params = new URLSearchParams(window.location.search);
-        await fetch(endpoint, {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            consent: true,
-            source: 'hero',
-            url: window.location.href,
-            referrer: document.referrer || null,
-            utm: {
-              source: params.get('utm_source'),
-              medium: params.get('utm_medium'),
-              campaign: params.get('utm_campaign'),
-            },
-            ts: new Date().toISOString(),
-          }),
+          body: JSON.stringify(payload),
         });
+        
+        if (!res.ok) {
+           throw new Error(`HTTP error! status: ${res.status}`);
+        }
         setSubmitted(true);
       } catch (err) {
-        console.warn('Lead capture failed:', err);
+        console.warn('Lead capture failed, falling back to local storage:', err);
+        setSubmitError('Unable to connect to server. Best effort saved.');
+        try {
+           globalThis.window.localStorage.setItem('rmp_pending_lead', JSON.stringify(payload));
+        } catch (storageErr) {
+           console.warn('Failed to save to localStorage', storageErr);
+        }
+      }
+    } else {
+      try {
+         globalThis.window.localStorage.setItem('rmp_pending_lead', JSON.stringify(payload));
+         setSubmitted(true);
+      } catch (storageErr) {
+         console.warn('Failed to save to localStorage', storageErr);
+         setSubmitError('Failed to save data offline.');
       }
     }
     
@@ -59,6 +80,7 @@ export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) 
     setEmail('');
     setConsent(false);
     setSubmitted(false);
+    setSubmitError('');
     onOpenChange(false);
   };
 
@@ -92,6 +114,12 @@ export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) 
                 />
               </div>
               
+              {submitError && (
+                 <div className="text-sm text-destructive bg-destructive/10 p-2 rounded">
+                    {submitError}
+                 </div>
+              )}
+              
               <div className="flex items-start gap-2">
                 <Checkbox
                   id="consent"
@@ -103,7 +131,7 @@ export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) 
                   htmlFor="consent" 
                   className="text-sm leading-tight cursor-pointer"
                 >
-                  I'm 13+ / parent consent obtained
+                  I&apos;m 13+ / parent consent obtained
                 </Label>
               </div>
 

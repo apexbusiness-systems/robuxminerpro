@@ -17,24 +17,43 @@ function ensureRootElement(): HTMLElement {
   return createdRoot;
 }
 
+/// <reference types="vite-plugin-pwa/client" />
+import { registerSW } from 'virtual:pwa-register';
+import { Capacitor } from '@capacitor/core';
+
 function registerServiceWorker(): void {
-  if (!('serviceWorker' in navigator)) {
+  if (!('serviceWorker' in navigator) || process.env.NODE_ENV !== 'production') {
+    return;
+  }
+
+  // Skip web service worker registration if running natively in Capacitor
+  if (Capacitor.isNativePlatform()) {
+    console.log('[bootstrap] Skipping PWA registration within native container.');
     return;
   }
 
   window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
-      .then((registration) => {
-        console.log('PWA registered successfully:', registration.scope);
-
+    const updateSW = registerSW({
+      immediate: true,
+      onRegisteredSW(swUrl: string, r: ServiceWorkerRegistration | undefined) {
+        if (!r) return;
+        
+        r.update();
+        console.log('PWA registered successfully:', swUrl);
         setInterval(() => {
-          registration.update();
+          r.update();
         }, 60 * 60 * 1000);
-      })
-      .catch((error: unknown) => {
+      },
+      onRegisterError(error: unknown) {
         console.warn('PWA registration failed:', error);
-      });
+      }
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        updateSW(true);
+      }
+    });
   });
 }
 
