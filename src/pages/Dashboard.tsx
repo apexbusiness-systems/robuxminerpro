@@ -3,18 +3,13 @@ import {
   Zap,
   TrendingUp,
   Trophy,
-  Target,
   ChevronRight,
   PackageOpen,
   ExternalLink,
-  Cpu,
   Star,
-  Sparkles,
   ShieldCheck,
-  ZapOff,
   Compass,
   Users,
-  Activity,
   Flame,
   Lock,
   Radio
@@ -49,8 +44,8 @@ const getCachedData = (): DashboardData | null => {
     if (cached) {
       const parsed = JSON.parse(cached);
       if (parsed.streak) {
-        if (typeof parsed.streak.days !== 'number' || isNaN(parsed.streak.days)) parsed.streak.days = 0;
-        if (typeof parsed.streak.nextMilestone !== 'number' || isNaN(parsed.streak.nextMilestone)) parsed.streak.nextMilestone = 7;
+        if (typeof parsed.streak.days !== 'number' || Number.isNaN(parsed.streak.days)) parsed.streak.days = 0;
+        if (typeof parsed.streak.nextMilestone !== 'number' || Number.isNaN(parsed.streak.nextMilestone)) parsed.streak.nextMilestone = 7;
       }
       return parsed;
     }
@@ -401,7 +396,7 @@ const Dashboard: React.FC = () => {
           }
         }
 
-        const userParts: any[] = [{ text: userMsg }];
+        const userParts: { text?: string; inlineData?: { mimeType: string; data: string } }[] = [{ text: userMsg }];
         if (activeFrameBase64) {
           userParts.push({
             inlineData: { mimeType: 'image/jpeg', data: activeFrameBase64 }
@@ -509,7 +504,9 @@ const Dashboard: React.FC = () => {
 
       // ── VOICE BUTTON — Native Browser SpeechRecognition ───────────
       let isListening = false;
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const SpeechRecognition = (globalThis as any).SpeechRecognition || (globalThis as any).webkitSpeechRecognition;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let recognition: any = null;
 
       if (SpeechRecognition) {
@@ -518,6 +515,7 @@ const Dashboard: React.FC = () => {
         recognition.interimResults = false;
         recognition.lang = 'en-US';
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognition.onresult = async (event: any) => {
           const transcript = event.results[0][0].transcript;
           if (transcript?.trim()) {
@@ -525,6 +523,7 @@ const Dashboard: React.FC = () => {
           }
         };
         
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognition.onerror = (event: any) => {
           console.error('[SpeechRecognition Error]', event.error);
           chatInput.placeholder = 'Mic error. Try typing.';
