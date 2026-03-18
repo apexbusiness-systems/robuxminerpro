@@ -59,9 +59,6 @@ export type Database = {
           referred_by: string | null
           total_robux: number
           updated_at: string
-          premium_tier: 'free' | 'premium' | 'enterprise'
-          current_streak: number
-          last_streak_date: string | null
           user_id: string
           username: string | null
         }
@@ -76,9 +73,6 @@ export type Database = {
           referred_by?: string | null
           total_robux?: number
           updated_at?: string
-          premium_tier?: 'free' | 'premium' | 'enterprise'
-          current_streak?: number
-          last_streak_date?: string | null
           user_id: string
           username?: string | null
         }
@@ -93,9 +87,6 @@ export type Database = {
           referred_by?: string | null
           total_robux?: number
           updated_at?: string
-          premium_tier?: 'free' | 'premium' | 'enterprise'
-          current_streak?: number
-          last_streak_date?: string | null
           user_id?: string
           username?: string | null
         }
@@ -148,9 +139,6 @@ export type Database = {
           task_type: Database["public"]["Enums"]["task_type"]
           title: string
           updated_at: string
-          premium_tier: 'free' | 'premium' | 'enterprise'
-          current_streak: number
-          last_streak_date: string | null
         }
         Insert: {
           created_at?: string
@@ -163,9 +151,6 @@ export type Database = {
           task_type: Database["public"]["Enums"]["task_type"]
           title: string
           updated_at?: string
-          premium_tier?: 'free' | 'premium' | 'enterprise'
-          current_streak?: number
-          last_streak_date?: string | null
         }
         Update: {
           created_at?: string
@@ -178,9 +163,6 @@ export type Database = {
           task_type?: Database["public"]["Enums"]["task_type"]
           title?: string
           updated_at?: string
-          premium_tier?: 'free' | 'premium' | 'enterprise'
-          current_streak?: number
-          last_streak_date?: string | null
         }
         Relationships: []
       }

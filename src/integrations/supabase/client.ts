@@ -20,7 +20,15 @@ const configuredKey = parsedEnv.success
   ? parsedEnv.data.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY || parsedEnv.data.VITE_SUPABASE_PUBLISHABLE_KEY
   : undefined;
 
-export const isSupabaseConfigured = Boolean(configuredUrl && configuredKey);
+export const isSupabaseConfigured = Boolean(
+  configuredUrl &&
+  configuredKey &&
+  !configuredUrl.includes('invalid.supabase.local') &&
+  !configuredUrl.includes('does-not-exist') &&
+  !configuredUrl.includes('.local') &&
+  configuredKey !== 'invalid-publishable-key' &&
+  configuredKey !== 'mock-anon-key'
+);
 
 if (!isSupabaseConfigured) {
   const validationDetails = parsedEnv.success

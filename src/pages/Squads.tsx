@@ -6,7 +6,6 @@ import type { Squad } from '@/types';
 
 export default function Squads() {
   const [squads, setSquads] = useState<Squad[]>([]);
-  const squadsEnabled = import.meta.env.VITE_FEATURE_SQUADS === 'true';
 
   useEffect(() => {
     get<Squad[]>('/squads').then(data => {
@@ -19,12 +18,6 @@ export default function Squads() {
     <main className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-8">Squads</h1>
       
-      {!squadsEnabled && (
-        <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
-          Squad features are in development. Check back soon!
-        </div>
-      )}
-
       {squads.length === 0 ? (
         <Card>
           <CardContent className="text-center py-12">

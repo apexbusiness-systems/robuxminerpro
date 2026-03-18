@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { AuthError, User } from '@supabase/supabase-js';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
+import { AuthError } from '@supabase/supabase-js';
 import { Eye, EyeOff, Mail, Lock, User as UserIcon, Phone, Chrome } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { z } from 'zod';
@@ -100,9 +100,14 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
   // Check if user is already logged in
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        navigate('/');
+      if (!isSupabaseConfigured) return;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          navigate('/dashboard');
+        }
+      } catch (e) {
+        // Silently catch fetch failures for unconfigured envs
       }
     };
     checkUser();
@@ -165,6 +170,16 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
       return;
     }
 
+    if (!isSupabaseConfigured) {
+      toast({
+        title: "Development Mode Active",
+        description: "Supabase not configured. Activating APEX Bypass mock login.",
+      });
+      bypassMockLogin();
+      navigate('/dashboard');
+      return;
+    }
+
     if (isSignUp && password !== confirmPassword) {
       setError('Passwords do not match');
       setIsLoading(false);
@@ -178,7 +193,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
 
     try {
       if (isSignUp) {
-        const redirectUrl = `${window.location.origin}/`;
+        const redirectUrl = `${window.location.origin}/dashboard`;
         
         const { error } = await supabase.auth.signUp({
           email,
@@ -210,7 +225,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
           title: "Welcome back!",
           description: "You have successfully signed in.",
         });
-        navigate('/');
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Auth error:', error);
@@ -225,6 +240,16 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
     setIsLoading(true);
 
     try {
+      if (!isSupabaseConfigured) {
+        toast({
+          title: "Development Mode Active",
+          description: "Supabase not configured. Activating APEX Bypass mock login.",
+        });
+        bypassMockLogin();
+        navigate('/dashboard');
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -272,12 +297,9 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/30 p-4">
       <div className="w-full max-w-md space-y-6">
-        {/* Logo */}
+        {/* Auth page subtitle */}
         <div className="text-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-            RobuxMinerPro
-          </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground font-medium text-sm md:text-base max-w-[280px] mx-auto leading-relaxed">
             The ultimate Robux earning platform
           </p>
         </div>
@@ -289,20 +311,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
                 <TabsTrigger value="signin">Sign In</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
               </TabsList>
-              
-              <TabsContent value="signin" className="space-y-4 mt-6">
-                <CardTitle>Welcome back</CardTitle>
-                <CardDescription>
-                  Sign in to your account to continue earning Robux
-                </CardDescription>
-              </TabsContent>
-              
-              <TabsContent value="signup" className="space-y-4 mt-6">
-                <CardTitle>Create account</CardTitle>
-                <CardDescription>
-                  Join thousands of users earning Robux daily
-                </CardDescription>
-              </TabsContent>
             </Tabs>
           </CardHeader>
 
@@ -336,17 +344,19 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
               </div>
             </div>
 
-            <Button
-              variant="secondary"
-              type="button"
-              onClick={() => {
-                bypassMockLogin();
-                navigate('/dashboard');
-              }}
-              className="w-full border-primary/20 hover:border-primary/50 text-primary-glow bg-primary/10 hover:bg-primary/20"
-            >
-              🚀 APEX EMERGENCY BYPASS (Dev Mode)
-            </Button>
+            {!isSupabaseConfigured && (
+              <Button
+                variant="secondary"
+                type="button"
+                onClick={() => {
+                  bypassMockLogin();
+                  navigate('/dashboard');
+                }}
+                className="w-full border-primary/20 hover:border-primary/50 text-primary-glow bg-primary/10 hover:bg-primary/20"
+              >
+                🚀 APEX EMERGENCY BYPASS (Dev Mode)
+              </Button>
+            )}
 
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'signin' | 'signup')}>
               <TabsContent value="signin" className="space-y-4">

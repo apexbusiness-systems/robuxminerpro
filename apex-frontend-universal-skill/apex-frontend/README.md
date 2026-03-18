@@ -1,9 +1,0 @@
-# apex-frontend
-
-Install as a Claude Skill (Capabilities → Skills → Upload) or in Claude Code under:
-~/.claude/skills/apex-frontend/
-
-Invoke:
-- /apex-frontend design ...
-- /apex-frontend debug ...
-- /apex-frontend perf ...

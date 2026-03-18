@@ -1,6 +1,5 @@
 import { createPortal } from "react-dom";
 import { useEffect, useRef, lazy, Suspense } from "react";
-import { useI18n } from "@/i18n/I18nProvider";
 
 const Mentor = lazy(() => import("../pages/Mentor"));
 
@@ -11,7 +10,6 @@ const LoadingSpinner = () => (
 );
 
 export default function ChatDock({open,onClose}:{open:boolean;onClose:()=>void}){
-  const { t } = useI18n();
   const closeBtn = useRef<HTMLButtonElement>(null);
   useEffect(()=>{ document.body.style.overflow = open ? "hidden" : ""; if(open) setTimeout(()=>closeBtn.current?.focus(), 0); },[open]);
   if(!open) return null;
@@ -26,7 +24,7 @@ export default function ChatDock({open,onClose}:{open:boolean;onClose:()=>void})
           <Suspense fallback={<LoadingSpinner />}>
             <Mentor/>
           </Suspense>
-          <p className="muted" style={{marginTop:8}}>{t("mentor.dockWarning")}</p>
+          <p className="muted" style={{marginTop:8}}>Official links only; we refuse "free Robux" requests for safety.</p>
         </div>
       </div>
     </div>,

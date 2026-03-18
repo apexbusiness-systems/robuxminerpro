@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Sparkles, Zap, Trophy, Star } from 'lucide-react';
+import { Zap, Trophy, Star } from 'lucide-react';
 
 // Import 3D assets
 import chestImg from '@/assets/chest_epic_lava.png';
@@ -126,10 +126,6 @@ export const RewardUnboxing: React.FC<RewardUnboxProps> = ({ onComplete, rewardT
                 alt="Reward" 
                 className="w-48 h-48 object-contain drop-shadow-[0_10px_30px_rgba(217,70,239,0.5)]"
               />
-              {/* Floating particles around item */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Sparkles className="w-64 h-64 text-primary/10 animate-spin-slow opacity-50" />
-              </div>
             </motion.div>
             
             <motion.div
