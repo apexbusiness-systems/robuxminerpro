@@ -887,11 +887,11 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-6xl font-black text-white tabular-nums">{data.streak.days}</span>
+              <span className="text-6xl font-black text-white tabular-nums">{data.streak?.days ?? 0}</span>
               <span className="text-xl font-black uppercase tracking-tighter" style={{ color: '#fb923c' }}>Days</span>
             </div>
             <p className="text-xs text-white/30 font-bold mb-6">
-              <span style={{ color: '#fb923c' }}>{data.streak.nextMilestone - data.streak.days} days</span> to unlock 3× Reward Multiplier
+              <span style={{ color: '#fb923c' }}>{(data.streak?.nextMilestone ?? 7) - (data.streak?.days ?? 0)} days</span> to unlock 3× Reward Multiplier
             </p>
 
             {/* Progress pips */}
@@ -904,10 +904,10 @@ const Dashboard: React.FC = () => {
                   transition={{ delay: 0.6 + i * 0.05 }}
                   className="flex-1 h-3 rounded-full"
                   style={{
-                    background: i < data.streak.days
+                    background: i < (data.streak?.days ?? 0)
                       ? 'linear-gradient(180deg, #fed7aa, #fb923c)'
                       : 'rgba(255,255,255,0.06)',
-                    boxShadow: i < data.streak.days ? '0 0 12px rgba(251,146,60,0.4)' : 'none',
+                    boxShadow: i < (data.streak?.days ?? 0) ? '0 0 12px rgba(251,146,60,0.4)' : 'none',
                     border: i < data.streak.days ? 'none' : '1px solid rgba(255,255,255,0.05)'
                   }}
                 />
