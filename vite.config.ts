@@ -9,6 +9,31 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "0.0.0.0",
     port: 8080,
+    proxy: {
+      '/api/openai': {
+        target: 'https://api.openai.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/openai/, ''),
+        secure: true,
+      },
+      '/api/ollama': {
+        target: 'http://localhost:11434',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/ollama/, ''),
+      },
+      '/api/gemini': {
+        target: 'https://generativelanguage.googleapis.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/gemini/, ''),
+        secure: true,
+      },
+      '/api/groq': {
+        target: 'https://api.groq.com/openai',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/groq/, ''),
+        secure: true,
+      },
+    },
   },
   preview: {
     host: "0.0.0.0",

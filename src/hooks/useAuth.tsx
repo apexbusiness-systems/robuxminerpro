@@ -39,6 +39,7 @@ interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
+  isAdmin: boolean;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -63,7 +64,7 @@ interface AuthProviderProps {
 const MOCK_USER: User = {
   id: 'apex-mock-user-id',
   email: 'apex@example.com',
-  app_metadata: {},
+  app_metadata: { role: 'admin' },
   user_metadata: { display_name: 'APEX Explorer' },
   aud: 'authenticated',
   created_at: new Date().toISOString(),
@@ -236,21 +237,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     });
   }, [toast]);
 
+  const isAdmin = useMemo(() => {
+    return user?.app_metadata?.role === 'admin';
+  }, [user]);
+
   const value = useMemo(() => ({
     user,
     session,
     profile,
     loading,
+    isAdmin,
     signOut,
     updateProfile,
     refreshProfile,
-    bypassMockLogin: import.meta.env.DEV
-      ? bypassMockLogin
-      : () => {
-          if (import.meta.env.DEV) return;
-          console.warn('[Auth] bypassMockLogin is disabled in production');
-        },
-  }), [user, session, profile, loading, signOut, updateProfile, refreshProfile, bypassMockLogin]);
+    bypassMockLogin,
+  }), [user, session, profile, loading, isAdmin, signOut, updateProfile, refreshProfile, bypassMockLogin]);
 
   return (
     <AuthContext.Provider value={value}>

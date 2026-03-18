@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
-import { useI18n } from '@/i18n/I18nProvider';
 
 export default function Mentor() {
-  const { t } = useI18n();
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +15,7 @@ export default function Mentor() {
     }
   }, []);
 
-  const handleSafety = (message: string): string | null => {
+  const handleSafety = useCallback((message: string): string | null => {
     const lowerMsg = message.toLowerCase();
     const forbidden = [
       /\bfree\s+robux\b/i,
@@ -25,25 +23,16 @@ export default function Mentor() {
       /\brobux[\W_]*min(e|ing)\b/i,
       /\bfree\s+membership\b/i,
       /\bhack/i,
-      /\bcheat/i,
-      /\bobby\s+for\s+robux\b/i,
-      /\btrading\s+platform\b/i,
-      /\bsomeone\s+will\s+give\s+robux\b/i,
-      /\broblox\s+gift\s+card\s+code\b/i,
-      /\benter\s+your\s+password\b/i,
-      /\bpassword\b/i,
-      /\baccount\s+sharing\b/i,
-      /\bexploit\b/i,
-      /\bbotting\b/i
+      /\bcheat/i
     ];
     
     if (forbidden.some(pattern => pattern.test(lowerMsg))) {
-      return t("mentor.safetyWarning");
+      return "We only teach official ways to get Robux. Learn more at help.roblox.com.";
     }
     return null;
-  };
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
@@ -54,7 +43,7 @@ export default function Mentor() {
         { role: 'assistant' as const, content: safetyCheck }
       ];
       setMessages(newMessages);
-      localStorage.setItem('chat-transcript', JSON.stringify(newMessages.slice(-100)));
+      localStorage.setItem('chat-transcript', JSON.stringify(newMessages));
       setInput('');
       return;
     }
@@ -69,7 +58,7 @@ export default function Mentor() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        navigate('/auth');
+        navigate('/login');
         return;
       }
 
@@ -149,7 +138,7 @@ export default function Mentor() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, isLoading, messages, navigate, handleSafety]);
 
   return (
     <main className="container mx-auto py-8 px-4 max-w-4xl">
@@ -159,7 +148,7 @@ export default function Mentor() {
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {messages.length === 0 && (
             <div className="text-muted-foreground text-center py-8">
-              {t("mentor.welcome")}
+              Ask me about legitimate strategies for RobuxMinerPro!
             </div>
           )}
           {messages.map((msg, i) => (
@@ -175,7 +164,7 @@ export default function Mentor() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={t("mentor.placeholder")}
+              placeholder="Ask about strategies, tips, or optimization..."
               className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               disabled={isLoading}
             />

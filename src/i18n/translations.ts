@@ -104,10 +104,6 @@ export const translations = {
     "home.provider.title": "Choose your path",
     "language.english": "English",
     "language.spanish": "Español",
-    "mentor.safetyWarning": "⚠️ SAFETY FLAG: What you're describing sounds like a common Roblox scam.\n\nLegitimate Robux earning NEVER requires:\n- Entering your password on a third-party website\n- Downloading external software\n- Completing \"tasks\" on unofficial sites\n- Sharing your account with anyone\n\nIf you've already shared credentials:\n1. Change your Roblox password immediately\n2. Enable 2-Step Verification at roblox.com/my/account\n3. Report to Roblox Support: roblox.com/support\n4. Check and revoke unfamiliar authorized apps",
-    "mentor.welcome": "Ask me about legitimate strategies to earn Robux! I can help you with Game Passes, Developer Products, the UGC Marketplace, and more.",
-    "mentor.placeholder": "Ask about Creator tools, DevEx, or game monetization...",
-    "mentor.dockWarning": "Official links only; we refuse \"free Robux\", generators, and credential requests for your safety.",
   },
   es: {
     "nav.features": "Funciones",
@@ -214,10 +210,6 @@ export const translations = {
     "home.provider.title": "Elige tu camino",
     "language.english": "English",
     "language.spanish": "Español",
-    "mentor.safetyWarning": "⚠️ SAFETY FLAG: What you're describing sounds like a common Roblox scam.\n\nLegitimate Robux earning NEVER requires:\n- Entering your password on a third-party website\n- Downloading external software\n- Completing \"tasks\" on unofficial sites\n- Sharing your account with anyone\n\nIf you've already shared credentials:\n1. Change your Roblox password immediately\n2. Enable 2-Step Verification at roblox.com/my/account\n3. Report to Roblox Support: roblox.com/support\n4. Check and revoke unfamiliar authorized apps",
-    "mentor.welcome": "Ask me about legitimate strategies to earn Robux! I can help you with Game Passes, Developer Products, the UGC Marketplace, and more.",
-    "mentor.placeholder": "Ask about Creator tools, DevEx, or game monetization...",
-    "mentor.dockWarning": "Official links only; we refuse \"free Robux\", generators, and credential requests for your safety.",
   },
 } as const;
 

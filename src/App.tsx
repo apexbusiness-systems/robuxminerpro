@@ -23,12 +23,8 @@ const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const HealthCheck = lazy(() => import("./pages/HealthCheck"));
 const Status = lazy(() => import("./pages/Status"));
-const Docs = lazy(() => import("./pages/Docs"));
-const Help = lazy(() => import("./pages/Help"));
-const Community = lazy(() => import("./pages/Community"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Cookies = lazy(() => import("./pages/Cookies"));
-const Api = lazy(() => import("./pages/Api"));
+const SimulateGame = lazy(() => import("./pages/SimulateGame"));
+
 
 // Lazy load authenticated pages
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -75,12 +71,8 @@ const App = () => {
                       <Route path="/terms" element={<Terms />} />
                       <Route path="/status" element={<Status />} />
                       <Route path="/health" element={<HealthCheck />} />
-                      <Route path="/docs" element={<Docs />} />
-                      <Route path="/help" element={<Help />} />
-                      <Route path="/community" element={<Community />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/cookies" element={<Cookies />} />
-                      <Route path="/api" element={<Api />} />
+                      <Route path="/simulate-game" element={<SimulateGame />} />
+
                       
                       {/* Auth route */}
                       <Route path="/auth" element={

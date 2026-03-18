@@ -26,8 +26,7 @@ import {
   Calendar,
   CreditCard
 } from 'lucide-react';
-
-
+import logo from '@/assets/logo.svg';
 
 const Navigation: React.FC = () => {
   const { user, profile, signOut } = useAuth();
@@ -57,10 +56,6 @@ const Navigation: React.FC = () => {
     }
   };
 
-  const getTierIcon = (tier: string) => {
-    return tier === 'premium' || tier === 'pro' ? Crown : User;
-  };
-
   if (!user) {
     const landingLinks = [
       { label: t('nav.features'), hash: '#features' },
@@ -70,26 +65,25 @@ const Navigation: React.FC = () => {
       { label: t('nav.faq'), hash: '#faq' },
     ];
 
+
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container relative h-16 px-4">
+        <div className="container relative h-20 px-4 overflow-visible">
           <div className="flex h-full items-center justify-between">
             <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
               <div className="relative">
                 <img 
-                  src="/official_logo.png"
+                  src={logo} 
                   alt={t('nav.logoAlt')}
-                  className="h-14 sm:h-16 w-auto drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-transform duration-500 group-hover:scale-105"
+                  className="h-[140px] w-auto drop-shadow-[0_0_25px_rgba(139,92,246,0.5)] group-hover:rotate-[360deg] transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-purple-500/10 blur-xl animate-pulse rounded-full" />
+                <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
               </div>
-              <div className="flex flex-col leading-none justify-center">
-                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-                  ROBUX<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">MINER</span>
+              <div className="flex flex-col leading-none">
+                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                  ROBUX<span className="text-primary-glow">MINER</span>
                 </span>
-                <span className="text-[10px] sm:text-[12px] font-black tracking-[0.4em] text-cyan-400 uppercase mt-1 opacity-90 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
-                  APEX PRO EDITION
-                </span>
+                <span className="text-[8px] sm:text-[10px] font-black tracking-[0.4em] text-primary-glow uppercase mt-1">APEX PRO EDITION</span>
               </div>
             </Link>
 
@@ -127,9 +121,11 @@ const Navigation: React.FC = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button asChild size="sm">
-                <Link to="/auth">{t('nav.signIn')}</Link>
-              </Button>
+              {location.pathname !== '/auth' && (
+                <Button asChild size="sm">
+                  <Link to="/auth">{t('nav.signIn')}</Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -145,19 +141,17 @@ const Navigation: React.FC = () => {
           <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
             <div className="relative">
               <img 
-                src="/official_logo.png"
+                src={logo} 
                 alt={t('nav.logoAlt')}
-                className="h-14 sm:h-16 w-auto drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-transform duration-500 group-hover:scale-105"
+                className="h-16 w-auto drop-shadow-[0_0_25px_rgba(139,92,246,0.5)] group-hover:rotate-[360deg] transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-purple-500/10 blur-xl animate-pulse rounded-full" />
+              <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
             </div>
-            <div className="flex flex-col leading-none justify-center">
-              <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-                ROBUX<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">MINER</span>
+            <div className="flex flex-col leading-none">
+              <span className="text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                ROBUX<span className="text-primary-glow">MINER</span>
               </span>
-              <span className="text-[10px] sm:text-[12px] font-black tracking-[0.4em] text-cyan-400 uppercase mt-1 opacity-90 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
-                APEX PRO EDITION
-              </span>
+              <span className="text-[10px] font-black tracking-[0.4em] text-primary-glow uppercase mt-1">APEX PRO EDITION</span>
             </div>
           </Link>
 

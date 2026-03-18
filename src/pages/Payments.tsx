@@ -2,18 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 export default function Payments() {
-  const paymentsEnabled = import.meta.env.VITE_FEATURE_PAYMENTS === 'true';
-
   return (
     <main className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-8">Payments</h1>
       
       <div className="max-w-2xl mx-auto">
-        {!paymentsEnabled && (
-          <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
-            Payments are currently in closed beta. Join the waitlist below to get early access.
-          </div>
-        )}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -40,8 +33,8 @@ export default function Payments() {
                 </div>
                 <div className="text-right">
                   <div className="text-lg font-bold">$9.99</div>
-                  <Button disabled aria-label="Feature not yet available">
-                    Launching Soon
+                  <Button disabled>
+                    Coming Soon
                   </Button>
                 </div>
               </div>
@@ -53,8 +46,8 @@ export default function Payments() {
                 </div>
                 <div className="text-right">
                   <div className="text-lg font-bold">$4.99</div>
-                  <Button disabled aria-label="Feature not yet available">
-                    Launching Soon
+                  <Button disabled>
+                    Coming Soon
                   </Button>
                 </div>
               </div>
@@ -66,8 +59,8 @@ export default function Payments() {
                 </div>
                 <div className="text-right">
                   <div className="text-lg font-bold">$1.99</div>
-                  <Button disabled aria-label="Feature not yet available">
-                    Launching Soon
+                  <Button disabled>
+                    Coming Soon
                   </Button>
                 </div>
               </div>
