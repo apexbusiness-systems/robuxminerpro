@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { LeadCaptureModal } from '@/components/LeadCaptureModal';
 import { Button } from '@/components/ui/button';
