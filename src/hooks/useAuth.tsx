@@ -1,7 +1,33 @@
 import { useState, useEffect, createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { isSupabaseConfigured, supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+
+const MOCK_AUTH_STORAGE_KEY = 'apex_mock_auth_enabled';
+
+const clearSupabaseAuthStorage = () => {
+  if (typeof globalThis.window === 'undefined') return;
+
+  const purgeStorage = (storage: Storage) => {
+    const keysToRemove: string[] = [];
+
+    for (let index = 0; index < storage.length; index += 1) {
+      const storageKey = storage.key(index);
+      if (!storageKey) continue;
+
+      if (storageKey.startsWith('sb-') || storageKey.startsWith('supabase.auth.')) {
+        keysToRemove.push(storageKey);
+      }
+    }
+
+    keysToRemove.forEach((storageKey) => {
+      storage.removeItem(storageKey);
+    });
+  };
+
+  purgeStorage(globalThis.window.localStorage);
+  purgeStorage(globalThis.window.sessionStorage);
+};
 
 interface Profile {
   id: string;
@@ -88,7 +114,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { toast } = useToast();
 
   const isSupabaseValid = useCallback(() => {
-    return !import.meta.env.VITE_SUPABASE_URL?.includes('your-project-ref');
+    return isSupabaseConfigured;
   }, []);
 
   const fetchProfile = useCallback(async (userId: string) => {
@@ -124,8 +150,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (!isSupabaseValid()) {
-      setUser(MOCK_USER);
-      setProfile(MOCK_PROFILE);
+      const isMockSessionActive = globalThis.window?.localStorage.getItem(MOCK_AUTH_STORAGE_KEY) === 'true';
+      if (isMockSessionActive) {
+        setUser(MOCK_USER);
+        setSession(null);
+        setProfile(MOCK_PROFILE);
+      } else {
+        setUser(null);
+        setSession(null);
+        setProfile(null);
+      }
       setLoading(false);
       return;
     }
@@ -172,11 +206,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signOut = useCallback(async () => {
+    globalThis.window?.localStorage.removeItem(MOCK_AUTH_STORAGE_KEY);
+
+    if (!isSupabaseValid()) {
+      clearSupabaseAuthStorage();
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+      });
+      return;
+    }
+
     try {
-      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      const { error } = await supabase.auth.signOut();
       if (error) throw error;
       
       // Explicitly forcefully clear React state immediately
+      clearSupabaseAuthStorage();
       setSession(null);
       setUser(null);
       setProfile(null);
@@ -186,15 +235,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         description: "You have been successfully signed out.",
       });
       
-      window.location.replace('/');
     } catch {
       // Hard fallback if network completely fails
+      clearSupabaseAuthStorage();
       setSession(null);
       setUser(null);
       setProfile(null);
-      window.location.replace('/');
     }
-  }, [toast]);
+  }, [isSupabaseValid, toast]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     if (!user) return;
@@ -235,7 +283,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [user, fetchProfile]);
 
   const bypassMockLogin = useCallback(() => {
+    globalThis.window?.localStorage.setItem(MOCK_AUTH_STORAGE_KEY, 'true');
     setUser(MOCK_USER);
+    setSession(null);
     setProfile(MOCK_PROFILE);
     setLoading(false);
     toast({
