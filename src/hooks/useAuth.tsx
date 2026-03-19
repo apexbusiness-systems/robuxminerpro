@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { isSupabaseConfigured, supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 const MOCK_AUTH_STORAGE_KEY = 'apex_mock_auth_enabled';
@@ -8,19 +8,25 @@ const MOCK_AUTH_STORAGE_KEY = 'apex_mock_auth_enabled';
 const clearSupabaseAuthStorage = () => {
   if (typeof globalThis.window === 'undefined') return;
 
-  const keysToRemove: string[] = [];
-  for (let index = 0; index < globalThis.window.localStorage.length; index += 1) {
-    const storageKey = globalThis.window.localStorage.key(index);
-    if (!storageKey) continue;
+  const purgeStorage = (storage: Storage) => {
+    const keysToRemove: string[] = [];
 
-    if (storageKey.startsWith('sb-') && storageKey.endsWith('-auth-token')) {
-      keysToRemove.push(storageKey);
+    for (let index = 0; index < storage.length; index += 1) {
+      const storageKey = storage.key(index);
+      if (!storageKey) continue;
+
+      if (storageKey.startsWith('sb-') || storageKey.startsWith('supabase.auth.')) {
+        keysToRemove.push(storageKey);
+      }
     }
-  }
 
-  keysToRemove.forEach((storageKey) => {
-    globalThis.window.localStorage.removeItem(storageKey);
-  });
+    keysToRemove.forEach((storageKey) => {
+      storage.removeItem(storageKey);
+    });
+  };
+
+  purgeStorage(globalThis.window.localStorage);
+  purgeStorage(globalThis.window.sessionStorage);
 };
 
 interface Profile {
@@ -108,7 +114,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { toast } = useToast();
 
   const isSupabaseValid = useCallback(() => {
-    return !import.meta.env.VITE_SUPABASE_URL?.includes('your-project-ref');
+    return isSupabaseConfigured;
   }, []);
 
   const fetchProfile = useCallback(async (userId: string) => {
