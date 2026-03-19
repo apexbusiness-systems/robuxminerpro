@@ -5,7 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const MOCK_AUTH_STORAGE_KEY = 'apex_mock_auth_enabled';
 
-const clearSupabaseAuthStorage = () => {
+export const clearSupabaseAuthStorage = () => {
   if (typeof globalThis.window === 'undefined') return;
 
   const purgeStorage = (storage: Storage) => {
