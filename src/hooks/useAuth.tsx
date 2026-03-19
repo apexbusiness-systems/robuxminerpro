@@ -4,12 +4,8 @@ import { isSupabaseConfigured, supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 const MOCK_AUTH_STORAGE_KEY = 'apex_mock_auth_enabled';
-// FIX: Sentinel flag written to sessionStorage before the logout-triggered page reload.
-// On remount, AuthProvider reads this flag and skips getSession() re-hydration,
-// preventing the Supabase GoTrue singleton from restoring the just-signed-out session.
-const LOGOUT_IN_PROGRESS_KEY = 'apex_logout_in_progress';
 
-const clearSupabaseAuthStorage = () => {
+export const clearSupabaseAuthStorage = () => {
   if (typeof globalThis.window === 'undefined') return;
 
   const purgeStorage = (storage: Storage) => {
@@ -19,13 +15,7 @@ const clearSupabaseAuthStorage = () => {
       const storageKey = storage.key(index);
       if (!storageKey) continue;
 
-      // FIX: Also purge MOCK_AUTH_STORAGE_KEY — previously missed by the sb- prefix filter,
-      // which caused the mock user to persist forever even after signOut().
-      if (
-        storageKey.startsWith('sb-') ||
-        storageKey.startsWith('supabase.auth.') ||
-        storageKey === MOCK_AUTH_STORAGE_KEY
-      ) {
+      if (storageKey.startsWith('sb-') || storageKey.startsWith('supabase.auth.')) {
         keysToRemove.push(storageKey);
       }
     }
@@ -244,14 +234,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signOut = useCallback(async () => {
-    // FIX: Write the logout sentinel to sessionStorage BEFORE anything else.
-    // sessionStorage persists across JS execution within the tab but is cleared
-    // when the tab/browser closes — it is the correct scope for a "this reload
-    // is a logout reload" flag. This is read by the useEffect above on remount
-    // to block getSession() from re-hydrating the Supabase singleton's session.
-    globalThis.window?.sessionStorage.setItem(LOGOUT_IN_PROGRESS_KEY, 'true');
-
-    // Remove mock auth key explicitly (not caught by the sb- prefix filter)
     globalThis.window?.localStorage.removeItem(MOCK_AUTH_STORAGE_KEY);
 
     if (!isSupabaseValid()) {
@@ -260,37 +242,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(null);
       setProfile(null);
       toast({
-        title: 'Signed out',
-        description: 'You have been successfully signed out.',
+        title: "Signed out",
+        description: "You have been successfully signed out.",
       });
-      // FIX: Hard navigation destroys the entire React tree + Supabase singleton in-memory state.
-      // window.location.href is used (not assign) to ensure a full browser navigation
-      // that cannot be intercepted by service workers or React Router.
-      globalThis.window.location.href = '/auth';
       return;
     }
 
     try {
-      // Tell Supabase server to invalidate the refresh token server-side.
-      // This fires the SIGNED_OUT event to onAuthStateChange.
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      // Explicitly forcefully clear React state immediately
+      clearSupabaseAuthStorage();
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      toast({
+        title: 'Signed out',
+        description: 'You have been successfully signed out.',
+      });
+      
     } catch {
-      // Intentionally continue — we force-clear client state regardless of
-      // server response. Network failure must not leave the user stuck logged in.
+      // Hard fallback if network completely fails
+      clearSupabaseAuthStorage();
+      setSession(null);
+      setUser(null);
+      setProfile(null);
     }
-
-    // Purge all Supabase + mock storage keys AFTER signOut() has fired.
-    clearSupabaseAuthStorage();
-
-    toast({
-      title: 'Signed out',
-      description: 'You have been successfully signed out.',
-    });
-
-    // FIX: Hard navigation — destroys the Supabase GoTrue singleton entirely.
-    // This is the only reliable way to guarantee zero in-memory session residue
-    // in a SPA where the SDK holds session state outside React.
-    globalThis.window.location.href = '/auth';
   }, [isSupabaseValid, toast]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {

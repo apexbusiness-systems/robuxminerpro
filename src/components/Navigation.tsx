@@ -49,6 +49,7 @@ const Navigation: React.FC = () => {
   // and could cause double-navigation issues.
   const handleSignOut = async () => {
     await signOut();
+    globalThis.window.location.assign('/auth');
   };
 
   const getTierColor = (tier: string) => {
