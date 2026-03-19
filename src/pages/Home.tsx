@@ -210,12 +210,13 @@ const Home = () => {
               <div className="relative w-full max-w-md lg:max-w-[450px]">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 blur-3xl rounded-full" />
                 <video 
-                  src={heroVideo} 
+                  src={heroVideo}
                   autoPlay
                   loop
                   muted
                   playsInline
-                  className="relative w-full h-auto drop-shadow-2xl hover-lift object-contain rounded-2xl"
+                  aria-label={t('home.hero.robotAlt')}
+                  className="relative w-full h-auto drop-shadow-2xl hover-lift object-cover rounded-3xl border border-white/10"
                 />
               </div>
             </div>
