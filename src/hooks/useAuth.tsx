@@ -185,30 +185,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
     try {
-      const { error } = await supabase.auth.signOut();
-      localStorage.clear();
-      sessionStorage.clear();
-      if (error) throw error;
-      
-      // Explicitly forcefully clear React state immediately
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      
-      toast({
-        title: "Signed out",
-        description: "You have been successfully signed out.",
-      });
-      window.location.replace('/');
+      // Try global sign-out first (revokes server-side refresh token)
+      await supabase.auth.signOut({ scope: 'global' });
     } catch {
-      // Hard fallback if network completely fails
-      localStorage.clear();
-      sessionStorage.clear();
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      window.location.replace('/');
+      // If global fails (network/CORS), force local-only sign-out
+      try {
+        await supabase.auth.signOut({ scope: 'local' });
+      } catch {
+        // Last resort: manually clear Supabase storage keys
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('sb-')) localStorage.removeItem(key);
+        });
+      }
     }
+    // Regardless of API result, nuke all auth state
+    setSession(null);
+    setUser(null);
+    setProfile(null);
+    toast({
+      title: "Signed out",
+      description: "You have been successfully signed out.",
+    });
+    window.location.replace('/auth');
   }, [toast, isSupabaseValid]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
