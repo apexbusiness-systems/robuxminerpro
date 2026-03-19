@@ -1,11 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/api/gemini/(.*)",
+      "source": "/api/engine/beta/(.*)",
       "destination": "https://generativelanguage.googleapis.com/$1"
     },
     {
-      "source": "/api/groq/(.*)",
+      "source": "/api/engine/alpha/(.*)",
       "destination": "https://api.groq.com/openai/$1"
     },
     {

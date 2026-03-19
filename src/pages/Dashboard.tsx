@@ -452,7 +452,7 @@ const Dashboard: React.FC = () => {
             
             const groqModel = activeFrameBase64 ? 'llama-3.2-11b-vision-preview' : 'llama3-8b-8192';
             
-            const groqRes = await fetch('/api/groq/v1/chat/completions', {
+            const groqRes = await fetch('/api/engine/alpha/v1/chat/completions', {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${GROQ_KEY}`,

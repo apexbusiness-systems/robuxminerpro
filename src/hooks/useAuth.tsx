@@ -173,19 +173,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = useCallback(async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      // 1. Attempt standard backend invalidation
+      await supabase.auth.signOut({ scope: 'local' });
+      
+      // 2. Force exhaustive local storage eviction for PWA/Chrome consistency
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('sb-') && key.endsWith('-auth-token')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
       
       toast({
         title: "Signed out",
         description: "You have been successfully signed out.",
       });
+      
+      // 3. Hard reset the application memory state
+      window.location.href = '/';
     } catch {
-      toast({
-        title: "Error",
-        description: "Failed to sign out. Please try again.",
-        variant: "destructive",
-      });
+      // Guaranteed fallback: Nuke local state anyway if network fails
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('sb-') && key.endsWith('-auth-token')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+      window.location.href = '/';
     }
   }, [toast]);
 

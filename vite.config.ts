@@ -21,16 +21,16 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/ollama/, ''),
       },
-      '/api/gemini': {
+      '/api/engine/beta': {
         target: 'https://generativelanguage.googleapis.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/gemini/, ''),
+        rewrite: (path) => path.replace(/^\/api\/engine\/beta/, ''),
         secure: true,
       },
-      '/api/groq': {
+      '/api/engine/alpha': {
         target: 'https://api.groq.com/openai',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/groq/, ''),
+        rewrite: (path) => path.replace(/^\/api\/engine\/alpha/, ''),
         secure: true,
       },
     },
