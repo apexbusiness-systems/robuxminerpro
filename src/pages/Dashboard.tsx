@@ -378,14 +378,8 @@ const Dashboard: React.FC = () => {
         requestAnimationFrame(animate);
       };
 
-      const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY as string;
-
-      // ── CALL GEMINI LLM (WITH GROQ FALLBACK) ───────────────────────
+      // ── SECURE VERCEL EDGE CALL ───────────────────────
       const askAgent = async (userMsg: string): Promise<string> => {
-        if (!GEMINI_KEY && !GROQ_KEY) {
-          return `${AGENT_NAME}: Set VITE_GEMINI_API_KEY or VITE_GROQ_API_KEY in .env to activate AI.`;
-        }
-        
         // Grab current frame if vision is active
         const visionVideo = pipContainer.querySelector('#agent-vision-video') as HTMLVideoElement;
         let activeFrameBase64: string | null = null;
@@ -410,71 +404,24 @@ const Dashboard: React.FC = () => {
         chatHistory.push({ role: 'user', parts: userParts });
         
         try {
-          // Primary: Gemini
-          if (GEMINI_KEY && GEMINI_KEY !== 'REPLACE_WITH_YOUR_GEMINI_KEY') {
-            const res = await fetch(`/api/gemini/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-                contents: chatHistory,
-                generationConfig: { maxOutputTokens: 600, temperature: 0.7 },
-              }),
-            });
-            
-            if (res.ok) {
-              const rawText = await res.text();
-              const data = JSON.parse(rawText);
-              const reply = data.candidates?.[0]?.content?.parts?.[0]?.text as string || "Error generating response.";
-              chatHistory.push({ role: 'model', parts: [{ text: reply }] });
-              return reply;
-            }
-            console.warn(`[Gemini Failed] ${res.statusText}. Falling back to Groq...`);
-          }
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...chatHistory.map(m => ({
+                role: m.role,
+                content: m.parts[0].text
+              }))],
+              activeFrameBase64 
+            }),
+          });
+          
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Agent Ave: Neural link offline.');
 
-          // Fallback: Groq
-          if (GROQ_KEY) {
-            console.log('[Groq Fallback] Initiating Groq sequence...');
-            
-            // Map payloads to OpenAI format for Groq
-            const groqHistory = chatHistory.map(msg => {
-              const contentArray = msg.parts.map(p => {
-                if (p.text) return { type: 'text', text: p.text };
-                if (p.inlineData) return { type: 'image_url', image_url: { url: `data:${p.inlineData.mimeType};base64,${p.inlineData.data}` } };
-                return null;
-              }).filter(Boolean);
-              return {
-                role: msg.role === 'model' ? 'assistant' : 'user',
-                // Flatten array to string if no vision needed
-                content: contentArray.length === 1 && contentArray[0]?.type === 'text' ? contentArray[0].text : contentArray
-              };
-            });
-            
-            const groqModel = activeFrameBase64 ? 'llama-3.2-11b-vision-preview' : 'llama3-8b-8192';
-            
-            const groqRes = await fetch('/api/engine/alpha/v1/chat/completions', {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${GROQ_KEY}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                model: groqModel,
-                messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...groqHistory],
-                max_tokens: 600,
-                temperature: 0.7,
-              })
-            });
-
-            if (!groqRes.ok) throw new Error(`Groq failed: ${groqRes.statusText}`);
-            
-            const groqData = await groqRes.json();
-            const reply = groqData.choices[0].message.content as string;
-            chatHistory.push({ role: 'model', parts: [{ text: reply }] });
-            return reply;
-          }
-
-          throw new Error("No valid AI API keys available.");
+          const reply = data.reply;
+          chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+          return reply;
           
 
         } catch (e) {
