@@ -4,22 +4,26 @@ import { isSupabaseConfigured, supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 const MOCK_AUTH_STORAGE_KEY = 'apex_mock_auth_enabled';
+// Sentinel written to sessionStorage before logout page reload.
+// Prevents getSession() from re-hydrating the Supabase singleton on remount.
+const LOGOUT_IN_PROGRESS_KEY = 'apex_logout_in_progress';
 
-export const clearSupabaseAuthStorage = () => {
+const clearSupabaseAuthStorage = () => {
   if (typeof globalThis.window === 'undefined') return;
 
   const purgeStorage = (storage: Storage) => {
     const keysToRemove: string[] = [];
-
     for (let index = 0; index < storage.length; index += 1) {
       const storageKey = storage.key(index);
       if (!storageKey) continue;
-
-      if (storageKey.startsWith('sb-') || storageKey.startsWith('supabase.auth.')) {
+      if (
+        storageKey.startsWith('sb-') ||
+        storageKey.startsWith('supabase.auth.') ||
+        storageKey === MOCK_AUTH_STORAGE_KEY
+      ) {
         keysToRemove.push(storageKey);
       }
     }
-
     keysToRemove.forEach((storageKey) => {
       storage.removeItem(storageKey);
     });
@@ -42,7 +46,6 @@ interface Profile {
   last_login?: string | null;
   created_at: string;
   updated_at: string;
-  // Enterprise fields (optional for backward compatibility)
   phone?: string | null;
   email_verified?: boolean;
   phone_verified?: boolean;
@@ -86,7 +89,6 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Mock data for development/demo mode
 const MOCK_USER: User = {
   id: 'apex-mock-user-id',
   email: 'apex@example.com',
@@ -125,9 +127,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .select('*')
         .eq('user_id', userId)
         .single();
-      if (error) {
-        return null;
-      }
+      if (error) return null;
       return data;
     } catch {
       return null;
@@ -142,16 +142,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .update({ last_login: new Date().toISOString() })
         .eq('user_id', userId);
     } catch {
-      // Ignore update errors
+      // Ignore
     }
   }, [isSupabaseValid]);
 
   useEffect(() => {
-    // FIX: Check for logout sentinel FIRST before doing anything with sessions.
-    // signOut() sets this in sessionStorage before triggering window.location.href.
-    // On the subsequent page reload, this block runs before getSession() can
-    // re-hydrate the Supabase GoTrue singleton's in-memory session, ensuring
-    // the user stays logged out after a hard navigation.
+    // LOGOUT SENTINEL: If signOut() set this flag before page reload,
+    // skip getSession() entirely so the Supabase singleton cannot
+    // re-hydrate the just-invalidated session.
     const logoutInProgress = globalThis.window?.sessionStorage.getItem(LOGOUT_IN_PROGRESS_KEY);
     if (logoutInProgress === 'true') {
       globalThis.window?.sessionStorage.removeItem(LOGOUT_IN_PROGRESS_KEY);
@@ -160,7 +158,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setSession(null);
       setProfile(null);
       setLoading(false);
-      return; // Do NOT proceed to getSession() or subscribe — session is intentionally dead.
+      return;
     }
 
     if (!isSupabaseValid()) {
@@ -178,10 +176,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    // FIX: Call getSession() FIRST and set up onAuthStateChange INSIDE the callback.
-    // This matches Supabase's recommended initialization pattern and eliminates the
-    // race condition where onAuthStateChange fires SIGNED_OUT but the subsequent
-    // getSession() promise resolution overwrites cleared state with a stale session.
+    // getSession() FIRST, then subscribe to onAuthStateChange INSIDE the callback.
+    // This eliminates the race where SIGNED_OUT fires then getSession overwrites it.
     let subscription: ReturnType<typeof supabase.auth.onAuthStateChange>['data']['subscription'] | null = null;
 
     const sessionTimeout = setTimeout(() => {
@@ -203,10 +199,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
       setLoading(false);
 
-      // FIX: Subscribe AFTER initial session is known — avoids double-set race.
       const { data } = supabase.auth.onAuthStateChange(async (event, newSession) => {
         if (event === 'SIGNED_OUT') {
-          // Explicit SIGNED_OUT event — clear everything immediately, no async.
           setSession(null);
           setUser(null);
           setProfile(null);
@@ -234,6 +228,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signOut = useCallback(async () => {
+    // Set sentinel BEFORE redirect so remounted AuthProvider skips getSession().
+    globalThis.window?.sessionStorage.setItem(LOGOUT_IN_PROGRESS_KEY, 'true');
     globalThis.window?.localStorage.removeItem(MOCK_AUTH_STORAGE_KEY);
 
     if (!isSupabaseValid()) {
@@ -241,34 +237,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setSession(null);
       setUser(null);
       setProfile(null);
-      toast({
-        title: "Signed out",
-        description: "You have been successfully signed out.",
-      });
+      toast({ title: 'Signed out', description: 'You have been successfully signed out.' });
+      globalThis.window.location.href = '/auth';
       return;
     }
 
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      
-      // Explicitly forcefully clear React state immediately
-      clearSupabaseAuthStorage();
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      toast({
-        title: 'Signed out',
-        description: 'You have been successfully signed out.',
-      });
-      
+      await supabase.auth.signOut();
     } catch {
-      // Hard fallback if network completely fails
-      clearSupabaseAuthStorage();
-      setSession(null);
-      setUser(null);
-      setProfile(null);
+      // Continue regardless — always force client-side logout.
     }
+
+    clearSupabaseAuthStorage();
+
+    toast({ title: 'Signed out', description: 'You have been successfully signed out.' });
+
+    // Hard navigation destroys the Supabase GoTrue singleton in-memory session.
+    globalThis.window.location.href = '/auth';
   }, [isSupabaseValid, toast]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
@@ -285,17 +270,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .single();
       if (error) throw error;
       setProfile(data);
-
-      toast({
-        title: 'Profile updated',
-        description: 'Your profile has been successfully updated.',
-      });
+      toast({ title: 'Profile updated', description: 'Your profile has been successfully updated.' });
     } catch {
-      toast({
-        title: 'Error',
-        description: 'Failed to update profile. Please try again.',
-        variant: 'destructive',
-      });
+      toast({ title: 'Error', description: 'Failed to update profile. Please try again.', variant: 'destructive' });
     }
   }, [user, toast]);
 
@@ -311,10 +288,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setSession(null);
     setProfile(MOCK_PROFILE);
     setLoading(false);
-    toast({
-      title: 'APEX Bypass Active',
-      description: 'Logged in as APEX Explorer (Mock Mode)',
-    });
+    toast({ title: 'APEX Bypass Active', description: 'Logged in as APEX Explorer (Mock Mode)' });
   }, [toast]);
 
   const isAdmin = useMemo(() => {
