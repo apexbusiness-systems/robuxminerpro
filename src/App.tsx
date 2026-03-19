@@ -53,7 +53,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <I18nProvider>
-          <ThemeProvider defaultTheme="dark" storageKey="rmp-theme">
+          <ThemeProvider defaultTheme="dark" forcedTheme="dark" storageKey="rmp-theme">
             <ErrorBoundary>
               <Toaster />
               <Analytics />
