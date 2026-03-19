@@ -176,38 +176,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signOut = useCallback(async () => {
-    if (!isSupabaseValid()) {
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      sessionStorage.setItem('rmp_signed_out', '1');
-      window.location.replace('/auth');
-      return;
-    }
-    try {
-      // Try global sign-out first (revokes server-side refresh token)
-      await supabase.auth.signOut({ scope: 'global' });
-    } catch {
-      // If global fails (network/CORS), force local-only sign-out
-      try {
-        await supabase.auth.signOut({ scope: 'local' });
-      } catch {
-        // Last resort: manually clear Supabase storage keys
-        Object.keys(localStorage).forEach((key) => {
-          if (key.startsWith('sb-')) localStorage.removeItem(key);
-        });
-      }
-    }
-    // Regardless of API result, nuke all auth state
+    // 1. Immediately clear all local Supabase session keys
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('sb-')) localStorage.removeItem(key);
+    });
+    // 2. Immediately clear React auth state
     setSession(null);
     setUser(null);
     setProfile(null);
+    // 3. Fire-and-forget: revoke server-side refresh token (don't block on it)
+    supabase.auth.signOut({ scope: 'global' }).catch(() => {});
+    // 4. Redirect immediately — user sees instant sign-out
     toast({
       title: "Signed out",
       description: "You have been successfully signed out.",
     });
     window.location.replace('/auth');
-  }, [toast, isSupabaseValid]);
+  }, [toast]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     if (!user) return;
