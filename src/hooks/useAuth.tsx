@@ -124,6 +124,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (!isSupabaseValid()) {
+      if (sessionStorage.getItem('rmp_signed_out') === '1') {
+        setLoading(false);
+        return;
+      }
       setUser(MOCK_USER);
       setProfile(MOCK_PROFILE);
       setLoading(false);
@@ -172,6 +176,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signOut = useCallback(async () => {
+    if (!isSupabaseValid()) {
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      sessionStorage.setItem('rmp_signed_out', '1');
+      window.location.replace('/auth');
+      return;
+    }
     try {
       const { error } = await supabase.auth.signOut();
       localStorage.clear();
@@ -197,7 +209,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setProfile(null);
       window.location.replace('/');
     }
-  }, [toast]);
+  }, [toast, isSupabaseValid]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     if (!user) return;
@@ -238,6 +250,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [user, fetchProfile]);
 
   const bypassMockLogin = useCallback(() => {
+    sessionStorage.removeItem('rmp_signed_out');
     setUser(MOCK_USER);
     setProfile(MOCK_PROFILE);
     setLoading(false);

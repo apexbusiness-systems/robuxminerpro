@@ -45,7 +45,6 @@ const Navigation: React.FC = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/auth');
   };
 
   const getTierColor = (tier: string) => {

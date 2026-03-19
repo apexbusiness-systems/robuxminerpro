@@ -170,7 +170,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
       return;
     }
 
-    if (!isSupabaseConfigured) {
+    if (!isSupabaseConfigured && import.meta.env.DEV) {
       toast({
         title: "Development Mode Active",
         description: "Supabase not configured. Activating APEX Bypass mock login.",
@@ -240,7 +240,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
     setIsLoading(true);
 
     try {
-      if (!isSupabaseConfigured) {
+      if (!isSupabaseConfigured && import.meta.env.DEV) {
         toast({
           title: "Development Mode Active",
           description: "Supabase not configured. Activating APEX Bypass mock login.",
@@ -344,7 +344,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ mode = 'signin' }) => {
               </div>
             </div>
 
-            {!isSupabaseConfigured && (
+            {!isSupabaseConfigured && import.meta.env.DEV && (
               <Button
                 variant="secondary"
                 type="button"

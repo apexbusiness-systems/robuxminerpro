@@ -8,7 +8,7 @@ import {
   Zap, Shield, TrendingUp, Users, CheckCircle, CheckCircle2, Star, Trophy,
   Rocket, Clock, Sparkles, Target, Crown, DollarSign, Lock
 } from 'lucide-react';
-import heroVideo from '@/assets/hero-video.mp4';
+
 import robuxCoins from '@/assets/robux-coins.png';
 import { HeroTitle } from '@/components/HeroTitle';
 import heroPng from '@/assets/hero.png';
@@ -210,7 +210,7 @@ const Home = () => {
               <div className="relative w-full max-w-md lg:max-w-[450px]">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 blur-3xl rounded-full" />
                 <video 
-                  src={heroVideo}
+                  src="/hero-video.mp4"
                   autoPlay
                   loop
                   muted
