@@ -70,17 +70,17 @@ const Navigation: React.FC = () => {
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container relative h-20 px-4 overflow-visible">
           <div className="flex h-full items-center justify-between">
-            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
               <img 
                 src={logo} 
                 alt={t('nav.logoAlt')}
-                className="h-10 w-auto"
+                className="h-14 sm:h-16 w-auto object-contain"
               />
-              <div className="flex flex-col leading-none justify-center">
-                <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
-                  ROBUX<span className="text-primary-glow">MINER</span>
+              <div className="flex flex-col leading-none justify-center mt-1">
+                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white">
+                  ROBUX<span className="text-[#c454ff]">MINER</span>
                 </span>
-                <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary-glow uppercase mt-0.5">
+                <span className="text-[10px] sm:text-[12px] font-black tracking-[0.35em] text-[#c454ff] uppercase mt-1.5 ml-1">
                   APEX PRO EDITION
                 </span>
               </div>
@@ -137,17 +137,17 @@ const Navigation: React.FC = () => {
       <div className="container relative h-16 px-4">
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
             <img 
               src={logo} 
               alt={t('nav.logoAlt')}
-              className="h-10 w-auto"
+              className="h-14 sm:h-16 w-auto object-contain"
             />
-            <div className="flex flex-col leading-none justify-center">
-              <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
-                ROBUX<span className="text-primary-glow">MINER</span>
+            <div className="flex flex-col leading-none justify-center mt-1">
+              <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white">
+                ROBUX<span className="text-[#c454ff]">MINER</span>
               </span>
-              <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary-glow uppercase mt-0.5">
+              <span className="text-[10px] sm:text-[12px] font-black tracking-[0.35em] text-[#c454ff] uppercase mt-1.5 ml-1">
                 APEX PRO EDITION
               </span>
             </div>
