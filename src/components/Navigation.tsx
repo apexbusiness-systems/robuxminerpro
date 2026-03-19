@@ -70,11 +70,11 @@ const Navigation: React.FC = () => {
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container relative h-20 px-4 overflow-visible">
           <div className="flex h-full items-center justify-between">
-            <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
+            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity relative z-50">
               <img 
                 src={logo} 
                 alt={t('nav.logoAlt')}
-                className="h-14 sm:h-16 w-auto object-contain"
+                className="h-[80px] sm:h-[100px] md:h-[110px] w-auto object-contain -ml-2"
               />
               <div className="flex flex-col leading-none justify-center mt-1">
                 <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white">
@@ -134,14 +134,14 @@ const Navigation: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container relative h-16 px-4">
+      <div className="container relative h-16 sm:h-20 px-4 overflow-visible">
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
+          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity relative z-50">
             <img 
               src={logo} 
               alt={t('nav.logoAlt')}
-              className="h-14 sm:h-16 w-auto object-contain"
+              className="h-[80px] sm:h-[100px] md:h-[110px] w-auto object-contain -ml-2"
             />
             <div className="flex flex-col leading-none justify-center mt-1">
               <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white">
