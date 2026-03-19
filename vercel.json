@@ -1,12 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/api/engine/beta/(.*)",
-      "destination": "https://generativelanguage.googleapis.com/$1"
+      "source": "/api/engine/beta/:path*",
+      "destination": "https://generativelanguage.googleapis.com/:path*"
     },
     {
-      "source": "/api/engine/alpha/(.*)",
-      "destination": "https://api.groq.com/openai/$1"
+      "source": "/api/engine/alpha/:path*",
+      "destination": "https://api.groq.com/openai/:path*"
     },
     {
       "source": "/(.*)",
