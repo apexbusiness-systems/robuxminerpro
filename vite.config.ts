@@ -40,17 +40,58 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(), 
+    react(),
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'sitemap.xml', 'icon-192.png', 'icon-512.png'],
+      includeAssets: ['favicon.ico', 'robots.txt', 'sitemap.xml', 'app_icon.png'],
       workbox: {
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,
-        navigateFallback: '/index.html',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2,webmanifest,txt,xml}']
+        // CRITICAL: navigateFallback must NOT serve stale index.html for real navigation
+        // Use NetworkFirst so new deploys are seen immediately on first load
+        navigateFallback: null,
+        runtimeCaching: [
+          {
+            // HTML navigation requests: always try network first
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+              networkTimeoutSeconds: 5,
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24, // 1 day
+              },
+            },
+          },
+          {
+            // JS/CSS/fonts: StaleWhileRevalidate (fast load + background update)
+            urlPattern: /\.(?:js|css|woff2|woff|ttf)$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'static-assets',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+          {
+            // Images: CacheFirst (rarely change)
+            urlPattern: /\.(?:png|svg|ico|webp|jpg|jpeg|gif)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'image-assets',
+              expiration: {
+                maxEntries: 60,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+        ],
+        globPatterns: ['**/*.{js,css,ico,png,svg,webp,woff2,webmanifest,txt,xml}']
       },
       manifest: {
         name: 'RobuxMinerPro',
@@ -63,17 +104,17 @@ export default defineConfig(({ mode }) => ({
         scope: '/',
         icons: [
           {
-            src: '/icon-192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/icon-512.png',
+            src: '/app_icon.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: '/icon-512.png',
+            src: '/app_icon.png',
+            sizes: '512x512',
+            type: 'image/png'
+          },
+          {
+            src: '/app_icon.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'

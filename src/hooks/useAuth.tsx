@@ -1,7 +1,37 @@
 import { useState, useEffect, createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { isSupabaseConfigured, supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+
+const MOCK_AUTH_STORAGE_KEY = 'apex_mock_auth_enabled';
+// Sentinel written to sessionStorage before logout page reload.
+// Prevents getSession() from re-hydrating the Supabase singleton on remount.
+const LOGOUT_IN_PROGRESS_KEY = 'apex_logout_in_progress';
+
+const clearSupabaseAuthStorage = () => {
+  if (typeof globalThis.window === 'undefined') return;
+
+  const purgeStorage = (storage: Storage) => {
+    const keysToRemove: string[] = [];
+    for (let index = 0; index < storage.length; index += 1) {
+      const storageKey = storage.key(index);
+      if (!storageKey) continue;
+      if (
+        storageKey.startsWith('sb-') ||
+        storageKey.startsWith('supabase.auth.') ||
+        storageKey === MOCK_AUTH_STORAGE_KEY
+      ) {
+        keysToRemove.push(storageKey);
+      }
+    }
+    keysToRemove.forEach((storageKey) => {
+      storage.removeItem(storageKey);
+    });
+  };
+
+  purgeStorage(globalThis.window.localStorage);
+  purgeStorage(globalThis.window.sessionStorage);
+};
 
 interface Profile {
   id: string;
@@ -16,7 +46,6 @@ interface Profile {
   last_login?: string | null;
   created_at: string;
   updated_at: string;
-  // Enterprise fields (optional for backward compatibility)
   phone?: string | null;
   email_verified?: boolean;
   phone_verified?: boolean;
@@ -60,7 +89,6 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Mock data for development/demo mode
 const MOCK_USER: User = {
   id: 'apex-mock-user-id',
   email: 'apex@example.com',
@@ -88,7 +116,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { toast } = useToast();
 
   const isSupabaseValid = useCallback(() => {
-    return !import.meta.env.VITE_SUPABASE_URL?.includes('your-project-ref');
+    return isSupabaseConfigured;
   }, []);
 
   const fetchProfile = useCallback(async (userId: string) => {
@@ -99,11 +127,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .select('*')
         .eq('user_id', userId)
         .single();
-
-      if (error) {
-        return null;
-      }
-
+      if (error) return null;
       return data;
     } catch {
       return null;
@@ -118,87 +142,122 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .update({ last_login: new Date().toISOString() })
         .eq('user_id', userId);
     } catch {
-      // Ignore update errors
+      // Ignore
     }
   }, [isSupabaseValid]);
 
   useEffect(() => {
-    if (!isSupabaseValid()) {
-      setUser(MOCK_USER);
-      setProfile(MOCK_PROFILE);
+    // LOGOUT SENTINEL: If signOut() set this flag before page reload,
+    // skip getSession() entirely so the Supabase singleton cannot
+    // re-hydrate the just-invalidated session.
+    const logoutInProgress = globalThis.window?.sessionStorage.getItem(LOGOUT_IN_PROGRESS_KEY);
+    if (logoutInProgress === 'true') {
+      globalThis.window?.sessionStorage.removeItem(LOGOUT_IN_PROGRESS_KEY);
+      clearSupabaseAuthStorage();
+      setUser(null);
+      setSession(null);
+      setProfile(null);
       setLoading(false);
       return;
     }
 
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+    if (!isSupabaseValid()) {
+      const isMockSessionActive = globalThis.window?.localStorage.getItem(MOCK_AUTH_STORAGE_KEY) === 'true';
+      if (isMockSessionActive) {
+        setUser(MOCK_USER);
+        setSession(null);
+        setProfile(MOCK_PROFILE);
+      } else {
+        setUser(null);
+        setSession(null);
+        setProfile(null);
+      }
+      setLoading(false);
+      return;
+    }
 
-        if (session?.user) {
-          updateLastActivity(session.user.id);
-          const profileData = await fetchProfile(session.user.id);
+    // getSession() FIRST, then subscribe to onAuthStateChange INSIDE the callback.
+    // This eliminates the race where SIGNED_OUT fires then getSession overwrites it.
+    let subscription: ReturnType<typeof supabase.auth.onAuthStateChange>['data']['subscription'] | null = null;
+
+    const sessionTimeout = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+      clearTimeout(sessionTimeout);
+
+      if (initialSession?.user) {
+        setSession(initialSession);
+        setUser(initialSession.user);
+        updateLastActivity(initialSession.user.id);
+        fetchProfile(initialSession.user.id).then(setProfile);
+      } else {
+        setUser(null);
+        setSession(null);
+        setProfile(null);
+      }
+      setLoading(false);
+
+      const { data } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+        if (event === 'SIGNED_OUT') {
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          return;
+        }
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+        if (newSession?.user) {
+          updateLastActivity(newSession.user.id);
+          const profileData = await fetchProfile(newSession.user.id);
           setProfile(profileData);
         } else {
           setProfile(null);
         }
         setLoading(false);
-      }
-    );
-
-    // Initial check
-    const sessionTimeout = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      clearTimeout(sessionTimeout);
-      if (session?.user) {
-        setSession(session);
-        setUser(session.user);
-        updateLastActivity(session.user.id);
-        fetchProfile(session.user.id).then(setProfile);
-        setLoading(false);
-      } else {
-        setLoading(false);
-      }
+      });
+      subscription = data.subscription;
     });
 
     return () => {
+      clearTimeout(sessionTimeout);
       if (subscription) subscription.unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const signOut = useCallback(async () => {
-    try {
-      const { error } = await supabase.auth.signOut({ scope: 'local' });
-      if (error) throw error;
-      
-      // Explicitly forcefully clear React state immediately
+    // Set sentinel BEFORE redirect so remounted AuthProvider skips getSession().
+    globalThis.window?.sessionStorage.setItem(LOGOUT_IN_PROGRESS_KEY, 'true');
+    globalThis.window?.localStorage.removeItem(MOCK_AUTH_STORAGE_KEY);
+
+    if (!isSupabaseValid()) {
+      clearSupabaseAuthStorage();
       setSession(null);
       setUser(null);
       setProfile(null);
-      
-      toast({
-        title: "Signed out",
-        description: "You have been successfully signed out.",
-      });
-      
-      window.location.replace('/');
-    } catch {
-      // Hard fallback if network completely fails
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      window.location.replace('/');
+      toast({ title: 'Signed out', description: 'You have been successfully signed out.' });
+      globalThis.window.location.href = '/auth';
+      return;
     }
-  }, [toast]);
+
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      // Continue regardless — always force client-side logout.
+    }
+
+    clearSupabaseAuthStorage();
+
+    toast({ title: 'Signed out', description: 'You have been successfully signed out.' });
+
+    // Hard navigation destroys the Supabase GoTrue singleton in-memory session.
+    globalThis.window.location.href = '/auth';
+  }, [isSupabaseValid, toast]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     if (!user) return;
-
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -209,39 +268,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .eq('user_id', user.id)
         .select()
         .single();
-
       if (error) throw error;
-
       setProfile(data);
-      
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been successfully updated.",
-      });
+      toast({ title: 'Profile updated', description: 'Your profile has been successfully updated.' });
     } catch {
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: 'Error', description: 'Failed to update profile. Please try again.', variant: 'destructive' });
     }
   }, [user, toast]);
 
   const refreshProfile = useCallback(async () => {
     if (!user) return;
-
     const profileData = await fetchProfile(user.id);
     setProfile(profileData);
   }, [user, fetchProfile]);
 
   const bypassMockLogin = useCallback(() => {
+    globalThis.window?.localStorage.setItem(MOCK_AUTH_STORAGE_KEY, 'true');
     setUser(MOCK_USER);
+    setSession(null);
     setProfile(MOCK_PROFILE);
     setLoading(false);
-    toast({
-      title: "APEX Bypass Active",
-      description: "Logged in as APEX Explorer (Mock Mode)",
-    });
+    toast({ title: 'APEX Bypass Active', description: 'Logged in as APEX Explorer (Mock Mode)' });
   }, [toast]);
 
   const isAdmin = useMemo(() => {
