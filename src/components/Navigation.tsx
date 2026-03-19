@@ -88,7 +88,6 @@ const Navigation: React.FC = () => {
                 </span>
               </div>
             </Link>
-          </div>
 
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
             <nav className="flex items-center gap-4 text-sm hidden md:flex">
@@ -128,8 +127,9 @@ const Navigation: React.FC = () => {
             </div>
           </div>
         </div>
-      </header>
-    );
+      </div>
+    </header>
+  );
   }
 
   return (
@@ -152,7 +152,6 @@ const Navigation: React.FC = () => {
               </span>
             </div>
           </Link>
-        </div>
 
         {/* Centered Brand Title removed for cleaner layout as per user feedback */}
         {/* Navigation Items */}
@@ -256,6 +255,7 @@ const Navigation: React.FC = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
         </div>
       </div>
     </header>
