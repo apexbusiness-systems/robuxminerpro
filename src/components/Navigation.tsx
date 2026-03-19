@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -31,7 +31,6 @@ import logo from '@/assets/logo.svg';
 const Navigation: React.FC = () => {
   const { user, profile, signOut } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
   const { t, locale, setLocale, availableLocales } = useI18n();
 
   const navItems = [
@@ -45,7 +44,7 @@ const Navigation: React.FC = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/auth');
+    globalThis.window.location.assign('/auth');
   };
 
   const getTierColor = (tier: string) => {

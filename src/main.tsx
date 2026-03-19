@@ -2,6 +2,8 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import './styles/tokens.css';
 import App from './App';
+import { Capacitor } from '@capacitor/core';
+import { registerSW } from 'virtual:pwa-register';
 
 const ROOT_ID = 'root';
 
@@ -18,9 +20,6 @@ function ensureRootElement(): HTMLElement {
 }
 
 /// <reference types="vite-plugin-pwa/client" />
-import { registerSW } from 'virtual:pwa-register';
-import { Capacitor } from '@capacitor/core';
-
 function registerServiceWorker(): void {
   if (!('serviceWorker' in navigator) || process.env.NODE_ENV !== 'production') {
     return;
@@ -32,28 +31,37 @@ function registerServiceWorker(): void {
     return;
   }
 
-  window.addEventListener('load', () => {
-    const updateSW = registerSW({
-      immediate: true,
-      onRegisteredSW(swUrl: string, r: ServiceWorkerRegistration | undefined) {
-        if (!r) return;
-        
-        r.update();
-        console.log('PWA registered successfully:', swUrl);
-        setInterval(() => {
-          r.update();
-        }, 60 * 60 * 1000);
-      },
-      onRegisterError(error: unknown) {
-        console.warn('PWA registration failed:', error);
-      }
-    });
+  let hasReloadedForUpdate = false;
 
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") {
-        updateSW(true);
-      }
-    });
+  const updateSW = registerSW({
+    immediate: true,
+    onRegisteredSW(swUrl: string, registration: ServiceWorkerRegistration | undefined) {
+      if (!registration) return;
+
+      console.log('[bootstrap] PWA registered:', swUrl);
+      void registration.update();
+      globalThis.window.setInterval(() => {
+        void registration.update();
+      }, 5 * 60 * 1000);
+    },
+    onNeedRefresh() {
+      void updateSW(true);
+    },
+    onRegisterError(error: unknown) {
+      console.warn('[bootstrap] PWA registration failed:', error);
+    },
+  });
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hasReloadedForUpdate) return;
+    hasReloadedForUpdate = true;
+    globalThis.window.location.reload();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      void updateSW();
+    }
   });
 }
 
