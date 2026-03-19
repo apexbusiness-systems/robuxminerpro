@@ -70,17 +70,20 @@ const Navigation: React.FC = () => {
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container relative h-20 px-4 overflow-visible">
           <div className="flex h-full items-center justify-between">
-            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity relative z-50">
-              <img 
-                src={logo} 
-                alt={t('nav.logoAlt')}
-                className="h-[80px] sm:h-[100px] md:h-[110px] w-auto object-contain -ml-2"
-              />
-              <div className="flex flex-col leading-none justify-center mt-1">
-                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white">
-                  ROBUX<span className="text-[#c454ff]">MINER</span>
+            <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
+              <div className="relative">
+                <img 
+                  src="/official_logo.png"
+                  alt={t('nav.logoAlt')}
+                  className="h-14 sm:h-16 w-auto drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-purple-500/10 blur-xl animate-pulse rounded-full" />
+              </div>
+              <div className="flex flex-col leading-none justify-center">
+                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                  ROBUX<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600">MINER</span>
                 </span>
-                <span className="text-[10px] sm:text-[12px] font-black tracking-[0.35em] text-[#c454ff] uppercase mt-1.5 ml-1">
+                <span className="text-[10px] sm:text-[12px] font-black tracking-[0.4em] text-purple-400 uppercase mt-1 opacity-90 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">
                   APEX PRO EDITION
                 </span>
               </div>
@@ -91,7 +94,7 @@ const Navigation: React.FC = () => {
                 <a
                   key={item.hash}
                   href={location.pathname === '/' ? item.hash : `/${item.hash}`}
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-purple-500 transition-colors drop-shadow-[0_0_12px_rgba(168,85,247,0.7)]"
                 >
                   {item.label}
                 </a>
@@ -134,20 +137,23 @@ const Navigation: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container relative h-16 sm:h-20 px-4 overflow-visible">
+      <div className="container relative h-16 px-4 overflow-visible">
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity relative z-50">
-            <img 
-              src={logo} 
-              alt={t('nav.logoAlt')}
-              className="h-[80px] sm:h-[100px] md:h-[110px] w-auto object-contain -ml-2"
-            />
-            <div className="flex flex-col leading-none justify-center mt-1">
-              <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white">
-                ROBUX<span className="text-[#c454ff]">MINER</span>
+          <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
+            <div className="relative">
+              <img 
+                src="/official_logo.png"
+                alt={t('nav.logoAlt')}
+                className="h-14 sm:h-16 w-auto drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-purple-500/10 blur-xl animate-pulse rounded-full" />
+            </div>
+            <div className="flex flex-col leading-none justify-center">
+              <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                ROBUX<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600">MINER</span>
               </span>
-              <span className="text-[10px] sm:text-[12px] font-black tracking-[0.35em] text-[#c454ff] uppercase mt-1.5 ml-1">
+              <span className="text-[10px] sm:text-[12px] font-black tracking-[0.4em] text-purple-400 uppercase mt-1 opacity-90 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">
                 APEX PRO EDITION
               </span>
             </div>
@@ -165,8 +171,8 @@ const Navigation: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 hover:text-primary group ${
-                    isActive ? 'text-primary' : 'text-muted-foreground'
+                  className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 hover:text-purple-500 group drop-shadow-[0_0_12px_rgba(168,85,247,0.7)] ${
+                    isActive ? 'text-purple-500' : 'text-muted-foreground'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
