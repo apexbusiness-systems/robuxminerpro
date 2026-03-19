@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Zap, Shield, TrendingUp, Users, CheckCircle2, Star, Trophy, Rocket, Clock
+  Zap, Shield, TrendingUp, Users, CheckCircle, CheckCircle2, Star, Trophy,
+  Rocket, Clock, Sparkles, Target, Crown, DollarSign, Lock
 } from 'lucide-react';
 import robotMiner from '@/assets/robot-miner-transparent.png';
 import robuxCoins from '@/assets/robux-coins.png';
