@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'sitemap.xml', 'icon-192.png', 'icon-512.png'],
+      includeAssets: ['favicon.ico', 'robots.txt', 'sitemap.xml', 'app_icon.png'],
       workbox: {
         cleanupOutdatedCaches: true,
         clientsClaim: true,
@@ -63,17 +63,17 @@ export default defineConfig(({ mode }) => ({
         scope: '/',
         icons: [
           {
-            src: '/icon-192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/icon-512.png',
+            src: '/app_icon.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: '/icon-512.png',
+            src: '/app_icon.png',
+            sizes: '512x512',
+            type: 'image/png'
+          },
+          {
+            src: '/app_icon.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'
