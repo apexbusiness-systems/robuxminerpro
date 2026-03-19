@@ -78,9 +78,9 @@ const Navigation: React.FC = () => {
               />
               <div className="flex flex-col leading-none justify-center">
                 <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
-                  ROBUX<span className="text-primary">MINER</span>
+                  ROBUX<span className="text-primary-glow">MINER</span>
                 </span>
-                <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mt-0.5">
+                <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary-glow uppercase mt-0.5">
                   APEX PRO EDITION
                 </span>
               </div>
@@ -145,9 +145,9 @@ const Navigation: React.FC = () => {
             />
             <div className="flex flex-col leading-none justify-center">
               <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
-                ROBUX<span className="text-primary">MINER</span>
+                ROBUX<span className="text-primary-glow">MINER</span>
               </span>
-              <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mt-0.5">
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary-glow uppercase mt-0.5">
                 APEX PRO EDITION
               </span>
             </div>
