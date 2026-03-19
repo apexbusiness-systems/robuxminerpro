@@ -187,6 +187,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         title: "Signed out",
         description: "You have been successfully signed out.",
       });
+      window.location.replace('/');
     } catch {
       // Hard fallback if network completely fails
       localStorage.clear();
@@ -194,6 +195,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setSession(null);
       setUser(null);
       setProfile(null);
+      window.location.replace('/');
     }
   }, [toast]);
 
