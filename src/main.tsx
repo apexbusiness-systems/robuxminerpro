@@ -21,7 +21,7 @@ function ensureRootElement(): HTMLElement {
 
 /// <reference types="vite-plugin-pwa/client" />
 function registerServiceWorker(): void {
-  if (!('serviceWorker' in navigator) || process.env.NODE_ENV !== 'production') {
+  if (!('serviceWorker' in navigator) || !import.meta.env.PROD) {
     return;
   }
 
@@ -32,8 +32,11 @@ function registerServiceWorker(): void {
   }
 
   let hasReloadedForUpdate = false;
+  const serviceWorkerControl: {
+    update?: (reloadPage?: boolean) => Promise<void>;
+  } = {};
 
-  const updateSW = registerSW({
+  serviceWorkerControl.update = registerSW({
     immediate: true,
     onRegisteredSW(swUrl: string, registration: ServiceWorkerRegistration | undefined) {
       if (!registration) return;
@@ -45,7 +48,7 @@ function registerServiceWorker(): void {
       }, 5 * 60 * 1000);
     },
     onNeedRefresh() {
-      void updateSW(true);
+      void serviceWorkerControl.update?.(true);
     },
     onRegisterError(error: unknown) {
       console.warn('[bootstrap] PWA registration failed:', error);
@@ -60,7 +63,7 @@ function registerServiceWorker(): void {
 
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
-      void updateSW();
+      void serviceWorkerControl.update?.();
     }
   });
 }
