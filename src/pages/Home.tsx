@@ -154,24 +154,22 @@ const Home = () => {
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
         
-        <div className="container relative mx-auto px-4 py-24 lg:py-40">
-          <div className="flex flex-col items-center text-center max-w-5xl mx-auto space-y-16">
+        <div className="container relative mx-auto px-4 py-24 lg:py-40 flex justify-center">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 w-full max-w-[1100px]">
             {/* Hero Content */}
-            <div className="flex flex-col items-center space-y-8 animate-slide-up w-full">
+            <div className="space-y-8 animate-slide-up flex-1 w-full max-w-2xl">
               <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
                 <Sparkles className="w-4 h-4" />
                 {t('home.badge.trusted')}
               </Badge>
               
-              <div className="flex justify-center w-full">
-                <HeroTitle />
-              </div>
+              <HeroTitle />
               
-              <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
                 {t('home.hero.subtitle')}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-6 justify-center w-full">
+              <div className="flex flex-col sm:flex-row gap-4 pt-6">
                 <Button 
                   size="lg" 
                   className="text-lg px-8 py-6 hover-lift"
@@ -199,7 +197,7 @@ const Home = () => {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 pt-12 border-t border-border mt-8 w-full max-w-3xl mx-auto">
+              <div className="grid grid-cols-3 gap-6 pt-12 border-t border-border mt-8">
                 <div className="space-y-1">
                   <div className="text-3xl font-bold text-primary" data-count="50000">0</div>
                   <div className="text-sm text-muted-foreground">{t('home.stats.activeUsers')}</div>
@@ -216,13 +214,13 @@ const Home = () => {
             </div>
 
             {/* Hero Illustration */}
-            <div className="relative animate-fade-in w-full max-w-2xl mx-auto pt-8">
-              <div className="relative flex justify-center">
+            <div className="relative animate-fade-in flex-1 w-full flex justify-center lg:justify-end">
+              <div className="relative w-full max-w-md lg:max-w-[450px]">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 blur-3xl rounded-full" />
                 <img 
                   src={robotMiner} 
                   alt={t('home.hero.robotAlt')}
-                  className="relative w-full max-w-lg mx-auto drop-shadow-2xl hover-lift"
+                  className="relative w-full h-auto drop-shadow-2xl hover-lift object-contain"
                 />
               </div>
             </div>
