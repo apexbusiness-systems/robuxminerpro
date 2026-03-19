@@ -12,6 +12,8 @@ CREATE TABLE public.profiles (
     avatar_url TEXT,
     total_robux INTEGER NOT NULL DEFAULT 0,
     mining_power INTEGER NOT NULL DEFAULT 1,
+    subscription_tier TEXT DEFAULT 'free',
+    subscription_expires_at TIMESTAMP WITH TIME ZONE,
     referral_code TEXT UNIQUE,
     referred_by UUID REFERENCES public.profiles(user_id),
     last_login TIMESTAMP WITH TIME ZONE DEFAULT now(),
