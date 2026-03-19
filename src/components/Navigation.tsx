@@ -61,7 +61,7 @@ const Navigation: React.FC = () => {
       { label: t('nav.features'), hash: '#features' },
       { label: t('nav.howItWorks'), hash: '#how-it-works' },
       { label: t('nav.pricing'), hash: '#pricing' },
-      { label: t('nav.testimonials'), hash: '#testimonials' },
+      { label: 'Learn More', hash: '#features' },
       { label: t('nav.faq'), hash: '#faq' },
     ];
 

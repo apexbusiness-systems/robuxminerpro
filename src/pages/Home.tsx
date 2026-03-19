@@ -8,7 +8,7 @@ import {
   Zap, Shield, TrendingUp, Users, CheckCircle, CheckCircle2, Star, Trophy,
   Rocket, Clock, Sparkles, Target, Crown, DollarSign, Lock
 } from 'lucide-react';
-import robotMiner from '@/assets/robot-miner-transparent.png';
+import heroVideo from '@/assets/hero-video.mp4';
 import robuxCoins from '@/assets/robux-coins.png';
 import { HeroTitle } from '@/components/HeroTitle';
 import heroPng from '@/assets/hero.png';
@@ -178,18 +178,10 @@ const Home = () => {
                   <Rocket className="mr-2 h-5 w-5" />
                   {t('home.hero.ctaPrimary')}
                 </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="text-lg px-8 py-6"
-                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  {t('home.hero.ctaSecondary')}
-                </Button>
                 <Button
                   size="lg"
                   variant="secondary"
-                  className="text-lg px-8 py-6"
+                  className="text-lg px-8 py-6 hover-lift"
                   onClick={() => void handleInstallClick()}
                 >
                   Download App
@@ -217,10 +209,13 @@ const Home = () => {
             <div className="relative animate-fade-in flex-1 w-full flex justify-center lg:justify-end">
               <div className="relative w-full max-w-md lg:max-w-[450px]">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 blur-3xl rounded-full" />
-                <img 
-                  src={robotMiner} 
-                  alt={t('home.hero.robotAlt')}
-                  className="relative w-full h-auto drop-shadow-2xl hover-lift object-contain"
+                <video 
+                  src={heroVideo} 
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="relative w-full h-auto drop-shadow-2xl hover-lift object-contain rounded-2xl"
                 />
               </div>
             </div>
