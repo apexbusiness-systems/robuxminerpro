@@ -132,7 +132,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
 
@@ -173,7 +173,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = useCallback(async () => {
     try {
-      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      const { error } = await supabase.auth.signOut();
+      localStorage.clear();
+      sessionStorage.clear();
       if (error) throw error;
       
       // Explicitly forcefully clear React state immediately
@@ -185,14 +187,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         title: "Signed out",
         description: "You have been successfully signed out.",
       });
-      
-      window.location.replace('/');
     } catch {
       // Hard fallback if network completely fails
+      localStorage.clear();
+      sessionStorage.clear();
       setSession(null);
       setUser(null);
       setProfile(null);
-      window.location.replace('/');
     }
   }, [toast]);
 

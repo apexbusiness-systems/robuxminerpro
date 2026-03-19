@@ -404,22 +404,50 @@ const Dashboard: React.FC = () => {
         chatHistory.push({ role: 'user', parts: userParts });
         
         try {
-          const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...chatHistory.map(m => ({
-                role: m.role,
-                content: m.parts[0].text
-              }))],
-              activeFrameBase64 
-            }),
-          });
-          
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || 'Agent Ave: Neural link offline.');
+          let reply = '';
+          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-          const reply = data.reply;
+          if (isLocal && GEMINI_KEY) {
+            // Local dev bypass: hit Gemini proxy directly because Vercel Edge functions don't run in standard Vite dev server
+            const geminiPayload = {
+              system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+              contents: chatHistory.map(m => ({
+                role: m.role === 'model' ? 'model' : 'user',
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                parts: m.parts.map((p: any) => 
+                  p.inlineData ? { inline_data: { mime_type: p.inlineData.mimeType, data: p.inlineData.data } } : { text: p.text }
+                )
+              }))
+            };
+            
+            const res = await fetch('/api/engine/beta/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(geminiPayload)
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error?.message || 'Agent Ave: Neural link offline.');
+            reply = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          } else {
+            const res = await fetch('/api/chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...chatHistory.map(m => ({
+                  role: m.role,
+                  content: m.parts[0].text
+                }))],
+                activeFrameBase64 
+              }),
+            });
+            
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Agent Ave: Neural link offline.');
+            reply = data.reply;
+          }
+
+          if (!reply) throw new Error('Agent Ave: Empty intelligence payload received.');
+
           chatHistory.push({ role: 'model', parts: [{ text: reply }] });
           return reply;
           

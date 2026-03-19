@@ -26,7 +26,7 @@ import {
   Calendar,
   CreditCard
 } from 'lucide-react';
-import logo from '@/assets/logo.svg';
+
 
 const Navigation: React.FC = () => {
   const { user, profile, signOut } = useAuth();
