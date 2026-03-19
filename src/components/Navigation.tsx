@@ -128,7 +128,7 @@ const Navigation: React.FC = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </header>
     );
   }
 
@@ -258,7 +258,7 @@ const Navigation: React.FC = () => {
           </DropdownMenu>
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 
