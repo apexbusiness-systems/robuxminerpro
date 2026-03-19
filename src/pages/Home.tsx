@@ -13,13 +13,21 @@ import robuxCoins from '@/assets/robux-coins.png';
 import { HeroTitle } from '@/components/HeroTitle';
 import heroPng from '@/assets/hero.png';
 import { useI18n } from '@/i18n/I18nProvider';
+import { useToast } from '@/hooks/use-toast';
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+}
 
 const Home = () => {
   const { t } = useI18n();
+  const { toast } = useToast();
   const [ctaDismissed, setCtaDismissed] = useState(() => 
     sessionStorage.getItem('rmp_cta_dismissed') === '1'
   );
   const [showLeadModal, setShowLeadModal] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const progressRef = useRef<HTMLDivElement | null>(null);
 
   // Scroll progress
@@ -102,6 +110,43 @@ const Home = () => {
     }
   }, [handleCTAClick]);
 
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+
+    const handleAppInstalled = () => {
+      setInstallPrompt(null);
+      toast({
+        title: 'App installed',
+        description: 'RobuxMinerPro is now available from your device home screen.',
+      });
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, [toast]);
+
+  const handleInstallClick = useCallback(async () => {
+    if (!installPrompt) {
+      toast({
+        title: 'Install unavailable',
+        description: 'If the install prompt does not appear automatically, open your browser menu and choose Install App.',
+      });
+      return;
+    }
+
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+  }, [installPrompt, toast]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* HERO SECTION */}
@@ -140,6 +185,14 @@ const Home = () => {
                   onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   {t('home.hero.ctaSecondary')}
+                </Button>
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="text-lg px-8 py-6"
+                  onClick={() => void handleInstallClick()}
+                >
+                  Download App
                 </Button>
               </div>
 
