@@ -22,12 +22,18 @@ export default async function handler(req: Request) {
     // Try Gemini First
     if (GEMINI_KEY) {
       try {
-        const geminiPayload = {
-          contents: messages.map((msg: any) => ({
-            role: msg.role === 'assistant' ? 'model' : 'user',
+        const systemMessage = messages.find((m: any) => m.role === 'system')?.content || '';
+        
+        const geminiPayload: any = {
+          contents: messages.filter((m: any) => m.role !== 'system').map((msg: any) => ({
+            role: (msg.role === 'assistant' || msg.role === 'model') ? 'model' : 'user',
             parts: [{ text: msg.content }]
           }))
         };
+        
+        if (systemMessage) {
+          geminiPayload.system_instruction = { parts: [{ text: systemMessage }] };
+        }
 
         if (activeFrameBase64) {
           geminiPayload.contents[geminiPayload.contents.length - 1].parts.push({
@@ -35,7 +41,7 @@ export default async function handler(req: Request) {
           });
         }
 
-        const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + GEMINI_KEY, {
+        const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(geminiPayload)
@@ -48,9 +54,11 @@ export default async function handler(req: Request) {
               reply: geminiData.candidates[0].content.parts[0].text
             }), { status: 200, headers: { 'Content-Type': 'application/json' } });
           }
+        } else {
+          console.warn(`Gemini Edge failed with ${geminiRes.status}:`, await geminiRes.text());
         }
       } catch (err) {
-        console.warn('Gemini edge failed. Falling back to Groq.');
+        console.warn('Gemini edge failed. Falling back to Groq.', err);
       }
     }
 
@@ -58,14 +66,17 @@ export default async function handler(req: Request) {
     if (GROQ_KEY) {
       const groqModel = activeFrameBase64 ? 'llama-3.2-11b-vision-preview' : 'llama3-8b-8192';
       
-      const groqPayload = {
+      const groqPayload: any = {
         model: groqModel,
-        messages: messages,
+        messages: messages.map((msg: any) => ({
+          role: msg.role === 'model' ? 'assistant' : msg.role,
+          content: msg.content
+        })),
         temperature: 0.7,
         max_tokens: 500
       };
 
-      if (activeFrameBase64 && messages.length > 0) {
+      if (activeFrameBase64 && groqPayload.messages.length > 0) {
         const lastMsg = groqPayload.messages[groqPayload.messages.length - 1];
         lastMsg.content = [
           { type: 'text', text: lastMsg.content },
@@ -82,7 +93,10 @@ export default async function handler(req: Request) {
         body: JSON.stringify(groqPayload)
       });
 
-      if (!groqRes.ok) throw new Error(`Groq HTTP Error: ${groqRes.status}`);
+      if (!groqRes.ok) {
+        const text = await groqRes.text();
+        throw new Error(`Groq HTTP Error: ${groqRes.status} - ${text}`);
+      }
 
       const groqData = await groqRes.json();
       return new Response(JSON.stringify({
