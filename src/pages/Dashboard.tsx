@@ -43,14 +43,18 @@ const getCachedData = (): DashboardData | null => {
     const cached = localStorage.getItem(CACHE_KEY);
     if (cached) {
       const parsed = JSON.parse(cached);
-      if (parsed.streak) {
-        if (typeof parsed.streak.days !== 'number' || Number.isNaN(parsed.streak.days)) parsed.streak.days = 0;
-        if (typeof parsed.streak.nextMilestone !== 'number' || Number.isNaN(parsed.streak.nextMilestone)) parsed.streak.nextMilestone = 7;
-      }
+      parsed.session = parsed.session || { balance: 0, perMinute: 0, elapsed: '00:00:00', totalEarned: 0 };
+      parsed.streak = parsed.streak || { days: 0, multiplier: 1, nextMilestone: 7 };
+      parsed.milestones = parsed.milestones || [];
+      parsed.recommendations = parsed.recommendations || [];
+      
+      if (typeof parsed.streak.days !== 'number' || Number.isNaN(parsed.streak.days)) parsed.streak.days = 0;
+      if (typeof parsed.streak.nextMilestone !== 'number' || Number.isNaN(parsed.streak.nextMilestone)) parsed.streak.nextMilestone = 7;
+      
       return parsed;
     }
-  } catch {
-    // Ignore error
+  } catch (e) {
+    console.debug("Ignored exception", e);
   }
   return null;
 };
