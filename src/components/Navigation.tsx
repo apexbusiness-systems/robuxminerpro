@@ -70,20 +70,19 @@ const Navigation: React.FC = () => {
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container relative h-20 px-4 overflow-visible">
           <div className="flex h-full items-center justify-between">
-            <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
-              <div className="relative">
-                <img 
-                  src={logo} 
-                  alt={t('nav.logoAlt')}
-                  className="h-[140px] w-auto drop-shadow-[0_0_25px_rgba(139,92,246,0.5)] group-hover:rotate-[360deg] transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                  ROBUX<span className="text-primary-glow">MINER</span>
+            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <img 
+                src={logo} 
+                alt={t('nav.logoAlt')}
+                className="h-10 w-auto"
+              />
+              <div className="flex flex-col leading-none justify-center">
+                <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
+                  ROBUX<span className="text-primary">MINER</span>
                 </span>
-                <span className="text-[8px] sm:text-[10px] font-black tracking-[0.4em] text-primary-glow uppercase mt-1">APEX PRO EDITION</span>
+                <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mt-0.5">
+                  APEX PRO EDITION
+                </span>
               </div>
             </Link>
 
@@ -138,20 +137,19 @@ const Navigation: React.FC = () => {
       <div className="container relative h-16 px-4">
         <div className="flex h-full items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
-            <div className="relative">
-              <img 
-                src={logo} 
-                alt={t('nav.logoAlt')}
-                className="h-16 w-auto drop-shadow-[0_0_25px_rgba(139,92,246,0.5)] group-hover:rotate-[360deg] transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                ROBUX<span className="text-primary-glow">MINER</span>
+          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <img 
+              src={logo} 
+              alt={t('nav.logoAlt')}
+              className="h-10 w-auto"
+            />
+            <div className="flex flex-col leading-none justify-center">
+              <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
+                ROBUX<span className="text-primary">MINER</span>
               </span>
-              <span className="text-[10px] font-black tracking-[0.4em] text-primary-glow uppercase mt-1">APEX PRO EDITION</span>
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mt-0.5">
+                APEX PRO EDITION
+              </span>
             </div>
           </Link>
 
