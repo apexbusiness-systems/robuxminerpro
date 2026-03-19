@@ -747,7 +747,7 @@ const Dashboard: React.FC = () => {
           >
             <div>
               <div className="text-[9px] font-black text-white/40 uppercase tracking-[0.25em] mb-1">Active Session</div>
-              <div className="text-xl font-mono font-black text-white">{data.session.elapsed}</div>
+              <div className="text-xl font-mono font-black text-white">{data?.session?.elapsed ?? '00:00:00'}</div>
             </div>
             <div className="h-10 w-px bg-white/8" />
             <div>
@@ -760,7 +760,7 @@ const Dashboard: React.FC = () => {
             <div>
               <div className="text-[9px] font-black text-white/40 uppercase tracking-[0.25em] mb-1">Mining Rate</div>
               <div className="text-[11px] font-black" style={{ color: '#a78bfa' }}>
-                +{data.session.perMinute.toFixed(2)} R$/min
+                +{(data?.session?.perMinute ?? 0).toFixed(2)} R$/min
               </div>
             </div>
           </div>
@@ -768,9 +768,9 @@ const Dashboard: React.FC = () => {
 
         {/* === KPI Row =========================================================== */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <StatCard label="Liquid Assets" value={isLoading ? '···' : `${data.session.balance.toLocaleString()} R$`} sub="Available Balance" icon={Zap} accent="#a78bfa" delay={cardDelay(0)} />
-          <StatCard label="Mining Streak" value={`${data.streak.days}d`} sub={`Next: ${data.streak.nextMilestone}d`} icon={Flame} accent="#f97316" delay={cardDelay(1)} />
-          <StatCard label="Multiplier" value={`${data.streak.multiplier}×`} sub="Active Boost" icon={TrendingUp} accent="#22d3ee" delay={cardDelay(2)} />
+          <StatCard label="Liquid Assets" value={isLoading ? '···' : `${(data?.session?.balance ?? 0).toLocaleString()} R$`} sub="Available Balance" icon={Zap} accent="#a78bfa" delay={cardDelay(0)} />
+          <StatCard label="Mining Streak" value={`${data?.streak?.days ?? 0}d`} sub={`Next: ${data?.streak?.nextMilestone ?? 7}d`} icon={Flame} accent="#f97316" delay={cardDelay(1)} />
+          <StatCard label="Multiplier" value={`${data?.streak?.multiplier ?? 1}×`} sub="Active Boost" icon={TrendingUp} accent="#22d3ee" delay={cardDelay(2)} />
           <StatCard label="Squad Members" value="12" sub="Online Now" icon={Users} accent="#d946ef" delay={cardDelay(3)} />
         </div>
 
@@ -911,7 +911,7 @@ const Dashboard: React.FC = () => {
                       ? 'linear-gradient(180deg, #fed7aa, #fb923c)'
                       : 'rgba(255,255,255,0.06)',
                     boxShadow: i < (data.streak?.days ?? 0) ? '0 0 12px rgba(251,146,60,0.4)' : 'none',
-                    border: i < data.streak.days ? 'none' : '1px solid rgba(255,255,255,0.05)'
+                    border: i < (data?.streak?.days ?? 0) ? 'none' : '1px solid rgba(255,255,255,0.05)'
                   }}
                 />
               ))}
