@@ -125,11 +125,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .select('*')
         .eq('user_id', userId)
         .single();
-
       if (error) {
         return null;
       }
-
       return data;
     } catch {
       return null;
@@ -149,6 +147,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [isSupabaseValid]);
 
   useEffect(() => {
+    // FIX: Check for logout sentinel FIRST before doing anything with sessions.
+    // signOut() sets this in sessionStorage before triggering window.location.href.
+    // On the subsequent page reload, this block runs before getSession() can
+    // re-hydrate the Supabase GoTrue singleton's in-memory session, ensuring
+    // the user stays logged out after a hard navigation.
+    const logoutInProgress = globalThis.window?.sessionStorage.getItem(LOGOUT_IN_PROGRESS_KEY);
+    if (logoutInProgress === 'true') {
+      globalThis.window?.sessionStorage.removeItem(LOGOUT_IN_PROGRESS_KEY);
+      clearSupabaseAuthStorage();
+      setUser(null);
+      setSession(null);
+      setProfile(null);
+      setLoading(false);
+      return; // Do NOT proceed to getSession() or subscribe — session is intentionally dead.
+    }
+
     if (!isSupabaseValid()) {
       const isMockSessionActive = globalThis.window?.localStorage.getItem(MOCK_AUTH_STORAGE_KEY) === 'true';
       if (isMockSessionActive) {
@@ -164,42 +178,56 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+    // FIX: Call getSession() FIRST and set up onAuthStateChange INSIDE the callback.
+    // This matches Supabase's recommended initialization pattern and eliminates the
+    // race condition where onAuthStateChange fires SIGNED_OUT but the subsequent
+    // getSession() promise resolution overwrites cleared state with a stale session.
+    let subscription: ReturnType<typeof supabase.auth.onAuthStateChange>['data']['subscription'] | null = null;
 
-        if (session?.user) {
-          updateLastActivity(session.user.id);
-          const profileData = await fetchProfile(session.user.id);
+    const sessionTimeout = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+      clearTimeout(sessionTimeout);
+
+      if (initialSession?.user) {
+        setSession(initialSession);
+        setUser(initialSession.user);
+        updateLastActivity(initialSession.user.id);
+        fetchProfile(initialSession.user.id).then(setProfile);
+      } else {
+        setUser(null);
+        setSession(null);
+        setProfile(null);
+      }
+      setLoading(false);
+
+      // FIX: Subscribe AFTER initial session is known — avoids double-set race.
+      const { data } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+        if (event === 'SIGNED_OUT') {
+          // Explicit SIGNED_OUT event — clear everything immediately, no async.
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          return;
+        }
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+        if (newSession?.user) {
+          updateLastActivity(newSession.user.id);
+          const profileData = await fetchProfile(newSession.user.id);
           setProfile(profileData);
         } else {
           setProfile(null);
         }
         setLoading(false);
-      }
-    );
-
-    // Initial check
-    const sessionTimeout = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      clearTimeout(sessionTimeout);
-      if (session?.user) {
-        setSession(session);
-        setUser(session.user);
-        updateLastActivity(session.user.id);
-        fetchProfile(session.user.id).then(setProfile);
-        setLoading(false);
-      } else {
-        setLoading(false);
-      }
+      });
+      subscription = data.subscription;
     });
 
     return () => {
+      clearTimeout(sessionTimeout);
       if (subscription) subscription.unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -229,10 +257,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setSession(null);
       setUser(null);
       setProfile(null);
-      
       toast({
-        title: "Signed out",
-        description: "You have been successfully signed out.",
+        title: 'Signed out',
+        description: 'You have been successfully signed out.',
       });
       
     } catch {
@@ -246,7 +273,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     if (!user) return;
-
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -257,27 +283,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .eq('user_id', user.id)
         .select()
         .single();
-
       if (error) throw error;
-
       setProfile(data);
-      
+
       toast({
-        title: "Profile updated",
-        description: "Your profile has been successfully updated.",
+        title: 'Profile updated',
+        description: 'Your profile has been successfully updated.',
       });
     } catch {
       toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update profile. Please try again.',
+        variant: 'destructive',
       });
     }
   }, [user, toast]);
 
   const refreshProfile = useCallback(async () => {
     if (!user) return;
-
     const profileData = await fetchProfile(user.id);
     setProfile(profileData);
   }, [user, fetchProfile]);
@@ -289,8 +312,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setProfile(MOCK_PROFILE);
     setLoading(false);
     toast({
-      title: "APEX Bypass Active",
-      description: "Logged in as APEX Explorer (Mock Mode)",
+      title: 'APEX Bypass Active',
+      description: 'Logged in as APEX Explorer (Mock Mode)',
     });
   }, [toast]);
 
