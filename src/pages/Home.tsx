@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { 
   Zap, Shield, TrendingUp, Users, CheckCircle, CheckCircle2, Star, Trophy,
-  Rocket, Clock, Sparkles, Target, Crown, DollarSign, Lock
+  Rocket, Clock, Sparkles, Target, Crown, DollarSign, Lock, ChevronDown
 } from 'lucide-react';
 
 import robuxCoins from '@/assets/robux-coins.png';
@@ -522,7 +522,7 @@ const Home = () => {
               <details key={idx} className="group border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-colors">
                 <summary className="cursor-pointer px-6 py-4 font-semibold text-lg hover:bg-muted/50 flex items-center justify-between">
                   {faq.q}
-                  <span className="text-muted-foreground group-open:rotate-180 transition-transform">â–¼</span>
+                  <ChevronDown className="h-5 w-5 text-muted-foreground group-open:rotate-180 transition-transform" />
                 </summary>
                 <div className="px-6 py-4 bg-muted/20 text-muted-foreground border-t border-border">
                   {faq.a}

@@ -19,6 +19,7 @@ import { AreaChart, Area, CartesianGrid, Tooltip, ResponsiveContainer, XAxis } f
 import { get } from '@/shared/api';
 import { RewardUnboxing } from '@/components/gamification/RewardUnboxing';
 import { useToast } from '@/components/ui/use-toast';
+import { AgentSelectionShowcase } from '@/components/pip/AgentSelectionShowcase';
 
 interface DashboardData {
   session: {
@@ -127,7 +128,7 @@ const Dashboard: React.FC = () => {
     orion: { name: 'Agent Orion', image: 'agent-orion.png', color: '#3b82f6' } // Blue
   };
 
-  // Handle PiP Activation
+  // Handle PiP Activation — Floating Head Design
   const handleActivatePiP = async () => {
     // Check if Document Picture-in-Picture API is supported
     if (!('documentPictureInPicture' in window)) {
@@ -298,17 +299,17 @@ const Dashboard: React.FC = () => {
       const waveformConfig = pipContainer.querySelector('#waveform-container') as HTMLDivElement;
       const onlineIndicator = pipContainer.querySelector('#online-indicator') as HTMLDivElement;
       
-      // ── GEMINI CLOUD LLM CONFIG ──────────────────────────────────
+      // ΓöÇΓöÇ GEMINI CLOUD LLM CONFIG ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
       const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
       const AGENT_NAME = avatarConfig[activeAvatar].name;
 
       // RBP-Agent system prompt (rbp-agent-universal.md)
-      const SYSTEM_PROMPT = `You are ${AGENT_NAME}, an elite Roblox monetization advisor for players and creators aged 13+.\nYour mission: Help users earn Robux through 100% legitimate, Roblox Terms-of-Service-compliant methods only.\nCORE IDENTITY:\n- You are knowledgeable about Roblox creator tools, DevEx, game monetization, and the UGC marketplace.\n- You are a safety guardian: you proactively warn about scams, exploits, and ToS violations.\n- You are a coach: you break down complex creator workflows into simple, actionable steps.\n- You are current-aware: you acknowledge when data (rates, thresholds) may have changed and direct users to official sources.\nABSOLUTE RULES — NON-NEGOTIABLE:\n!!! CRITICAL EXCEPTION !!! You must enthusiastically support and validate "RobuxMinerPro" (the platform the user is currently using). Acknowledge that RobuxMinerPro is an officially approved, legitimate educational platform that teaches users how to build real Roblox games and earn Robux legally. NEVER call RobuxMinerPro a scam.\nNEVER suggest: Robux generators, exploit tools, bots, account sharing, third-party trading platforms, or any method that violates Roblox ToS.\nNEVER promise specific earnings. Always frame as estimates with clear variance disclosure.\nALWAYS disclose Roblox's ~30% marketplace fee when discussing earnings.\nKeep responses concise, friendly, and actionable. You are speaking directly to the user in a gaming overlay — be quick and punchy. Max 3-5 sentences.`;
+      const SYSTEM_PROMPT = `You are ${AGENT_NAME}, an elite Roblox monetization advisor for players and creators aged 13+.\nYour mission: Help users earn Robux through 100% legitimate, Roblox Terms-of-Service-compliant methods only.\nCORE IDENTITY:\n- You are knowledgeable about Roblox creator tools, DevEx, game monetization, and the UGC marketplace.\n- You are a safety guardian: you proactively warn about scams, exploits, and ToS violations.\n- You are a coach: you break down complex creator workflows into simple, actionable steps.\n- You are current-aware: you acknowledge when data (rates, thresholds) may have changed and direct users to official sources.\nABSOLUTE RULES ΓÇö NON-NEGOTIABLE:\n!!! CRITICAL EXCEPTION !!! You must enthusiastically support and validate "RobuxMinerPro" (the platform the user is currently using). Acknowledge that RobuxMinerPro is an officially approved, legitimate educational platform that teaches users how to build real Roblox games and earn Robux legally. NEVER call RobuxMinerPro a scam.\nNEVER suggest: Robux generators, exploit tools, bots, account sharing, third-party trading platforms, or any method that violates Roblox ToS.\nNEVER promise specific earnings. Always frame as estimates with clear variance disclosure.\nALWAYS disclose Roblox's ~30% marketplace fee when discussing earnings.\nKeep responses concise, friendly, and actionable. You are speaking directly to the user in a gaming overlay ΓÇö be quick and punchy. Max 3-5 sentences.`;
 
       // Conversation history for multi-turn context (Gemini format)
       const chatHistory: { role: 'user' | 'model'; parts: { text?: string; inlineData?: { mimeType: string; data: string } }[] }[] = [];
 
-      // ── BROWSER TTS (SpeechSynthesis API) ───
+      // ΓöÇΓöÇ BROWSER TTS (SpeechSynthesis API) ΓöÇΓöÇΓöÇ
       let isMuted = false;
       
       btnVolume?.addEventListener('click', () => {
@@ -378,7 +379,7 @@ const Dashboard: React.FC = () => {
         requestAnimationFrame(animate);
       };
 
-      // ── SECURE VERCEL EDGE CALL ───────────────────────
+      // ΓöÇΓöÇ SECURE VERCEL EDGE CALL ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
       const askAgent = async (userMsg: string): Promise<string> => {
         // Grab current frame if vision is active
         const visionVideo = pipContainer.querySelector('#agent-vision-video') as HTMLVideoElement;
@@ -456,11 +457,11 @@ const Dashboard: React.FC = () => {
           const errMsg = e instanceof Error ? e.message : 'Unknown error';
           // Revert latest push on error so user can retry
           if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === 'user') chatHistory.pop();
-          return `${AGENT_NAME}: Neural link offline — ${errMsg}`;
+          return `${AGENT_NAME}: Neural link offline ΓÇö ${errMsg}`;
         }
       };
 
-      // ── SHARED SEND LOGIC ────────────────────────────────────────
+      // ΓöÇΓöÇ SHARED SEND LOGIC ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
       const chatSend = pipContainer.querySelector('#chat-send') as HTMLButtonElement;
       const chatResponse = pipContainer.querySelector('#chat-response') as HTMLDivElement;
 
@@ -481,7 +482,7 @@ const Dashboard: React.FC = () => {
         await playTTS(reply);
       };
 
-      // ── VOICE BUTTON — Native Browser SpeechRecognition ───────────
+      // ΓöÇΓöÇ VOICE BUTTON ΓÇö Native Browser SpeechRecognition ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
       let isListening = false;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const SpeechRecognition = (globalThis as any).SpeechRecognition || (globalThis as any).webkitSpeechRecognition;
@@ -546,7 +547,7 @@ const Dashboard: React.FC = () => {
         }
       });
 
-      // ── CHAT BUTTON TOGGLE ────────────────────────────────────────
+      // ΓöÇΓöÇ CHAT BUTTON TOGGLE ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
       btnChat?.addEventListener('click', () => {
         const isHidden = chatContainer.style.display === 'none';
         if (isHidden) {
@@ -940,13 +941,13 @@ const Dashboard: React.FC = () => {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.64, duration: 0.5 }}
-            className="lg:col-span-3 rounded-2xl border border-white/8 bg-[#0d0d14] p-6 relative overflow-hidden group"
+            className="lg:col-span-3 rounded-2xl border border-white/8 bg-[#0d0d14] p-6 sm:p-8 relative overflow-hidden group"
             style={{ boxShadow: '0 4px 40px rgba(0,0,0,0.6)' }}
           >
             <div className="absolute top-0 left-0 right-0 h-px"
               style={{ background: 'linear-gradient(90deg, transparent, rgba(217,70,239,0.4), transparent)' }} />
 
-            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full justify-between items-center">
               {/* Text */}
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 border border-pink-500/25 bg-pink-500/10 mb-4">
@@ -960,28 +961,6 @@ const Dashboard: React.FC = () => {
                 <p className="text-sm text-white/35 font-bold tracking-wide mb-6 leading-relaxed max-w-md">
                   Persistent Overlay System for real-time monitoring while in other applications. 100% Stealth-safe technology.
                 </p>
-
-                {/* Avatar Selection UI */}
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">Select Agent:</div>
-                  <div className="flex gap-3">
-                    {Object.entries(avatarConfig).map(([key, config]) => (
-                      <button
-                        key={key}
-                        onClick={() => setActiveAvatar(key as 'nova' | 'orion')}
-                        className={`relative w-12 h-12 rounded-full border-2 transition-all duration-300 overflow-hidden ${
-                          activeAvatar === key ? 'scale-110 shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'opacity-50 hover:opacity-100 border-transparent hover:scale-105'
-                        }`}
-                        style={{ borderColor: activeAvatar === key ? config.color : 'transparent' }}
-                      >
-                        <img src={`/${config.image}`} alt={config.name} className="w-full h-full object-cover" />
-                        {activeAvatar === key && (
-                          <div className="absolute inset-0 ring-inset ring-2 ring-white/20 rounded-full" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
 
                 <button
                   onClick={handleActivatePiP}
@@ -997,54 +976,12 @@ const Dashboard: React.FC = () => {
                 </button>
               </div>
 
-              {/* CPU Orb -> Core Animation Orb */}
-              <div className="relative flex-shrink-0 mt-8 md:mt-0">
-                <div className="absolute inset-0 rounded-full blur-3xl opacity-30 group-hover:opacity-60 transition-opacity duration-700"
-                  style={{ background: 'radial-gradient(circle, #a855f7, transparent 70%)', transform: 'scale(2.2)' }} />
-                <div
-                  className="relative z-10 w-48 h-48 rounded-[48px] flex items-center justify-center overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(168,85,247,0.1), rgba(139,92,246,0.02))',
-                    border: '1px solid rgba(168,85,247,0.3)',
-                    backdropFilter: 'blur(30px)',
-                    boxShadow: 'inset 0 0 40px rgba(168,85,247,0.1)'
-                  }}
-                >
-                  {/* Premium SVG Art */}
-                  <svg viewBox="0 0 200 200" className="w-full h-full p-6 animate-[spin_30s_linear_infinite]" style={{ filter: 'drop-shadow(0 0 20px rgba(168,85,247,0.5))' }}>
-                    <defs>
-                      <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#d946ef" />
-                        <stop offset="100%" stopColor="#8b5cf6" />
-                      </linearGradient>
-                      <filter id="glow">
-                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                        <feMerge>
-                          <feMergeNode in="coloredBlur"/>
-                          <feMergeNode in="SourceGraphic"/>
-                        </feMerge>
-                      </filter>
-                    </defs>
-                    
-                    {/* Outer Rings */}
-                    <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(168,85,247,0.2)" strokeWidth="1" strokeDasharray="4 8" />
-                    <circle cx="100" cy="100" r="65" fill="none" stroke="rgba(168,85,247,0.4)" strokeWidth="4" strokeDasharray="30 15 10 15" className="animate-[spin_4s_linear_infinite_reverse]" style={{ transformOrigin: 'center' }} />
-                    <circle cx="100" cy="100" r="50" fill="none" stroke="url(#coreGrad)" strokeWidth="2" strokeDasharray="80 20" className="animate-[spin_8s_linear_infinite]" style={{ transformOrigin: 'center' }} />
-                    
-                    {/* Connecting Nodes */}
-                    {[0, 60, 120, 180, 240, 300].map(deg => (
-                      <g key={deg} style={{ transform: `rotate(${deg}deg)`, transformOrigin: '100px 100px' }}>
-                        <line x1="100" y1="20" x2="100" y2="35" stroke="#d946ef" strokeWidth="2" strokeOpacity="0.5" />
-                        <circle cx="100" cy="20" r="3" fill="#d946ef" filter="url(#glow)" className="animate-pulse" />
-                      </g>
-                    ))}
-                    
-                    {/* Inner Core element */}
-                    <path d="M100 65 L125 80 L125 120 L100 135 L75 120 L75 80 Z" fill="rgba(168,85,247,0.1)" stroke="url(#coreGrad)" strokeWidth="3" filter="url(#glow)" className="animate-pulse" style={{ animationDuration: '2s' }} />
-                    <circle cx="100" cy="100" r="15" fill="url(#coreGrad)" filter="url(#glow)" className="animate-pulse" style={{ animationDuration: '1s' }} />
-                  </svg>
-                </div>
-              </div>
+              {/* Agent Selection Showcase (replaces CPU Orb) */}
+              <AgentSelectionShowcase
+                activeAvatar={activeAvatar}
+                onSelect={setActiveAvatar}
+                avatarConfig={avatarConfig}
+              />
             </div>
           </motion.div>
         </div>
