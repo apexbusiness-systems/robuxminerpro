@@ -161,37 +161,67 @@
       transparent,
       hsl(var(--accent) / 0.5)
     );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
   }
 
   .mesh-gradient {
-    background-color: hsla(240,10%,4%,1);
-    background-image: 
-      radial-gradient(at 0% 0%, hsla(280,100%,70%,0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, hsla(320,100%,65%,0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(280,100%,70%,0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(320,100%,65%,0.1) 0px, transparent 50%);
+    background-color: hsla(240, 10%, 4%, 1);
+    background-image:
+      radial-gradient(
+        at 0% 0%,
+        hsla(280, 100%, 70%, 0.15) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 100% 0%,
+        hsla(320, 100%, 65%, 0.15) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 100% 100%,
+        hsla(280, 100%, 70%, 0.1) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 0% 100%,
+        hsla(320, 100%, 65%, 0.1) 0px,
+        transparent 50%
+      );
   }
 
   .cyber-grid {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
   }
 
   .animate-glow-flow {
-    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.2),
+      transparent
+    );
     background-size: 200% 100%;
     animation: glow-flow 3s linear infinite;
   }
 
   @keyframes glow-flow {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
   }
 }
 
@@ -505,5 +535,81 @@
 
   .dark .text-primary-high-contrast {
     color: hsl(280 80% 65%);
+  }
+
+  /* ─── Agent Selection Showcase Animations ────────────────────────────── */
+  .agent-showcase-orbit {
+    animation: agent-orbit 20s linear infinite;
+    transform-origin: center;
+  }
+
+  .agent-showcase-float {
+    animation: agent-float 3s ease-in-out infinite;
+  }
+
+  .agent-showcase-glow-pulse {
+    animation: agent-glow-pulse 2s ease-in-out infinite alternate;
+  }
+
+  .agent-showcase-shine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .agent-showcase-shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.06) 45%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.06) 55%,
+      transparent 70%
+    );
+    background-size: 250% 100%;
+    animation: agent-card-shine 4s ease infinite;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  @keyframes agent-orbit {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes agent-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes agent-glow-pulse {
+    0% {
+      opacity: 0.25;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0.5;
+      transform: scale(1.15);
+    }
+  }
+
+  @keyframes agent-card-shine {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 }
