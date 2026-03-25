@@ -1,4 +1,4 @@
-# RobuxMinerPro — APEX-OmniHub Edition
+# RobuxMinerPro — APEX Edition
 
 **Version:** 1.0.0 (Hardened) | **Last Updated:** 2026-03-15
 

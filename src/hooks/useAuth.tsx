@@ -124,6 +124,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (!isSupabaseValid()) {
+      if (sessionStorage.getItem('rmp_signed_out') === '1') {
+        setLoading(false);
+        return;
+      }
       setUser(MOCK_USER);
       setProfile(MOCK_PROFILE);
       setLoading(false);
@@ -172,31 +176,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signOut = useCallback(async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      localStorage.clear();
-      sessionStorage.clear();
-      if (error) throw error;
-      
-      // Explicitly forcefully clear React state immediately
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      
-      toast({
-        title: "Signed out",
-        description: "You have been successfully signed out.",
-      });
-      window.location.replace('/');
-    } catch {
-      // Hard fallback if network completely fails
-      localStorage.clear();
-      sessionStorage.clear();
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      window.location.replace('/');
-    }
+    // 1. Immediately clear all local Supabase session keys
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('sb-')) localStorage.removeItem(key);
+    });
+    // 2. Immediately clear React auth state
+    setSession(null);
+    setUser(null);
+    setProfile(null);
+    // 3. Fire-and-forget: revoke server-side refresh token (don't block on it)
+    supabase.auth.signOut({ scope: 'global' }).catch(() => {});
+    // 4. Redirect immediately — user sees instant sign-out
+    toast({
+      title: "Signed out",
+      description: "You have been successfully signed out.",
+    });
+    window.location.replace('/auth');
   }, [toast]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
@@ -238,6 +233,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [user, fetchProfile]);
 
   const bypassMockLogin = useCallback(() => {
+    sessionStorage.removeItem('rmp_signed_out');
     setUser(MOCK_USER);
     setProfile(MOCK_PROFILE);
     setLoading(false);
