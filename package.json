@@ -82,6 +82,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
+    "@cloudflare/workers-types": "^4.20260317.1",
     "@eslint/js": "^9.32.0",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/typography": "^0.5.16",
