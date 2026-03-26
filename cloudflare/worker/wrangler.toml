@@ -1,0 +1,19 @@
+name = "robuxminerpro-agent-gateway"
+main = "src/index.ts"
+compatibility_date = "2026-03-01"
+account_id = "b8a58a01bf34e1d6e46adf9765b159e8"
+
+[vars]
+ENVIRONMENT = "production"
+
+# You will need to create these KV Namespaces via CLI:
+# npx wrangler kv:namespace create RATE_LIMIT
+# npx wrangler kv:namespace create RESPONSE_CACHE
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "<KV_NAMESPACE_ID_PLACEHOLDER>"
+
+[[kv_namespaces]]
+binding = "RESPONSE_CACHE"
+id = "<KV_NAMESPACE_ID_PLACEHOLDER>"
