@@ -93,7 +93,7 @@ export default {
         headers: finalHeaders
       });
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       return new Response(JSON.stringify({ error: "Gateway error", message: err.message }), { status: 500, headers: corsHeaders });
     }
   }

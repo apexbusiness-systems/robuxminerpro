@@ -8,11 +8,11 @@ interface Env {
   VITE_SUPABASE_ANON_KEY?: string;
 }
 
-const jsonResponse = (body: any, status: number) =>
+const jsonResponse = (body: unknown, status: number) =>
   new Response(JSON.stringify(body), {
     status,
     headers: { 'Content-Type': 'application/json' },
-  }) as any;
+  }) as unknown;
 
 function getSupabase(request: Request<unknown, unknown>, env: Env) {
   const authHeader = request.headers.get("Authorization");
@@ -42,7 +42,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
     if (error) throw error;
     return jsonResponse(data, 200);
-  } catch (error_: any) {
+  } catch (error_: unknown) {
     return jsonResponse({ error: error_.message }, error_.message === "Unauthorized" ? 401 : 500);
   }
 };
@@ -53,9 +53,9 @@ export const onRequestPatch: PagesFunction<Env> = async ({ request, env }) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return jsonResponse({ error: "Unauthorized" }, 401);
 
-    const body = await request.json() as { preferences?: any, age_bracket?: string, parental_consent?: boolean };
+    const body = await request.json() as { preferences?: unknown, age_bracket?: string, parental_consent?: boolean };
     
-    const updates: any = {};
+    const updates: Record<string, unknown> = {};
     if (body.preferences) updates.preferences = body.preferences;
     if (body.age_bracket) updates.age_bracket = body.age_bracket;
     if (body.parental_consent !== undefined) updates.parental_consent = body.parental_consent;
@@ -69,7 +69,7 @@ export const onRequestPatch: PagesFunction<Env> = async ({ request, env }) => {
 
     if (error) throw error;
     return jsonResponse(data, 200);
-  } catch (error_: any) {
+  } catch (error_: unknown) {
     return jsonResponse({ error: error_.message }, 500);
   }
 };

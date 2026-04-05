@@ -8,11 +8,11 @@ interface Env {
   VITE_SUPABASE_ANON_KEY?: string;
 }
 
-const jsonResponse = (body: any, status: number) =>
+const jsonResponse = (body: unknown, status: number) =>
   new Response(JSON.stringify(body), {
     status,
     headers: { 'Content-Type': 'application/json' },
-  }) as any;
+  }) as unknown;
 
 function getSupabase(request: Request<unknown, unknown>, env: Env) {
   const authHeader = request.headers.get("Authorization");
@@ -49,7 +49,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
     if (error) throw error;
     return jsonResponse({ data, total: count, page, limit }, 200);
-  } catch (error_: any) {
+  } catch (error_: unknown) {
     return jsonResponse({ error: error_.message }, error_.message === "Unauthorized" ? 401 : 500);
   }
 };
@@ -60,7 +60,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return jsonResponse({ error: "Unauthorized" }, 401);
 
-    const body = await request.json() as { title?: string, game_context?: any };
+    const body = await request.json() as { title?: string, game_context?: unknown };
     
     const { data, error } = await supabase
       .from("conversations")
@@ -73,7 +73,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
     if (error) throw error;
     return jsonResponse(data, 201);
-  } catch (error_: any) {
+  } catch (error_: unknown) {
     return jsonResponse({ error: error_.message }, 500);
   }
 };
@@ -97,7 +97,7 @@ export const onRequestDelete: PagesFunction<Env> = async ({ request, env }) => {
 
     if (error) throw error;
     return jsonResponse({ success: true }, 200);
-  } catch (error_: any) {
+  } catch (error_: unknown) {
     return jsonResponse({ error: error_.message }, 500);
   }
 };
