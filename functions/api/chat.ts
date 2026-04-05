@@ -112,7 +112,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
           });
 
           if (geminiRes.ok) {
-            const geminiData = await geminiRes.json() as any;
+            const geminiData = await geminiRes.json() as unknown;
             if (geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
               return jsonResponse({
                 reply: geminiData.candidates[0].content.parts[0].text
@@ -171,7 +171,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         throw new Error(`Groq HTTP Error: ${groqRes.status} - ${text}`);
       }
 
-      const groqData = await groqRes.json() as any;
+      const groqData = await groqRes.json() as unknown;
       return jsonResponse({
         reply: groqData.choices[0].message.content
       }, 200);

@@ -9,7 +9,7 @@ const jsonResponse = (body: Record<string, unknown>, status: number) =>
   new Response(JSON.stringify(body), {
     status,
     headers: { 'Content-Type': 'application/json' },
-  }) as any;
+  }) as unknown;
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
@@ -36,7 +36,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     const data = await response.json();
     return jsonResponse(data as Record<string, unknown>, response.status);
 
-  } catch (error_: any) {
+  } catch (error_: unknown) {
     return jsonResponse({ error: `Backend Error: ${error_.message}` }, 500);
   }
 };

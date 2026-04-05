@@ -80,6 +80,22 @@ const MOCK_PROFILE: Profile = {
   updated_at: new Date().toISOString(),
 };
 
+
+export const clearSupabaseAuthStorage = () => {
+  ['localStorage', 'sessionStorage'].forEach((storageType) => {
+    try {
+      const storage = window[storageType as 'localStorage' | 'sessionStorage'];
+      Object.keys(storage).forEach((key) => {
+        if (key.startsWith('sb-') || key.startsWith('supabase.auth.')) {
+          storage.removeItem(key);
+        }
+      });
+    } catch (e) {
+      // Ignore
+    }
+  });
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -177,9 +193,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = useCallback(async () => {
     // 1. Immediately clear all local Supabase session keys
-    Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith('sb-')) localStorage.removeItem(key);
-    });
+    clearSupabaseAuthStorage();
     // 2. Immediately clear React auth state
     setSession(null);
     setUser(null);
