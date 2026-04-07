@@ -11,11 +11,13 @@ interface LeadCaptureModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const LeadCaptureForm = ({ onSuccess }: { onSuccess: () => void }) => {
+export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) => {
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const modalRef = useFocusTrap(open);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +59,7 @@ const LeadCaptureForm = ({ onSuccess }: { onSuccess: () => void }) => {
         if (!res.ok) {
            throw new Error(`HTTP error! status: ${res.status}`);
         }
-        onSuccess();
+        setSubmitted(true);
       } catch (err) {
         console.warn('Lead capture failed, falling back to local storage:', err);
         setSubmitError('Unable to connect to server. Best effort saved.');
@@ -70,7 +72,7 @@ const LeadCaptureForm = ({ onSuccess }: { onSuccess: () => void }) => {
     } else {
       try {
          globalThis.window.localStorage.setItem('rmp_pending_lead', JSON.stringify(payload));
-         onSuccess();
+         setSubmitted(true);
       } catch (storageErr) {
          console.warn('Failed to save to localStorage', storageErr);
          setSubmitError('Failed to save data offline.');
@@ -80,88 +82,11 @@ const LeadCaptureForm = ({ onSuccess }: { onSuccess: () => void }) => {
     setIsSubmitting(false);
   };
 
-  return (
-    <>
-      <DialogHeader>
-        <DialogTitle>Start earning Robux legitimately</DialogTitle>
-      </DialogHeader>
-      <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email address</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoFocus
-          />
-        </div>
-
-        {submitError && (
-           <div className="text-sm text-destructive bg-destructive/10 p-2 rounded">
-              {submitError}
-           </div>
-        )}
-
-        <div className="flex items-start gap-2">
-          <Checkbox
-            id="consent"
-            checked={consent}
-            onCheckedChange={(checked) => setConsent(checked === true)}
-            required
-          />
-          <Label
-            htmlFor="consent"
-            className="text-sm leading-tight cursor-pointer"
-          >
-            I&apos;m 13+ / parent consent obtained
-          </Label>
-        </div>
-
-        <p className="text-xs text-muted-foreground">
-          We never ask for your password
-        </p>
-
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={!email || !consent || isSubmitting}
-        >
-          {isSubmitting ? 'Submitting...' : 'Get Started'}
-        </Button>
-      </form>
-    </>
-  );
-};
-
-const LeadCaptureSuccess = () => (
-  <div className="text-center py-6 space-y-4">
-    <div className="text-4xl mb-4">✓</div>
-    <DialogHeader>
-      <DialogTitle>Check your inbox</DialogTitle>
-    </DialogHeader>
-    <p className="text-muted-foreground">
-      We've sent you next steps to start earning Robux the right way.
-    </p>
-    <a
-      href="https://discord.gg/robuxminerpro"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-block text-primary hover:underline mt-4"
-    >
-      Join our Discord community (optional)
-    </a>
-  </div>
-);
-
-export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) => {
-  const [submitted, setSubmitted] = useState(false);
-  const modalRef = useFocusTrap(open);
-
   const handleClose = () => {
+    setEmail('');
+    setConsent(false);
     setSubmitted(false);
+    setSubmitError('');
     onOpenChange(false);
   };
 
@@ -177,9 +102,76 @@ export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) 
         }}
       >
         {!submitted ? (
-          <LeadCaptureForm onSuccess={() => setSubmitted(true)} />
+          <>
+            <DialogHeader>
+              <DialogTitle>Start earning Robux legitimately</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoFocus
+                />
+              </div>
+
+              {submitError && (
+                 <div className="text-sm text-destructive bg-destructive/10 p-2 rounded">
+                    {submitError}
+                 </div>
+              )}
+
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id="consent"
+                  checked={consent}
+                  onCheckedChange={(checked) => setConsent(checked === true)}
+                  required
+                />
+                <Label
+                  htmlFor="consent"
+                  className="text-sm leading-tight cursor-pointer"
+                >
+                  I&apos;m 13+ / parent consent obtained
+                </Label>
+              </div>
+
+              <p className="text-xs text-muted-foreground">
+                We never ask for your password
+              </p>
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!email || !consent || isSubmitting}
+              >
+                {isSubmitting ? 'Submitting...' : 'Get Started'}
+              </Button>
+            </form>
+          </>
         ) : (
-          <LeadCaptureSuccess />
+          <div className="text-center py-6 space-y-4">
+            <div className="text-4xl mb-4">✓</div>
+            <DialogHeader>
+              <DialogTitle>Check your inbox</DialogTitle>
+            </DialogHeader>
+            <p className="text-muted-foreground">
+              We've sent you next steps to start earning Robux the right way.
+            </p>
+            <a
+              href="https://discord.gg/robuxminerpro"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-primary hover:underline mt-4"
+            >
+              Join our Discord community (optional)
+            </a>
+          </div>
         )}
       </DialogContent>
     </Dialog>
