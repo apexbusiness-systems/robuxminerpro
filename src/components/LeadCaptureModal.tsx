@@ -44,9 +44,15 @@ export const LeadCaptureModal = ({ open, onOpenChange }: LeadCaptureModalProps) 
     const endpoint = import.meta.env.VITE_LEADS_ENDPOINT_URL;
     if (endpoint) {
       try {
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        const apiKey = import.meta.env.VITE_LEADS_API_KEY;
+        if (apiKey) {
+          headers['Authorization'] = `Bearer ${apiKey}`;
+        }
+
         const res = await fetch(endpoint, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify(payload),
         });
         
