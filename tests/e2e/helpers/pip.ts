@@ -16,7 +16,7 @@ export async function mockDocumentPictureInPicture(page: Page) {
         body: document.createElement('div'), // Where React will portal into
         createElement: (tag: string) => document.createElement(tag),
       },
-      addEventListener: (event: string, callback: any) => {},
+      addEventListener: (event: string, callback: EventListener) => {},
       close: () => {},
     };
 
