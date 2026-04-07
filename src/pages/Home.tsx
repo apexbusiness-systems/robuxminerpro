@@ -21,6 +21,22 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const Home = () => {
+
+  const revealRefs = useRef<HTMLElement[]>([]);
+  const countRefs = useRef<HTMLElement[]>([]);
+
+  const setRevealRef = useCallback((el: HTMLElement | null) => {
+    if (el && !revealRefs.current.includes(el)) {
+      revealRefs.current.push(el);
+    }
+  }, []);
+
+  const setCountRef = useCallback((el: HTMLElement | null) => {
+    if (el && !countRefs.current.includes(el)) {
+      countRefs.current.push(el);
+    }
+  }, []);
+
   const { t } = useI18n();
   const { toast } = useToast();
   const [ctaDismissed, setCtaDismissed] = useState(() => 
@@ -49,7 +65,7 @@ const Home = () => {
 
   // Reveal-on-view
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll('.reveal'));
+    const els = revealRefs.current;
     if (!('IntersectionObserver' in window) || !els.length) return;
     
     const io = new IntersectionObserver((entries) => {
@@ -64,7 +80,7 @@ const Home = () => {
 
   // Count-up for metrics
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
+    const els = countRefs.current;
     
     const animate = (el: HTMLElement) => {
       const target = Number(el.dataset.count || 0);
@@ -191,15 +207,15 @@ const Home = () => {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-6 pt-12 border-t border-border mt-8">
                 <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="50000">0</div>
+                  <div className="text-3xl font-bold text-primary" data-count="50000" ref={setCountRef}>0</div>
                   <div className="text-sm text-muted-foreground">{t('home.stats.activeUsers')}</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="98">0</div>
+                  <div className="text-3xl font-bold text-primary" data-count="98" ref={setCountRef}>0</div>
                   <div className="text-sm text-muted-foreground">{t('home.stats.successRate')}</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="7">0</div>
+                  <div className="text-3xl font-bold text-primary" data-count="7" ref={setCountRef}>0</div>
                   <div className="text-sm text-muted-foreground">{t('home.stats.avgDays')}</div>
                 </div>
               </div>
