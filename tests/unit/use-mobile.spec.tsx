@@ -59,7 +59,11 @@ describe('useIsMobile', () => {
     });
 
     expect(result.current).toBe(true);
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> origin/jules-16868652577047969688-934c1041
     act(() => {
       window.innerWidth = 1024;
       onChangeCallback();
@@ -70,11 +74,19 @@ describe('useIsMobile', () => {
 
   it('should unregister event listener on unmount', () => {
     const { unmount } = renderHook(() => useIsMobile());
+<<<<<<< HEAD
 
     const onChangeCallback = addEventListenerSpy.mock.calls[0][1];
 
     unmount();
 
+=======
+
+    const onChangeCallback = addEventListenerSpy.mock.calls[0][1];
+
+    unmount();
+
+>>>>>>> origin/jules-16868652577047969688-934c1041
     expect(removeEventListenerSpy).toHaveBeenCalledWith('change', onChangeCallback);
   });
 });
