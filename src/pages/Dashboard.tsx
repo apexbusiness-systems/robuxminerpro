@@ -631,15 +631,25 @@ const Dashboard: React.FC = () => {
     return () => clearInterval(id);
   }, []);
 
-  // Seed chart data + re-roll the last point on each tick
-  const chartData = useMemo(() => {
-    const base = Array.from({ length: 24 }, (_, i) => ({
+  // Seed chart data base once, re-roll only the last point on each tick
+  const chartDataBase = useMemo(() => {
+    return Array.from({ length: 23 }, (_, i) => ({
       t: `${i}:00`,
       v: 180 + Math.sin(i / 3.5) * 60 + Math.cos(i / 2) * 30 + Math.random() * 25
     }));
-    return base;
+  }, []);
+
+  const chartData = useMemo(() => {
+    const i = 23;
+    return [
+      ...chartDataBase,
+      {
+        t: `${i}:00`,
+        v: 180 + Math.sin(i / 3.5) * 60 + Math.cos(i / 2) * 30 + Math.random() * 25
+      }
+    ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tick]);
+  }, [tick, chartDataBase]);
 
   useEffect(() => {
     setIsLoading(!getCachedData());
