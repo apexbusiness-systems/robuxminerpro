@@ -1,12 +1,7 @@
-🧹 chore: Remove redundant Sonner toaster component
+🔒 Add Authorization header to leads endpoint request
 
-🎯 **What:** Removed unused `Sonner` component from `src/App.tsx`, deleted `src/components/ui/sonner.tsx`, and uninstalled `sonner` and `next-themes` dependencies.
+🎯 **What:** The LeadCaptureModal makes an unauthenticated POST request to the external leads endpoint configured via VITE_LEADS_ENDPOINT_URL. This change introduces a new environment variable `VITE_LEADS_API_KEY` and passes it as a Bearer token in the Authorization header.
 
-💡 **Why:** The application uses Shadcn UI's default `use-toast` (`Toaster` component) for notifications. `Sonner` was imported and rendered but unused throughout the app, creating redundant components in the DOM and unnecessary dependencies. Removing it reduces bundle size, cleans up the DOM, and simplifies the codebase.
+⚠️ **Risk:** Without authentication, the leads endpoint could be subjected to unauthorized access, spam submissions, or abuse, potentially leading to data pollution or denial of service against the leads system.
 
-✅ **Verification:**
-- Ran `npm run build` to verify the build process succeeds.
-- Updated `e2e/ui-components.spec.ts` to remove the `[data-sonner-toaster]` check and verified the test suite passes against the standard Radix UI toast region.
-- Verified unit tests and linting pass.
-
-✨ **Result:** A cleaner DOM, removal of two unneeded dependencies (`sonner` and `next-themes`), and fewer redundant imports.
+🛡️ **Solution:** Modified `src/components/LeadCaptureModal.tsx` to conditionally read the API key from `import.meta.env.VITE_LEADS_API_KEY` and inject it into the `Authorization: Bearer <token>` header if present. Also updated `.env.example` and `.env.ci` to document the new expected environment variable.

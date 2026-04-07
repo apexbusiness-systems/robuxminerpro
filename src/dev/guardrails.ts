@@ -71,6 +71,12 @@ function assertAssets() {
 export function runGuardrails() {
   const hits: GuardrailHit[] = [];
   try {
+    // Remove legacy SSR fallback hero if present
+    const ssr = document.getElementById('hero-ssr');
+    if (ssr) {
+      ssr.remove();
+      console.warn('Removed legacy SSR hero fallback.');
+    }
     // Ensure skip link target exists
     const skip = document.querySelector('a.skip-link[href="#main"]');
     if (skip && !document.getElementById('main')) {
