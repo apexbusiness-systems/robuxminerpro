@@ -1,0 +1,6 @@
+fix(ui): restore AgentSelectionShowcase PiP companion UI to Dashboard
+
+- Restored `AgentSelectionShowcase` from commit 32aaa07 to `src/components/pip/`.
+- Removed `EmbeddedPipPanel` (the mock pip assistant window) to satisfy the constraint of having only one PiP instance.
+- Updated `src/pages/Dashboard.tsx` to integrate `AgentSelectionShowcase`, replacing the `CPU Orb -> Core Animation Orb` and `Avatar Selection UI` as per the expected UI state shown in image 2.
+- Verified build and tests pass successfully.
