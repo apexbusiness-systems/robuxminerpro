@@ -69,12 +69,31 @@ function registerServiceWorker(): void {
 }
 
 function renderBootstrapFallback(root: HTMLElement, error: unknown): void {
-  root.innerHTML = `
-    <main style="font-family: Inter, system-ui, sans-serif; padding: 2rem; line-height: 1.5;">
-      <h1 style="font-size: 1.5rem; margin-bottom: 0.5rem;">RobuxMinerPro</h1>
-      <p style="margin: 0; color: #374151;">Application boot issue detected. Refresh the page or contact support if the problem persists.</p>
-    </main>
-  `;
+  root.textContent = '';
+
+  const main = document.createElement('main');
+  main.style.fontFamily = 'Inter, system-ui, sans-serif';
+  main.style.padding = '2rem';
+  main.style.lineHeight = '1.5';
+
+  // Apply a basic theme that defaults to dark if preferred
+  main.style.backgroundColor = 'var(--background, #ffffff)';
+  main.style.color = 'var(--foreground, #000000)';
+
+  const h1 = document.createElement('h1');
+  h1.style.fontSize = '1.5rem';
+  h1.style.marginBottom = '0.5rem';
+  h1.textContent = 'RobuxMinerPro';
+
+  const p = document.createElement('p');
+  p.style.margin = '0';
+  p.style.color = 'var(--muted-foreground, #374151)';
+  p.textContent = 'Application boot issue detected. Refresh the page or contact support if the problem persists.';
+
+  main.appendChild(h1);
+  main.appendChild(p);
+  root.appendChild(main);
+
   console.error('[bootstrap] Application failed to initialize.', error);
 }
 
