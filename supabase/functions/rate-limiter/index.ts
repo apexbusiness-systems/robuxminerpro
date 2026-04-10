@@ -36,12 +36,28 @@ serve(async (req) => {
 
     const userId = user.id;
 
-    // Get user tier
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('premium_tier')
-      .eq('user_id', userId)
-      .single();
+    // The getRateLimitForAction checks if the action is valid.
+    // If we only need the limitKey for the rate_limit_log query, we can determine it from action:
+    // limitKey is always just the action for valid actions.
+    const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
+    // Fetch user tier and rate limit log count concurrently
+    const [
+      { data: profile, error: profileError },
+      { count: requestCount, error: requestError }
+    ] = await Promise.all([
+      supabase
+        .from('profiles')
+        .select('premium_tier')
+        .eq('user_id', userId)
+        .maybeSingle(),
+      supabase
+        .from('rate_limit_log')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('action_type', action)
+        .gte('created_at', hourAgo)
+    ]);
 
     if (profileError) {
       console.error('Profile fetch error:', profileError);
@@ -50,18 +66,10 @@ serve(async (req) => {
     const tier = profile?.premium_tier;
 
     // Check rate limit
-    const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const { limitKey, maxRequests, tier: resolvedTier } = getRateLimitForAction(
       tier,
       action,
     );
-
-    const { count: requestCount, error: requestError } = await supabase
-      .from('rate_limit_log')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .eq('action_type', limitKey)
-      .gte('created_at', hourAgo);
 
     if (requestError) throw requestError;
 
