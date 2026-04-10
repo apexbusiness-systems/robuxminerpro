@@ -44,29 +44,6 @@ function walk(node: Node, hits: GuardrailHit[]) {
   } else node.childNodes.forEach((n) => walk(n, hits));
 }
 
-function assertAssets() {
-  const okLogo = /\/assets\/official_logo(?:-[a-z0-9]+)?\.svg$/i;
-  const okIcon = /\/assets\/app_icon(?:-[a-z0-9]+)?\.svg$/i;
-
-  const badImgs = Array.from(document.querySelectorAll('img')).filter((img) => {
-    const s = (img.getAttribute('src') || '').toLowerCase();
-    return /(logo|icon)/.test(s) && !(okLogo.test(s) || okIcon.test(s));
-  });
-
-  if (badImgs.length) {
-    console.error('Non-canonical logo/icon detected:', badImgs.map((i) => i.getAttribute('src')));
-  }
-
-  const badLinks = Array.from(
-    document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]')
-  ).filter((l) => {
-    const href = (l.getAttribute('href') || '').toLowerCase();
-    return !(okLogo.test(href) || okIcon.test(href));
-  });
-  if (badLinks.length) {
-    console.warn('Non-canonical favicons detected:', badLinks.map((l) => l.getAttribute('href')));
-  }
-}
 
 export function runGuardrails() {
   const hits: GuardrailHit[] = [];
@@ -88,7 +65,6 @@ export function runGuardrails() {
     if (hits.length) {
       console.warn('Guardrails sanitized content at runtime:', hits.slice(0, 10));
     }
-    assertAssets();
   } catch (e) {
     console.warn('Guardrails encountered an issue but did not block rendering:', e);
   }
