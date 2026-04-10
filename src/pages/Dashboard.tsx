@@ -60,7 +60,15 @@ const getCachedData = (): DashboardData | null => {
   return null;
 };
 
+
+// Seed chart data base outside component to avoid recreation
+const INITIAL_CHART_DATA = Array.from({ length: 24 }, (_, i) => ({
+  t: `${i}:00`,
+  v: 180 + Math.sin(i / 3.5) * 60 + Math.cos(i / 2) * 30 + Math.random() * 25
+}));
+
 // ─── Stat Card ─────────────────────────────────────────────────────────────────
+
 const StatCard = React.memo(({
   label,
   value,
@@ -634,11 +642,12 @@ const Dashboard: React.FC = () => {
 
   // Seed chart data + re-roll the last point on each tick
   const chartData = useMemo(() => {
-    const base = Array.from({ length: 24 }, (_, i) => ({
-      t: `${i}:00`,
-      v: 180 + Math.sin(i / 3.5) * 60 + Math.cos(i / 2) * 30 + Math.random() * 25
-    }));
-    return base;
+    const data = [...INITIAL_CHART_DATA];
+    data[23] = {
+      ...data[23],
+      v: 180 + Math.sin(23 / 3.5) * 60 + Math.cos(23 / 2) * 30 + Math.random() * 25
+    };
+    return data;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tick]);
 
