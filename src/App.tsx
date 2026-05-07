@@ -1,9 +1,8 @@
 import { Toaster } from "@/components/ui/toaster";
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useMemo } from "react";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
@@ -13,29 +12,30 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import AuthPage from "@/components/auth/AuthPage";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { APP_ROUTES, RouteId } from "@/config/routes";
 
 // Lazy load pages
-const Home = lazy(() => import("./pages/Home"));
-const Features = lazy(() => import("./pages/Features"));
-const Pricing = lazy(() => import("./pages/Pricing"));
-const Privacy = lazy(() => import("./pages/Privacy"));
-const Terms = lazy(() => import("./pages/Terms"));
+const RouteComponents: Record<RouteId, React.LazyExoticComponent<any>> = {
+  home: lazy(() => import("./pages/Home")),
+  features: lazy(() => import("./pages/Features")),
+  pricing: lazy(() => import("./pages/Pricing")),
+  privacy: lazy(() => import("./pages/Privacy")),
+  terms: lazy(() => import("./pages/Terms")),
+  status: lazy(() => import("./pages/Status")),
+  health: lazy(() => import("./pages/HealthCheck")),
+  auth: lazy(() => Promise.resolve({ default: AuthPage })), // AuthPage isn't lazy by default but we wrap it for consistency, wait actually AuthPage is imported directly above. We'll use the imported one.
+  dashboard: lazy(() => import("./pages/Dashboard")),
+  squads: lazy(() => import("./pages/Squads")),
+  achievements: lazy(() => import("./pages/Achievements")),
+  learn: lazy(() => import("./pages/Learn")),
+  events: lazy(() => import("./pages/Events")),
+  payments: lazy(() => import("./pages/Payments")),
+  mentor: lazy(() => import("./pages/Mentor")),
+  profile: lazy(() => import("./pages/Profile")),
+  settings: lazy(() => import("./pages/Settings"))
+};
+
 const NotFound = lazy(() => import("./pages/NotFound"));
-const HealthCheck = lazy(() => import("./pages/HealthCheck"));
-const Status = lazy(() => import("./pages/Status"));
-const SimulateGame = lazy(() => import("./pages/SimulateGame"));
-
-
-// Lazy load authenticated pages
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Squads = lazy(() => import("./pages/Squads"));
-const Achievements = lazy(() => import("./pages/Achievements"));
-const Learn = lazy(() => import("./pages/Learn"));
-const Events = lazy(() => import("./pages/Events"));
-const Payments = lazy(() => import("./pages/Payments"));
-const Mentor = lazy(() => import("./pages/Mentor"));
-const Profile = lazy(() => import("./pages/Profile"));
-const Settings = lazy(() => import("./pages/Settings"));
 
 const queryClient = new QueryClient();
 
@@ -63,72 +63,23 @@ const App = () => {
                   <main id="main" className="flex-1" tabIndex={-1}>
                     <Suspense fallback={<LoadingSpinner />}>
                       <Routes>
-                      {/* Public routes */}
-                      <Route path="/" element={<Home />} />
-                      <Route path="/features" element={<Features />} />
-                      <Route path="/pricing" element={<Pricing />} />
-                      <Route path="/privacy" element={<Privacy />} />
-                      <Route path="/terms" element={<Terms />} />
-                      <Route path="/status" element={<Status />} />
-                      <Route path="/health" element={<HealthCheck />} />
-                      <Route path="/simulate-game" element={<SimulateGame />} />
+                        {Object.values(APP_ROUTES).map(route => {
+                          const Component = route.id === 'auth' ? AuthPage : RouteComponents[route.id];
+                          const element = route.isProtected ? (
+                            <ProtectedRoute>
+                              <Component />
+                            </ProtectedRoute>
+                          ) : route.id === 'auth' ? (
+                            <ProtectedRoute requireAuth={false}>
+                              <Component />
+                            </ProtectedRoute>
+                          ) : (
+                            <Component />
+                          );
 
-                      
-                      {/* Auth route */}
-                      <Route path="/auth" element={
-                        <ProtectedRoute requireAuth={false}>
-                          <AuthPage />
-                        </ProtectedRoute>
-                      } />
-                      
-                      {/* Protected routes */}
-                      <Route path="/dashboard" element={
-                        <ProtectedRoute>
-                          <Dashboard />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/squads" element={
-                        <ProtectedRoute>
-                          <Squads />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/achievements" element={
-                        <ProtectedRoute>
-                          <Achievements />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/learn" element={
-                        <ProtectedRoute>
-                          <Learn />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/events" element={
-                        <ProtectedRoute>
-                          <Events />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/payments" element={
-                        <ProtectedRoute>
-                          <Payments />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/mentor" element={
-                        <ProtectedRoute>
-                          <Mentor />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/profile" element={
-                        <ProtectedRoute>
-                          <Profile />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/settings" element={
-                        <ProtectedRoute>
-                          <Settings />
-                        </ProtectedRoute>
-                      } />
-                      
-                      <Route path="*" element={<NotFound />} />
+                          return <Route key={route.id} path={route.path} element={element} />;
+                        })}
+                        <Route path="*" element={<NotFound />} />
                       </Routes>
                     </Suspense>
                   </main>
