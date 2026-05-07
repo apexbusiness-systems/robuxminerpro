@@ -46,6 +46,7 @@ export default defineConfig(({ mode }) => ({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'sitemap.xml', 'app_icon.png'],
       workbox: {
+        navigationPreload: true,
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,

@@ -1,286 +1,199 @@
-import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Menu, X, Rocket, LogOut, ChevronDown } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
+import { useI18n } from '@/i18n/I18nProvider';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/hooks/useAuth';
-import { useI18n } from '@/i18n/I18nProvider';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { 
-  User, 
-  Settings, 
-  LogOut, 
-  Crown, 
-  Coins,
-  Home,
-  Users,
-  Trophy,
-  BookOpen,
-  Calendar,
-  CreditCard
-} from 'lucide-react';
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { NAV_ROUTES, PUBLIC_ROUTES, APP_ROUTES, PREFETCHABLE_ROUTES } from '@/config/routes';
+import { useQueryClient } from '@tanstack/react-query';
+import { prefetchRouteData } from '@/shared/prefetch';
 
-
-const Navigation: React.FC = () => {
-  const { user, profile, signOut } = useAuth();
+const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { session, profile, signOut } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
-  const { t, locale, setLocale, availableLocales } = useI18n();
+  const { t, locale, setLocale } = useI18n();
+  const queryClient = useQueryClient();
 
-  const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: Home, show: true },
-    { name: 'Squads', path: '/squads', icon: Users, show: import.meta.env.VITE_FEATURE_SQUADS === 'true' },
-    { name: 'Achievements', path: '/achievements', icon: Trophy, show: true },
-    { name: 'Learn', path: '/learn', icon: BookOpen, show: true },
-    { name: 'Events', path: '/events', icon: Calendar, show: true },
-    { name: 'Payments', path: '/payments', icon: CreditCard, show: import.meta.env.VITE_FEATURE_PAYMENTS === 'true' },
-  ].filter(item => item.show);
-
-  const handleSignOut = async () => {
-    await signOut();
-  };
-
-  const getTierColor = (tier: string) => {
-    switch (tier) {
-      case 'premium': return 'bg-gradient-to-r from-yellow-400 to-yellow-600';
-      case 'pro': return 'bg-gradient-to-r from-purple-400 to-purple-600';
-      default: return 'bg-gradient-to-r from-gray-400 to-gray-600';
+  const handlePrefetch = (path: string) => {
+    // Only prefetch if we are authenticated and the route is in the prefetchable list
+    if (session && PREFETCHABLE_ROUTES.some(r => r.path === path)) {
+      prefetchRouteData(queryClient, path);
     }
   };
 
-  if (!user) {
-    const landingLinks = [
-      { label: t('nav.features'), hash: '#features' },
-      { label: t('nav.howItWorks'), hash: '#how-it-works' },
-      { label: t('nav.pricing'), hash: '#pricing' },
-      { label: 'Learn More', hash: '#features' },
-      { label: t('nav.faq'), hash: '#faq' },
-    ];
+  const navLinks = session
+    ? NAV_ROUTES.filter(r => r.isProtected)
+    : NAV_ROUTES.filter(r => !r.isProtected);
 
-
-    return (
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container relative h-20 px-4 overflow-visible">
-          <div className="flex h-full items-center justify-between">
-            <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
-              <div className="relative">
-                <img 
-                  src="/official_logo.png"
-                  alt={t('nav.logoAlt')}
-                  className="h-14 sm:h-16 w-auto drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-purple-500/10 blur-xl animate-pulse rounded-full" />
-              </div>
-              <div className="flex flex-col leading-none justify-center">
-                <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-                  ROBUX<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600">MINER</span>
-                </span>
-                <span className="text-[10px] sm:text-[12px] font-black tracking-[0.4em] text-purple-400 uppercase mt-1 opacity-90 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">
-                  APEX PRO EDITION
-                </span>
-              </div>
-            </Link>
-
-            <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
-              {landingLinks.map((item) => (
-                <a
-                  key={item.hash}
-                  href={location.pathname === '/' ? item.hash : `/${item.hash}`}
-                  className="text-muted-foreground hover:text-purple-500 transition-colors drop-shadow-[0_0_12px_rgba(168,85,247,0.7)]"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {t('nav.language')}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {availableLocales.map((option) => (
-                    <DropdownMenuItem
-                      key={option.value}
-                      onClick={() => setLocale(option.value)}
-                    >
-                      <span className="flex w-full items-center justify-between gap-3">
-                        {option.label}
-                        {locale === option.value ? '✓' : null}
-                      </span>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              {location.pathname !== '/auth' && (
-                <Button asChild size="sm">
-                  <Link to="/auth">{t('nav.signIn')}</Link>
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-    );
-  }
+  const getInitials = (name?: string) => {
+    if (!name) return 'U';
+    return name.slice(0, 2).toUpperCase();
+  };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container relative h-16 px-4 overflow-visible">
-        <div className="flex h-full items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-4 hover:scale-[1.02] transition-all duration-300 group">
-            <div className="relative">
-              <img 
-                src="/official_logo.png"
-                alt={t('nav.logoAlt')}
-                className="h-14 sm:h-16 w-auto drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-purple-500/10 blur-xl animate-pulse rounded-full" />
-            </div>
-            <div className="flex flex-col leading-none justify-center">
-              <span className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-                ROBUX<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600">MINER</span>
-              </span>
-              <span className="text-[10px] sm:text-[12px] font-black tracking-[0.4em] text-purple-400 uppercase mt-1 opacity-90 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">
-                APEX PRO EDITION
-              </span>
-            </div>
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between">
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center space-x-2" aria-label={t('nav.logoAlt')}>
+            <Rocket className="h-6 w-6 text-primary" aria-hidden="true" />
+            <span className="font-bold hidden sm:inline-block">RobuxMinerPro</span>
           </Link>
-
-          {/* Centered Brand Title removed for cleaner layout as per user feedback */}
-
-          {/* Navigation Items */}
-          <nav className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-
+          <div className="hidden md:flex items-center gap-6">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
               return (
                 <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center space-x-2 text-sm font-medium transition-all duration-200 hover:text-purple-500 group drop-shadow-[0_0_12px_rgba(168,85,247,0.7)] ${
-                    isActive ? 'text-purple-500' : 'text-muted-foreground'
+                  key={link.id}
+                  to={link.path}
+                  onMouseEnter={() => handlePrefetch(link.path)}
+                  onFocus={() => handlePrefetch(link.path)}
+                  onTouchStart={() => handlePrefetch(link.path)}
+                  className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 ${
+                    location.pathname === link.path
+                      ? 'text-foreground'
+                      : 'text-muted-foreground'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.name}</span>
-                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-200 group-hover:w-full ${
-                    isActive ? 'w-full' : ''
-                  }`} />
+                  {Icon && <Icon className="h-4 w-4" />}
+                  {link.navLabel}
                 </Link>
               );
             })}
-          </nav>
-
-          {/* User Menu */}
-          <div className="flex items-center space-x-4">
-            <ThemeToggle />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  {t('nav.language')}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {availableLocales.map((option) => (
-                  <DropdownMenuItem
-                    key={option.value}
-                    onClick={() => setLocale(option.value)}
-                  >
-                    <span className="flex w-full items-center justify-between gap-3">
-                      {option.label}
-                      {locale === option.value ? '✓' : null}
-                    </span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {/* Robux Display */}
-            {profile && (
-              <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-full border border-yellow-400/20">
-                <Coins className="h-4 w-4 text-yellow-500" />
-                <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
-                  {profile.total_robux.toLocaleString()}
-                </span>
-              </div>
-            )}
-
-            {/* User Dropdown - APEX High-Density Polish */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-14 w-14 rounded-2xl p-0 overflow-hidden border-2 border-white/10 hover:border-primary-glow/50 transition-all shadow-2xl group active:scale-95">
-                  <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/20 transition-colors" />
-                  <Avatar className="h-full w-full rounded-none">
-                    <AvatarImage 
-                      src={profile?.avatar_url || ''} 
-                      alt={profile?.display_name || 'User'} 
-                      className="object-cover"
-                    />
-                    <AvatarFallback className={`${getTierColor(profile?.subscription_tier || 'free')} text-white font-black text-xl rounded-none w-full h-full flex items-center justify-center`}>
-                      {profile?.display_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent flex items-end justify-center pb-1">
-                    <div className="w-8 h-[2px] bg-primary-glow shadow-[0_0_10px_rgba(139,92,246,1)] rounded-full" />
-                  </div>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <div className="flex items-center justify-start gap-2 p-2">
-                  <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{profile?.display_name || 'User'}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {user.email}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="secondary" className="text-xs">
-                        <Crown className="h-3 w-3 mr-1" />
-                        {profile?.subscription_tier || 'Free'}
-                      </Badge>
-                      {profile && (
-                        <Badge variant="outline" className="text-xs">
-                          ⚡ {profile.mining_power}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="cursor-pointer">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/settings" className="cursor-pointer">
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
+
+        <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-2 border-r pr-4 mr-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocale(locale === 'en' ? 'es' : 'en')}
+              className="text-xs uppercase"
+            >
+              {locale}
+            </Button>
+            <ThemeToggle />
+          </div>
+
+          {session ? (
+            <div className="flex items-center gap-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={profile?.avatar_url} alt={profile?.username || 'User avatar'} />
+                      <AvatarFallback>{getInitials(profile?.username)}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      {profile?.username && (
+                        <p className="font-medium">{profile.username}</p>
+                      )}
+                      <p className="w-[200px] truncate text-sm text-muted-foreground">
+                        {session.user.email}
+                      </p>
+                    </div>
+                  </div>
+                  <DropdownMenuItem asChild>
+                    <Link to={APP_ROUTES.profile.path} className="w-full cursor-pointer">
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to={APP_ROUTES.settings.path} className="w-full cursor-pointer">
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="text-destructive focus:bg-destructive focus:text-destructive-foreground cursor-pointer"
+                    onClick={() => signOut()}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-4">
+              <Button variant="ghost" asChild>
+                <Link to={APP_ROUTES.auth.path}>{t('nav.signIn')}</Link>
+              </Button>
+            </div>
+          )}
+
+          <Button
+            variant="ghost"
+            className="md:hidden"
+            size="icon"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Menu"
+            aria-expanded={isOpen}
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
-    </header>
+
+      {/* Mobile menu */}
+      {isOpen && (
+        <div className="md:hidden border-t p-4 space-y-4 bg-background">
+          {navLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.id}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-2 text-sm font-medium p-2 rounded-md ${
+                  location.pathname === link.path
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                {Icon && <Icon className="h-4 w-4" />}
+                {link.navLabel}
+              </Link>
+            );
+          })}
+          {!session && (
+            <Button className="w-full" asChild onClick={() => setIsOpen(false)}>
+              <Link to={APP_ROUTES.auth.path}>{t('nav.signIn')}</Link>
+            </Button>
+          )}
+          <div className="flex items-center justify-between pt-4 border-t">
+            <span className="text-sm font-medium">{t('nav.language')}</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setLocale(locale === 'en' ? 'es' : 'en');
+                setIsOpen(false);
+              }}
+              className="uppercase"
+            >
+              {locale}
+            </Button>
+          </div>
+          <div className="flex items-center justify-between pt-2">
+            <span className="text-sm font-medium">Theme</span>
+            <ThemeToggle />
+          </div>
+        </div>
+      )}
+    </nav>
   );
 };
 
