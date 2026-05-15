@@ -1,6 +1,10 @@
 # RobuxMinerPro — APEX Edition
 
-**Version:** 1.0.0 (Hardened) | **Last Updated:** 2026-03-15
+**Version:** 2.0.0 | **Last Updated:** 2026-05-15
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for full release notes.
 
 ## APEX Architecture Status
 
