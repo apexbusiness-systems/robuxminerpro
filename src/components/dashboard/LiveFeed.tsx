@@ -1,0 +1,6 @@
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
+interface FeedItem { id: string; text: string; }
+const mock: FeedItem[] = Array.from({ length: 5 }, (_, i) => ({ id: `m-${i}`, text: `Miner ${i + 1} just mined ${(i + 1) * 25} Robux` }));
+export function LiveFeed() { const [items, setItems] = useState<FeedItem[]>(isSupabaseConfigured ? [] : mock); useEffect(() => { if (!isSupabaseConfigured) return; const channel = supabase.channel('rmp:live-feed').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'mining_sessions' }, (payload) => { const reward = Number((payload.new as Record<string, unknown>).robux_earned ?? 0); setItems((prev) => [{ id: crypto.randomUUID(), text: `A miner just mined ${reward} Robux` }, ...prev].slice(0, 20)); }).subscribe(); return () => { channel.unsubscribe(); }; }, []); return <div className="rounded-xl border p-4"><AnimatePresence>{items.map((item) => <motion.div key={item.id} initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }}>{item.text}</motion.div>)}</AnimatePresence></div>; }

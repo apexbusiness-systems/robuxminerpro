@@ -1,11 +1,14 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
+type MatchMediaMock = ReturnType<typeof vi.fn>;
+type ListenerSpy = ReturnType<typeof vi.fn>;
+
 describe('useIsMobile', () => {
-  let matchMediaSpy: any;
-  let addEventListenerSpy: any;
-  let removeEventListenerSpy: any;
+  let matchMediaSpy: MatchMediaMock;
+  let addEventListenerSpy: ListenerSpy;
+  let removeEventListenerSpy: ListenerSpy;
 
   beforeEach(() => {
     addEventListenerSpy = vi.fn();
@@ -13,7 +16,7 @@ describe('useIsMobile', () => {
 
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: vi.fn().mockImplementation(query => ({
+      value: vi.fn().mockImplementation((query: string) => ({
         matches: query === '(max-width: 768px)',
         media: query,
         onchange: null,
@@ -24,12 +27,12 @@ describe('useIsMobile', () => {
         dispatchEvent: vi.fn(),
       })),
     });
-    matchMediaSpy = window.matchMedia;
+    matchMediaSpy = window.matchMedia as unknown as MatchMediaMock;
 
     Object.defineProperty(window, 'innerWidth', {
-        writable: true,
-        configurable: true,
-        value: 1024,
+      writable: true,
+      configurable: true,
+      value: 1024,
     });
   });
 
@@ -39,7 +42,6 @@ describe('useIsMobile', () => {
 
   it('should return true if initial window width is <= MOBILE_BREAKPOINT', () => {
     window.innerWidth = 500;
-
     matchMediaSpy.mockImplementation((query: string) => ({
       matches: true,
       media: query,

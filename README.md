@@ -98,3 +98,13 @@ Before publish, confirm:
 (Per Google, robots.txt must live at the site root; one per host.)
 
 (robots.txt placement per [Google Search Central](https://developers.google.com/search/docs/crawling-indexing/robots/intro).)
+
+
+## Release Notes v2.0.0
+Security, performance, and feature hardening delivered across P0-P3.
+
+## Post-Migration Steps
+Run: `supabase gen types typescript --project-id <PROJECT_ID> > src/integrations/supabase/types.ts`
+
+## Architecture
+New dashboard atoms live under `src/components/dashboard/` with offline engine at `src/lib/offlineMining.ts`.

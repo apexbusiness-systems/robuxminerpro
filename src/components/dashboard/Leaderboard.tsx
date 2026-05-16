@@ -1,0 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+const mock = Array.from({ length: 10 }, (_, i) => ({ display_name: `Miner ${i + 1}`, username: `miner${i + 1}`, total_robux: (10 - i) * 1000, avatar_url: null as string | null }));
+export function Leaderboard() { const { user } = useAuth(); const { data } = useQuery({ queryKey: ['leaderboard'], staleTime: 60_000, queryFn: async () => { if (!isSupabaseConfigured) return mock; const { data, error } = await supabase.from('profiles').select('display_name, username, total_robux, avatar_url, user_id').order('total_robux', { ascending: false }).limit(10); if (error) throw error; return data ?? []; } }); return <div className="rounded-xl border p-4">{(data ?? []).map((r: Record<string, unknown>, i: number) => <div key={`${String(r.username)}-${i}`} className={`flex justify-between py-1 ${r.user_id === user?.id ? 'bg-muted' : ''}`}><span>{i + 1}. {String(r.display_name ?? r.username ?? 'User')}</span><span>{Number(r.total_robux ?? 0).toLocaleString()}</span></div>)}</div>; }
