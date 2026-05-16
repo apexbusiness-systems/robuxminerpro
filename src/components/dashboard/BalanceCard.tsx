@@ -1,0 +1,4 @@
+import { useEffect, useState } from 'react';
+import { animate, useMotionValue } from 'framer-motion';
+import type { StreakState } from '@/hooks/useStreak';
+export function BalanceCard({ balance, miningPower, streakState }: { balance: number; miningPower: number; streakState: StreakState }) { const mv = useMotionValue(balance); const [display, setDisplay] = useState(balance); useEffect(() => { const controls = animate(mv, balance, { duration: 0.8, ease: 'easeOut', onUpdate: (v) => setDisplay(Math.floor(v)) }); return () => controls.stop(); }, [balance, mv]); return <div className="rounded-xl border p-4"><div className="text-sm">Balance</div><div className="text-3xl font-bold">{display.toLocaleString()} Robux</div><div className="text-xs">Power {miningPower}x • {streakState.tierLabel}</div></div>; }

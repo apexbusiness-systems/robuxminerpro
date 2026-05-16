@@ -1,0 +1,6 @@
+import { useMemo } from 'react';
+import { differenceInCalendarDays, parseISO } from 'date-fns';
+import { useAuth } from '@/hooks/useAuth';
+export interface StreakState { currentStreak: number; isActiveToday: boolean; multiplier: number; tierLabel: string; }
+const MULTIPLIER_TIERS = [{ min: 30, multiplier: 4.0, label: '🏆 Legendary' }, { min: 14, multiplier: 3.0, label: '💎 Diamond' }, { min: 7, multiplier: 2.0, label: '🔥 On Fire' }, { min: 3, multiplier: 1.5, label: '⚡ Hot Streak' }, { min: 1, multiplier: 1.0, label: '🌱 Starting' }, { min: 0, multiplier: 1.0, label: '—' }] as const;
+export function useStreak(): StreakState { const { profile } = useAuth(); return useMemo(() => { if (!profile) return { currentStreak: 0, isActiveToday: false, multiplier: 1, tierLabel: '—' }; const streak = ((profile as Record<string, unknown>).streak_count as number) ?? 0; const isActiveToday = profile.last_login ? differenceInCalendarDays(new Date(), parseISO(profile.last_login)) === 0 : false; const tier = MULTIPLIER_TIERS.find((t) => streak >= t.min) ?? MULTIPLIER_TIERS[MULTIPLIER_TIERS.length - 1]; return { currentStreak: streak, isActiveToday, multiplier: tier.multiplier, tierLabel: tier.label }; }, [profile]); }

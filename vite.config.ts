@@ -141,11 +141,16 @@ export default defineConfig(({ mode }) => ({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-toast'],
-          charts: ['recharts']
+        manualChunks: (id: string) => {
+          if (id.includes('@supabase/')) return 'supabase';
+          if (id.includes('framer-motion')) return 'motion';
+          if (id.includes('recharts') || id.includes('d3-') || id.includes('victory-vendor')) return 'charts';
+          if (id.includes('@radix-ui/')) return 'radix';
+          if (id.includes('@tanstack/')) return 'query';
+          if (id.includes('react-router')) return 'router';
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) return 'react';
+          if (id.includes('date-fns')) return 'dateutl';
+          if (id.includes('zod') || id.includes('@hookform') || id.includes('react-hook-form')) return 'forms';
         }
       }
     },

@@ -14,9 +14,9 @@ interface Profile {
   referral_code?: string | null;
   referred_by?: string | null;
   last_login?: string | null;
+  streak_count?: number;
   created_at: string;
   updated_at: string;
-  // Enterprise fields (optional for backward compatibility)
   phone?: string | null;
   email_verified?: boolean;
   phone_verified?: boolean;
@@ -47,28 +47,16 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const IS_DEV = import.meta.env.DEV;
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-// Mock data for development/demo mode
 const MOCK_USER: User = {
   id: 'apex-mock-user-id',
   email: 'apex@example.com',
-  app_metadata: { role: 'admin' },
+  app_metadata: IS_DEV ? { role: 'admin' } : {},
   user_metadata: { display_name: 'APEX Explorer' },
   aud: 'authenticated',
   created_at: new Date().toISOString(),
-};
+} as User;
 
 const MOCK_PROFILE: Profile = {
   id: 'mock-profile-id',
@@ -80,21 +68,32 @@ const MOCK_PROFILE: Profile = {
   updated_at: new Date().toISOString(),
 };
 
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) throw new Error('useAuth must be used within an AuthProvider');
+  return context;
+};
 
 export const clearSupabaseAuthStorage = () => {
-  ['localStorage', 'sessionStorage'].forEach((storageType) => {
+  const rawUrl = import.meta.env.VITE_SUPABASE_URL ?? '';
+  const projectRef = rawUrl.replace('https://', '').split('.')[0];
+  const scopedPrefixes = projectRef ? [`sb-${projectRef}-auth-token`] : ['sb-invalid-auth-token'];
+
+  (['localStorage', 'sessionStorage'] as const).forEach((storageType) => {
     try {
-      const storage = window[storageType as 'localStorage' | 'sessionStorage'];
+      const storage = window[storageType];
       Object.keys(storage).forEach((key) => {
-        if (key.startsWith('sb-') || key.startsWith('supabase.auth.')) {
-          storage.removeItem(key);
-        }
+        if (scopedPrefixes.some((prefix) => key.startsWith(prefix))) storage.removeItem(key);
       });
-    } catch (e) {
-      // Ignore
+    } catch {
+      // Non-browser environment — ignore silently
     }
   });
 };
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
@@ -103,24 +102,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const isSupabaseValid = useCallback(() => {
-    return !import.meta.env.VITE_SUPABASE_URL?.includes('your-project-ref');
-  }, []);
+  const isSupabaseValid = useCallback(() => !import.meta.env.VITE_SUPABASE_URL?.includes('your-project-ref'), []);
 
   const fetchProfile = useCallback(async (userId: string) => {
     if (!isSupabaseValid()) return MOCK_PROFILE;
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
-
-      if (error) {
-        return null;
-      }
-
-      return data;
+      const { data, error } = await supabase.from('profiles').select('*').eq('user_id', userId).single();
+      if (error) return null;
+      return data as Profile;
     } catch {
       return null;
     }
@@ -129,10 +118,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const updateLastActivity = useCallback(async (userId: string) => {
     if (!isSupabaseValid()) return;
     try {
-      await supabase
-        .from('profiles')
-        .update({ last_login: new Date().toISOString() })
-        .eq('user_id', userId);
+      await supabase.from('profiles').update({ last_login: new Date().toISOString() }).eq('user_id', userId);
     } catch {
       // Ignore update errors
     }
@@ -150,132 +136,75 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-
-        if (session?.user) {
-          updateLastActivity(session.user.id);
-          const profileData = await fetchProfile(session.user.id);
-          setProfile(profileData);
-        } else {
-          setProfile(null);
-        }
-        setLoading(false);
-      }
-    );
-
-    // Initial check
-    const sessionTimeout = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      clearTimeout(sessionTimeout);
-      if (session?.user) {
-        setSession(session);
-        setUser(session.user);
-        updateLastActivity(session.user.id);
-        fetchProfile(session.user.id).then(setProfile);
-        setLoading(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
+      if (nextSession?.user) {
+        updateLastActivity(nextSession.user.id);
+        const profileData = await fetchProfile(nextSession.user.id);
+        setProfile(profileData);
       } else {
-        setLoading(false);
+        setProfile(null);
       }
+      setLoading(false);
     });
 
-    return () => {
-      if (subscription) subscription.unsubscribe();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const sessionTimeout = setTimeout(() => setLoading(false), 3000);
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      clearTimeout(sessionTimeout);
+      if (existingSession?.user) {
+        setSession(existingSession);
+        setUser(existingSession.user);
+        updateLastActivity(existingSession.user.id);
+        fetchProfile(existingSession.user.id).then(setProfile);
+      }
+      setLoading(false);
+    });
+
+    return () => subscription?.unsubscribe();
+  }, [fetchProfile, isSupabaseValid, updateLastActivity]);
 
   const signOut = useCallback(async () => {
-    // 1. Immediately clear all local Supabase session keys
     clearSupabaseAuthStorage();
-    // 2. Immediately clear React auth state
     setSession(null);
     setUser(null);
     setProfile(null);
-    // 3. Fire-and-forget: revoke server-side refresh token (don't block on it)
     supabase.auth.signOut({ scope: 'global' }).catch(() => {});
-    // 4. Redirect immediately — user sees instant sign-out
-    toast({
-      title: "Signed out",
-      description: "You have been successfully signed out.",
-    });
+    toast({ title: 'Signed out', description: 'You have been successfully signed out.' });
     window.location.replace('/auth');
   }, [toast]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     if (!user) return;
-
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', user.id)
-        .select()
-        .single();
-
+      const { data, error } = await supabase.from('profiles').update({ ...updates, updated_at: new Date().toISOString() }).eq('user_id', user.id).select().single();
       if (error) throw error;
-
-      setProfile(data);
-      
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been successfully updated.",
-      });
+      setProfile(data as Profile);
+      toast({ title: 'Profile updated', description: 'Your profile has been successfully updated.' });
     } catch {
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: 'Error', description: 'Failed to update profile. Please try again.', variant: 'destructive' });
     }
   }, [user, toast]);
 
   const refreshProfile = useCallback(async () => {
     if (!user) return;
-
-    const profileData = await fetchProfile(user.id);
-    setProfile(profileData);
-  }, [user, fetchProfile]);
+    setProfile(await fetchProfile(user.id));
+  }, [fetchProfile, user]);
 
   const bypassMockLogin = useCallback(() => {
+    if (!IS_DEV) return;
     sessionStorage.removeItem('rmp_signed_out');
     setUser(MOCK_USER);
     setProfile(MOCK_PROFILE);
     setLoading(false);
-    toast({
-      title: "APEX Bypass Active",
-      description: "Logged in as APEX Explorer (Mock Mode)",
-    });
+    toast({ title: 'APEX Bypass Active [DEV ONLY]', description: 'Logged in as APEX Explorer (Mock Mode)' });
   }, [toast]);
 
   const isAdmin = useMemo(() => {
+    if (!IS_DEV && !isSupabaseValid()) return false;
     return user?.app_metadata?.role === 'admin';
-  }, [user]);
+  }, [user, isSupabaseValid]);
 
-  const value = useMemo(() => ({
-    user,
-    session,
-    profile,
-    loading,
-    isAdmin,
-    signOut,
-    updateProfile,
-    refreshProfile,
-    bypassMockLogin,
-  }), [user, session, profile, loading, isAdmin, signOut, updateProfile, refreshProfile, bypassMockLogin]);
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = useMemo(() => ({ user, session, profile, loading, isAdmin, signOut, updateProfile, refreshProfile, bypassMockLogin }), [user, session, profile, loading, isAdmin, signOut, updateProfile, refreshProfile, bypassMockLogin]);
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

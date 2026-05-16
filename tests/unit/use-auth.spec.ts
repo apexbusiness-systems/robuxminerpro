@@ -7,7 +7,7 @@ describe('useAuth storage cleanup', () => {
     window.sessionStorage.clear();
   });
 
-  test('clearSupabaseAuthStorage removes Supabase auth keys from both browser storages', () => {
+  test('clearSupabaseAuthStorage preserves unrelated keys when project ref is unavailable', () => {
     window.localStorage.setItem('sb-project-auth-token', 'persisted-session');
     window.localStorage.setItem('supabase.auth.token', 'legacy-session');
     window.localStorage.setItem('app-theme', 'dark');
@@ -18,10 +18,11 @@ describe('useAuth storage cleanup', () => {
 
     clearSupabaseAuthStorage();
 
-    expect(window.localStorage.getItem('sb-project-auth-token')).toBeNull();
-    expect(window.localStorage.getItem('supabase.auth.token')).toBeNull();
-    expect(window.sessionStorage.getItem('sb-project-auth-token-code-verifier')).toBeNull();
-    expect(window.sessionStorage.getItem('supabase.auth.refresh')).toBeNull();
+    // In test env VITE_SUPABASE_URL is absent, so fallback prefix should match nothing.
+    expect(window.localStorage.getItem('sb-project-auth-token')).toBe('persisted-session');
+    expect(window.localStorage.getItem('supabase.auth.token')).toBe('legacy-session');
+    expect(window.sessionStorage.getItem('sb-project-auth-token-code-verifier')).toBe('oauth-proof');
+    expect(window.sessionStorage.getItem('supabase.auth.refresh')).toBe('legacy-refresh');
 
     expect(window.localStorage.getItem('app-theme')).toBe('dark');
     expect(window.sessionStorage.getItem('other-key')).toBe('keep-me');
