@@ -61,7 +61,8 @@ export function runGuardrails() {
       if (mainEl) (mainEl as HTMLElement).id = 'main';
     }
 
-    walk(document.body, hits);
+    const scopeRoot = document.getElementById('chat-container') ?? document.body;
+    walk(scopeRoot, hits);
     if (hits.length) {
       console.warn('Guardrails sanitized content at runtime:', hits.slice(0, 10));
     }
