@@ -1,6 +1,6 @@
-import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
-import { createClient, SupabaseClient, User } from "https://esm.sh/@supabase/supabase-js@2.39.0";
-import { ChatRequestSchema, ChatRequest } from "../_shared/types.ts";
+import { serve } from "std/http/server.ts";
+import { createClient, SupabaseClient, User } from "@supabase/supabase-js";
+import { ChatRequestSchema, ChatRequest, Message } from "../_shared/types.ts";
 import { scanInputSafety, scanOutputSafety } from "../_shared/safety.ts";
 import { classifyQuery, ModelTier } from "../_shared/query-router.ts";
 import { embedText, callGroq, callGemini } from "../_shared/llm-clients.ts";
@@ -73,7 +73,7 @@ async function getOrCreateConversation(supabase: SupabaseClient, userId: string,
   return { activeConvId: newConv.id, messageHistory: [] };
 }
 
-async function executeLLMCall(tier: ModelTier, systemPrompt: string, allMessages: any[]) {
+async function executeLLMCall(tier: ModelTier, systemPrompt: string, allMessages: Message[]) {
   const startTime = Date.now();
   let generatedText = "";
   let finalModel = "groq/llama-3.1-8b";
@@ -90,7 +90,7 @@ async function executeLLMCall(tier: ModelTier, systemPrompt: string, allMessages
     try {
       finalModel = "gemini/2.5-flash";
       generatedText = await callGemini(systemPrompt, allMessages, geminiApiKey, false);
-    } catch (error_) {
+    } catch (_error_) {
       generatedText = "I'm having trouble connecting to the network right now. Give me a second and try again!";
     }
   }
@@ -138,14 +138,17 @@ serve(async (req: Request) => {
 
     const tier = classifyQuery(payload.message, (knowledge !== null && knowledge.length > 0));
 
+    interface MemoryRow { content: string }
+    interface KnowledgeRow { title: string; content: string }
+
     let contextBlock = "\n\n<context>\n";
     if (profile) contextBlock += "<profile>" + JSON.stringify(profile.preferences) + "</profile>\n";
     if (payload.game_context) contextBlock += "<game_state>" + JSON.stringify(payload.game_context) + "</game_state>\n";
     if (memories && memories.length > 0) {
-      contextBlock += "<memories>\n" + memories.map((m: any) => "- " + m.content).join('\n') + "\n</memories>\n";
+      contextBlock += "<memories>\n" + memories.map((m: MemoryRow) => "- " + m.content).join('\n') + "\n</memories>\n";
     }
     if (knowledge && knowledge.length > 0) {
-      contextBlock += "<knowledge>\n" + knowledge.map((k: any) => "[" + k.title + "]: " + k.content).join('\n') + "\n</knowledge>\n";
+      contextBlock += "<knowledge>\n" + knowledge.map((k: KnowledgeRow) => "[" + k.title + "]: " + k.content).join('\n') + "\n</knowledge>\n";
     }
     contextBlock += "</context>";
 
@@ -186,7 +189,7 @@ serve(async (req: Request) => {
       }
     }), { headers: corsHeaders });
 
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }), { status: 500, headers: corsHeaders });
   }
 });
