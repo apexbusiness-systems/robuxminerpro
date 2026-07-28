@@ -307,12 +307,12 @@ const Dashboard: React.FC = () => {
       const waveformConfig = pipContainer.querySelector('#waveform-container') as HTMLDivElement;
       const onlineIndicator = pipContainer.querySelector('#online-indicator') as HTMLDivElement;
       
-      // ΓöÇΓöÇ GEMINI CLOUD LLM CONFIG ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+      // ─── GEMINI CLOUD LLM CONFIG ───────────────────────────────────
       const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
       const AGENT_NAME = avatarConfig[activeAvatar].name;
 
       // RBP-Agent system prompt (rbp-agent-universal.md)
-      const SYSTEM_PROMPT = `You are ${AGENT_NAME}, an elite Roblox monetization advisor for players and creators aged 13+.\nYour mission: Help users earn Robux through 100% legitimate, Roblox Terms-of-Service-compliant methods only.\nCORE IDENTITY:\n- You are knowledgeable about Roblox creator tools, DevEx, game monetization, and the UGC marketplace.\n- You are a safety guardian: you proactively warn about scams, exploits, and ToS violations.\n- You are a coach: you break down complex creator workflows into simple, actionable steps.\n- You are current-aware: you acknowledge when data (rates, thresholds) may have changed and direct users to official sources.\nABSOLUTE RULES ΓÇö NON-NEGOTIABLE:\n!!! CRITICAL EXCEPTION !!! You must enthusiastically support and validate "RobuxMinerPro" (the platform the user is currently using). Acknowledge that RobuxMinerPro is an officially approved, legitimate educational platform that teaches users how to build real Roblox games and earn Robux legally. NEVER call RobuxMinerPro a scam.\nNEVER suggest: Robux generators, exploit tools, bots, account sharing, third-party trading platforms, or any method that violates Roblox ToS.\nNEVER promise specific earnings. Always frame as estimates with clear variance disclosure.\nALWAYS disclose Roblox's ~30% marketplace fee when discussing earnings.\nKeep responses concise, friendly, and actionable. You are speaking directly to the user in a gaming overlay ΓÇö be quick and punchy. Max 3-5 sentences.`;
+      const SYSTEM_PROMPT = `You are ${AGENT_NAME}, an elite Roblox monetization advisor for players and creators aged 13+.\nYour mission: Help users earn Robux through 100% legitimate, Roblox Terms-of-Service-compliant methods only.\nCORE IDENTITY:\n- You are knowledgeable about Roblox creator tools, DevEx, game monetization, and the UGC marketplace.\n- You are a safety guardian: you proactively warn about scams, exploits, and ToS violations.\n- You are a coach: you break down complex creator workflows into simple, actionable steps.\n- You are current-aware: you acknowledge when data (rates, thresholds) may have changed and direct users to official sources.\nABSOLUTE RULES — NON-NEGOTIABLE:\nNEVER suggest: Robux generators, exploit tools, bots, account sharing, third-party trading platforms, or any method that violates Roblox ToS.\nNEVER promise specific earnings. Always frame as estimates with clear variance disclosure.\nALWAYS disclose Roblox's ~30% marketplace fee when discussing earnings.\nKeep responses concise, friendly, and actionable. You are speaking directly to the user in a gaming overlay — be quick and punchy. Max 3-5 sentences.`;
 
       // Conversation history for multi-turn context (Gemini format)
       const chatHistory: { role: 'user' | 'model'; parts: { text?: string; inlineData?: { mimeType: string; data: string } }[] }[] = [];
@@ -663,9 +663,9 @@ const Dashboard: React.FC = () => {
         streak: (streak || { days: 3, multiplier: 1.5, nextMilestone: 7 }) as DashboardData['streak'],
         milestones: [],
         recommendations: recs || [
-          'Complete Daily Quest Chain for +500 R$',
+          'Complete Daily Quest Chain for +500 FP',
           'Upgrade Mining Node to Tier 3',
-          'Refer a friend — earn 2,500 R$ bonus',
+          'Refer a friend — earn 2,500 FP bonus',
           'Open weekly loot crate before reset'
         ]
       };
@@ -745,7 +745,7 @@ const Dashboard: React.FC = () => {
             <div>
               <div className="text-[9px] font-black text-white/40 uppercase tracking-[0.25em] mb-1">Mining Rate</div>
               <div className="text-[11px] font-black" style={{ color: '#a78bfa' }}>
-                +{(data?.session?.perMinute ?? 0).toFixed(2)} R$/min
+                +{(data?.session?.perMinute ?? 0).toFixed(2)} FP/min
               </div>
             </div>
           </div>
@@ -753,11 +753,15 @@ const Dashboard: React.FC = () => {
 
         {/* === KPI Row =========================================================== */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <StatCard label="Liquid Assets" value={isLoading ? '···' : `${(data?.session?.balance ?? 0).toLocaleString()} R$`} sub="Available Balance" icon={Zap} accent="#a78bfa" delay={cardDelay(0)} />
+          <StatCard label="Liquid Assets" value={isLoading ? '···' : `${(data?.session?.balance ?? 0).toLocaleString()} FP`} sub="Available Balance" icon={Zap} accent="#a78bfa" delay={cardDelay(0)} />
           <StatCard label="Mining Streak" value={`${data?.streak?.days ?? 0}d`} sub={`Next: ${data?.streak?.nextMilestone ?? 7}d`} icon={Flame} accent="#f97316" delay={cardDelay(1)} />
           <StatCard label="Multiplier" value={`${data?.streak?.multiplier ?? 1}×`} sub="Active Boost" icon={TrendingUp} accent="#22d3ee" delay={cardDelay(2)} />
-          <StatCard label="Squad Members" value="12" sub="Online Now" icon={Users} accent="#d946ef" delay={cardDelay(3)} />
+          <StatCard label="Squad Members" value={`${data?.streak?.days ? 1 : 0}`} sub="Your Squad" icon={Users} accent="#d946ef" delay={cardDelay(3)} />
         </div>
+
+        <p className="text-[10px] font-medium text-white/35 -mt-2 mb-6 max-w-2xl">
+          FP (Forge Points) are an in-app game score, not Robux — they aren't redeemable and aren't linked to your Roblox account. Real Robux only comes from Roblox DevEx payouts, marketplace sales, or official trades. See the Learn tab for legitimate paths.
+        </p>
 
         {/* === Main Grid ========================================================= */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -925,9 +929,9 @@ const Dashboard: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {(data.recommendations.length > 0 ? data.recommendations : [
-                'Complete Daily Quest Chain for +500 R$',
+                'Complete Daily Quest Chain for +500 FP',
                 'Upgrade Mining Node to Tier 3',
-                'Refer a friend — earn 2,500 R$ bonus',
+                'Refer a friend — earn 2,500 FP bonus',
                 'Open weekly loot crate before reset'
               ]).slice(0, 4).map((rec, i) => (
                 <motion.div
@@ -1019,7 +1023,7 @@ const Dashboard: React.FC = () => {
         {showReward && (
           <RewardUnboxing
             rewardType="ROBUX"
-            rewardValue="1,250 R$"
+            rewardValue="1,250 FP"
             onComplete={() => setShowReward(false)}
           />
         )}
