@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
+import { serve } from "std/http/server.ts";
+import { createClient } from "@supabase/supabase-js";
 import { callGemini, embedText } from "../_shared/llm-clients.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
@@ -30,7 +30,8 @@ serve(async (req: Request) => {
     if (convError || !conv) throw new Error("Conversation not found");
     if (!conv.messages || conv.messages.length === 0) return new Response("Ok", { status: 200 });
 
-    const chatLog = conv.messages.map((m: any) => m.role + ": " + m.content).join("\n");
+    interface MessageRow { role: string; content: string }
+    const chatLog = conv.messages.map((m: MessageRow) => m.role + ": " + m.content).join("\n");
 
     const prompt = "Extract key facts, preferences, and game events from this conversation that would be useful to remember for future interactions with this player. Return as JSON array:\n" +
       "[{\"memory_type\": \"fact|preference|game_event|skill_assessment\", \"content\": \"string\", \"importance\": 0.0-1.0}]\n" +
@@ -62,7 +63,7 @@ serve(async (req: Request) => {
 
     return new Response(JSON.stringify({ success: true, count: memories.length }), { status: 200, headers: { "Content-Type": "application/json" } });
 
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }), { status: 500 });
   }
 });

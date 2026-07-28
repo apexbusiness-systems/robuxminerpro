@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
+import { serve } from "std/http/server.ts";
+import { createClient } from "@supabase/supabase-js";
 import { embedText } from "../_shared/llm-clients.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
@@ -44,7 +44,7 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({ success: true, insertedCount }), { status: 200, headers: { "Content-Type": "application/json" } });
 
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }), { status: 500 });
   }
 });

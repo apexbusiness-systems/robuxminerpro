@@ -54,7 +54,7 @@ Deno.test("LoadTest: handles concurrent rate limit lookups", async () => {
   const latencies: number[] = [];
   let successes = 0;
 
-  const requests = Array.from({ length: concurrentUsers }, async (_, i) => {
+  const requests = Array.from({ length: concurrentUsers }, (_, i) => {
     const start = performance.now();
     const result = getRateLimitForAction(getTier(i), getAction(i));
     assertExists(result.limitKey);
