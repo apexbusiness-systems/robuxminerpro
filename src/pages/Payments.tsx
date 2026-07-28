@@ -28,11 +28,24 @@ export default function Payments() {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
-                  <h3 className="font-medium">Premium Mining Boost</h3>
-                  <p className="text-sm text-muted-foreground">3x mining speed for 30 days</p>
+                  <h3 className="font-medium">Free Tier</h3>
+                  <p className="text-sm text-muted-foreground">Basic AI coaching & community squad access (10 req/hr)</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-lg font-bold">$9.99</div>
+                  <div className="text-lg font-bold">$0</div>
+                  <Button variant="outline" disabled>
+                    Current Tier
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div>
+                  <h3 className="font-medium">Premium Membership</h3>
+                  <p className="text-sm text-muted-foreground">Unlimited AI mentoring, priority squad matching & advanced analytics (100 req/hr)</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold">$9.99/mo</div>
                   <Button disabled>
                     Coming Soon
                   </Button>
@@ -41,24 +54,11 @@ export default function Payments() {
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
-                  <h3 className="font-medium">Mega Mining Pack</h3>
-                  <p className="text-sm text-muted-foreground">10x mining speed for 7 days</p>
+                  <h3 className="font-medium">Enterprise Creator</h3>
+                  <p className="text-sm text-muted-foreground">Dedicated studio coaching, custom Luau code reviews & API access (1,000 req/hr)</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-lg font-bold">$4.99</div>
-                  <Button disabled>
-                    Coming Soon
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                  <h3 className="font-medium">Starter Boost</h3>
-                  <p className="text-sm text-muted-foreground">2x mining speed for 7 days</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold">$1.99</div>
+                  <div className="text-lg font-bold">$49.99/mo</div>
                   <Button disabled>
                     Coming Soon
                   </Button>
