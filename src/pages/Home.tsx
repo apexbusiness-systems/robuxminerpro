@@ -62,36 +62,6 @@ const Home = () => {
     return () => io.disconnect();
   }, []);
 
-  // Count-up for metrics
-  useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
-    
-    const animate = (el: HTMLElement) => {
-      const target = Number(el.dataset.count || 0);
-      const dur = 900;
-      const start = performance.now();
-      
-      const step = (t: number) => {
-        const p = Math.min(1, (t - start) / dur);
-        el.textContent = Math.round(target * (0.08 + 0.92 * p)).toLocaleString();
-        if (p < 1) requestAnimationFrame(step);
-      };
-      
-      requestAnimationFrame(step);
-    };
-    
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          animate(e.target as HTMLElement);
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.6 });
-    
-    els.forEach(el => io.observe(el));
-    return () => io.disconnect();
-  }, []);
 
   const handleDismissCTA = useCallback(() => {
     setCtaDismissed(true);
@@ -186,22 +156,6 @@ const Home = () => {
                 >
                   Download App
                 </Button>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 pt-12 border-t border-border mt-8">
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="50000">0</div>
-                  <div className="text-sm text-muted-foreground">{t('home.stats.activeUsers')}</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="98">0</div>
-                  <div className="text-sm text-muted-foreground">{t('home.stats.successRate')}</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-bold text-primary" data-count="7">0</div>
-                  <div className="text-sm text-muted-foreground">{t('home.stats.avgDays')}</div>
-                </div>
               </div>
             </div>
 
