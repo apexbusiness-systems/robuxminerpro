@@ -22,6 +22,6 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: "cfat_6iNrQ0PDrjOAeeS3dEkuyPQCiEikCWtTf2KOTbX966f12af6"
-          accountId: "b8a58a01bf34e1d6e46adf9765b159e8"
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=rmp-apex
