@@ -1,6 +1,6 @@
 export type ModelTier = 'fast' | 'balanced' | 'smart';
 
-export function classifyQuery(message: string, hasRagResults: boolean): ModelTier {
+export function classifyQuery(message: string, _hasRagResults: boolean): ModelTier {
   const lowerMsg = message.toLowerCase();
   
   // FAST criteria:
