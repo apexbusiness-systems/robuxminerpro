@@ -19,7 +19,7 @@ export async function callGroq(systemPrompt: string, messages: Message[], apiKey
   const formattedMessages = [
     { role: "system", content: systemPrompt },
     ...messages.map(m => ({
-      role: m.role === 'model' ? 'assistant' : m.role,
+      role: (m.role as string) === 'model' ? 'assistant' : m.role,
       content: m.content
     }))
   ];
@@ -50,7 +50,7 @@ export async function callGemini(systemPrompt: string, messages: Message[], apiK
   const model = isPro ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
   
   const contents = messages.map(m => ({
-    role: (m.role === 'assistant' || m.role === 'model') ? 'model' : 'user',
+    role: ((m.role as string) === 'assistant' || (m.role as string) === 'model') ? 'model' : 'user',
     parts: [{ text: m.content }]
   }));
 
